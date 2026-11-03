@@ -1,0 +1,142 @@
+name: Deploy Docs
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".vscode/**"
+      - ".gitignore"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - ".vscode/**"
+      - ".gitignore"
+  release:
+    types: [published]
+  workflow_run:
+    workflows: ["build"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      SAE_CONFIG_CACHE_DIR: ~/.cache/sae_config_cache
+      # Building the docs doesn't need a GPU, so skip the multi-GB CUDA torch build
+      UV_TORCH_BACKEND: cpu
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Important for mike to work properly
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v10.2.0
+        with:
+          python-version: "3.11"
+          # Creates .venv and puts it on PATH for later steps
+          activate-environment: true
+          enable-cache: false
+      - name: Cache Huggingface assets
+        uses: actions/cache@v4
+        with:
+          key: huggingface-${{ runner.os }}-3.11-${{ hashFiles('**/pyproject.toml') }}
+          path: ~/.cache/huggingface
+          restore-keys: |
+            huggingface-${{ runner.os }}-3.11-
+      # The save step below uses a unique per-run key: GitHub caches are
+      # immutable, so re-saving under an existing key silently discards any
+      # configs fetched during this run. Restore falls back to the most recent
+      # cache via prefix match, so progress accumulates across runs even when
+      # a run fails partway through.
+      - name: Restore SAE config cache
+        id: cache-sae-config-restore
+        uses: actions/cache/restore@v4
+        with:
+          key: sae-config-cache-v1-${{ hashFiles('sae_lens/pretrained_saes.yaml') }}-${{ github.run_id }}
+          path: ~/.cache/sae_config_cache
+          restore-keys: |
+            sae-config-cache-v1-${{ hashFiles('sae_lens/pretrained_saes.yaml') }}-
+            sae-config-cache-v1-
+      - name: Install dependencies
+        run: uv pip install -e . --group dev
+      - name: Set Python Path
+        run: echo "PYTHONPATH=$PYTHONPATH:$PWD" >> $GITHUB_ENV
+      # PRs don't deploy, so without this a broken docs build only shows up on
+      # main. mike builds with properdocs when it's installed, so match that.
+      - name: Build docs
+        if: github.event_name == 'pull_request'
+        run: properdocs build --clean --config-file mkdocs.yml
+      - name: Configure Git
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+      - name: Check if release was created
+        if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+        id: check_release
+        run: |
+          # Download the workflow run artifacts to get the outputs
+          echo "Checking workflow run outputs..."
+          # The workflow_run event doesn't directly expose job outputs, so we need to check via API
+          WORKFLOW_RUN_ID="${{ github.event.workflow_run.id }}"
+
+          # Get the workflow run jobs
+          JOBS_RESPONSE=$(gh api repos/${{ github.repository }}/actions/runs/$WORKFLOW_RUN_ID/jobs)
+
+          # Check if the release job ran and completed successfully
+          RELEASE_JOB_CONCLUSION=$(echo "$JOBS_RESPONSE" | jq -r '.jobs[] | select(.name == "release") | .conclusion')
+
+          if [ "$RELEASE_JOB_CONCLUSION" = "success" ]; then
+            echo "release_job_succeeded=true" >> $GITHUB_OUTPUT
+            echo "Release job succeeded"
+          else
+            echo "release_job_succeeded=false" >> $GITHUB_OUTPUT
+            echo "Release job did not succeed or did not run"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy release docs
+        if: github.event_name == 'release' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && steps.check_release.outputs.release_job_succeeded == 'true')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the release tag
+          if [ "${{ github.event_name }}" = "release" ]; then
+            RELEASE_TAG=${GITHUB_REF#refs/tags/}
+          else
+            # Get the latest tag when triggered by workflow_run
+            RELEASE_TAG=$(git describe --tags --abbrev=0)
+          fi
+
+          # Deploy the version (this will overwrite if it exists)
+          mike deploy --push $RELEASE_TAG
+
+          # If stable release (no pre-release identifiers), also update latest alias
+          if [[ ! "$RELEASE_TAG" =~ (alpha|beta|rc) ]]; then
+            mike alias -u --push $RELEASE_TAG latest
+            mike set-default --push latest
+          fi
+      - name: Deploy main branch docs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mike deploy --push --update-aliases dev main
+          # Only set as default if no stable release exists
+          if ! mike list | grep -q "latest"; then
+            mike set-default --push dev
+          fi
+      - name: Save SAE config cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ steps.cache-sae-config-restore.outputs.cache-primary-key }}
+          path: ~/.cache/sae_config_cache

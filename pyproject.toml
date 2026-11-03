@@ -1,0 +1,152 @@
+[project]
+name = "sae-lens"
+version = "6.54.12"
+description = "Training and Analyzing Sparse Autoencoders (SAEs)"
+authors = [{ name = "Joseph Bloom" }]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10,<4.0"
+keywords = [
+    "deep-learning",
+    "sparse-autoencoders",
+    "mechanistic-interpretability",
+    "PyTorch",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "transformer-lens>=2.16.1,<4.0.0",
+    "transformers>=4.38.1,<6.0.0",
+    "plotly>=5.19.0",
+    "plotly-express>=0.4.1",
+    "datasets>=3.1.0",
+    "babe>=0.0.7,<0.0.8",
+    "nltk>=3.8.1,<4.0.0",
+    "safetensors>=0.4.2,<1.0.0",
+    "python-dotenv>=1.0.1",
+    "pyyaml>=6.0.1,<7.0.0",
+    "typing-extensions>=4.10.0,<5.0.0",
+    "simple-parsing>=0.1.8,<0.2.0",
+    "tenacity>=9.0.0",
+]
+
+[project.optional-dependencies]
+mamba = ["mamba-lens>=0.0.4,<0.0.5"]
+
+[project.urls]
+Homepage = "https://decoderesearch.github.io/SAELens"
+Repository = "https://github.com/decoderesearch/SAELens"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.2,<9.0.0",
+    "pytest-cov>=4.1.0,<5.0.0",
+    "pytest-profiling>=1.8.1,<2.0.0",
+    "pytest-randomly>=4.1.0,<5.0.0",
+    "pytest-xdist>=3.8.0,<4.0.0",
+    "pre-commit>=3.6.2,<4.0.0",
+    "pyright==1.1.365",
+    "mamba-lens>=0.0.4,<0.0.5",
+    # No <25 upper bound: uv can't find a single ansible-lint 24.x that works
+    # across all supported Python versions when locking.
+    "ansible-lint>=24.2.3 ; platform_system != 'Windows'",
+    "botocore>=1.34.101,<2.0.0",
+    "boto3>=1.34.101,<2.0.0",
+    "docstr-coverage>=2.3.2,<3.0.0",
+    "mkdocs>=1.6.1,<2.0.0",
+    "mkdocs-material>=9.5.34,<10.0.0",
+    "mkdocs-autorefs>=1.4.2,<2.0.0",
+    "mkdocs-redirects>=1.2.1,<2.0.0",
+    "mkdocs-section-index>=0.3.9,<0.4.0",
+    "mkdocstrings>=0.25.2,<0.26.0",
+    "mkdocstrings-python>=1.10.9,<2.0.0",
+    "griffe<2.0",
+    # pymdown-extensions 12.2 made `md` a required argument of Highlight, which
+    # mkdocstrings < 1.0 doesn't pass. Remove once mkdocstrings is upgraded.
+    "pymdown-extensions<12.2",
+    "beautifulsoup4>=4.12.0,<5.0.0",
+    "tabulate>=0.9.0,<0.10.0",
+    "ruff>=0.7.4,<0.8.0",
+    "eai-sparsify>=1.1.1,<2.0.0",
+    "mike>=2.0.0,<3.0.0",
+    "trio>=0.30.0,<0.31.0",
+    "dictionary-learning>=0.1.0,<0.2.0",
+    "kaleido>=1.2.0,<2.0.0",
+    "ipykernel>=7.1.0,<8.0.0",
+    "transformers>=5.0.0,<6.0.0",
+    # wait until transformer-lens 3.0.0b2 is released to work with transformers v5.0.0
+    # "transformer-lens==3.0.0b1",
+]
+
+[tool.uv.build-backend]
+module-name = "sae_lens"
+module-root = ""
+
+[tool.ruff]
+# Ruff infers its target from requires-python (py310), which enables extra
+# pyupgrade rules. Pin it to the default ruff used before the move to [project]
+# metadata so linting is unchanged.
+target-version = "py38"
+
+[tool.ruff.lint]
+exclude = ["*.ipynb"]
+ignore = ["E203", "E501", "E731", "F722", "E741", "F821", "F403", "ARG002"]
+select = ["UP", "TID", "I", "F", "E", "ARG", "SIM", "RET", "LOG", "T20"]
+
+[tool.ruff.lint.per-file-ignores]
+"benchmark/*" = ["T20", "TID251"]
+"scripts/*" = ["T20"]
+"tests/*" = ["TID251"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"typing.Union".msg = "Use `|` instead"
+"typing.Optional".msg = "Use `| None` instead"
+"typing.Dict".msg = "Use `dict` instead"
+"typing.Tuple".msg = "Use `tuple` instead"
+"typing.List".msg = "Use `list` instead"
+"tests".msg = "Do not import from tests in the main codebase."
+
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = "none"
+reportUnknownMemberType = "none"
+reportUnknownArgumentType = "none"
+reportUnknownVariableType = "none"
+reportUntypedFunctionDecorator = "none"
+reportUnnecessaryIsInstance = "none"
+reportUnnecessaryComparison = "none"
+reportConstantRedefinition = "none"
+reportUnknownLambdaType = "none"
+reportPrivateUsage = "none"
+reportDeprecated = "none"
+reportPrivateImportUsage = "none"
+ignore = ["**/wandb/**"]
+
+[tool.semantic_release]
+version_variables = ["sae_lens/__init__.py:__version__"]
+version_toml = ["pyproject.toml:project.version"]
+build_command = "pip install uv && uv build"
+branches = { main = { match = "main" }, alpha = { match = "alpha", prerelease = true }, beta = { match = "beta", prerelease = true } }
+
+
+
+
+
+
+
+
+
+
+[build-system]
+requires = ["uv_build>=0.12.21,<0.13.0"]
+build-backend = "uv_build"
+

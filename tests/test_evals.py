@@ -1,0 +1,1482 @@
+import argparse
+import json
+import math
+from pathlib import Path
+from typing import Any
+from unittest.mock import MagicMock, patch
+
+import pytest
+import torch
+from datasets import Dataset
+from transformer_lens import HookedTransformer, HookedTransformerConfig
+
+from sae_lens.config import LanguageModelSAERunnerConfig
+from sae_lens.evals import (
+    EvalConfig,
+    ExplainedVarianceCalculator,
+    _kl,
+    all_loadable_saes,
+    get_downstream_reconstruction_metrics,
+    get_eval_everything_config,
+    get_recons_loss,
+    get_saes_from_regex,
+    get_sparsity_and_variance_metrics,
+    multiple_evals,
+    process_args,
+    process_results,
+    run_evals,
+    run_evals_cli,
+    run_evaluations,
+)
+from sae_lens.load_model import load_model
+from sae_lens.loading.pretrained_saes_directory import PretrainedSAELookup
+from sae_lens.saes.batchtopk_sae import (
+    BatchTopKTrainingSAE,
+)
+from sae_lens.saes.sae import SAE, SAEMetadata, TrainingSAE
+from sae_lens.saes.standard_sae import (
+    StandardSAE,
+    StandardSAEConfig,
+    StandardTrainingSAE,
+)
+from sae_lens.saes.topk_sae import TopKTrainingSAE
+from sae_lens.training.activation_scaler import ActivationScaler, ActivationWhitening
+from sae_lens.training.activations_store import ActivationsStore
+from tests.helpers import (
+    NEEL_NANDA_C4_10K_DATASET,
+    TINYSTORIES_MODEL,
+    build_batchtopk_runner_cfg,
+    build_runner_cfg,
+    build_topk_runner_cfg,
+    load_model_cached,
+    random_params,
+)
+
+TRAINER_EVAL_CONFIG = EvalConfig(
+    n_eval_reconstruction_batches=10,
+    compute_ce_loss=True,
+    n_eval_sparsity_variance_batches=1,
+    compute_l2_norms=True,
+)
+
+
+@pytest.fixture
+def example_dataset() -> Dataset:
+    return Dataset.from_list(
+        [
+            {"text": "hello world1"},
+            {"text": "hello world2"},
+            {"text": "hello world3"},
+        ]
+        * 20
+    )
+
+
+# not sure why we have NaNs in the feature metrics, but this is a quick fix for tests
+def _replace_nan(list: list[float]) -> list[float]:
+    return [0 if math.isnan(x) else x for x in list]
+
+
+@pytest.fixture(
+    params=[
+        {
+            "model_name": "tiny-stories-1M",
+            "dataset_path": "NeelNanda/c4-10k",
+            "hook_name": "blocks.1.hook_resid_pre",
+            "d_in": 64,
+        },
+        {
+            "model_name": "tiny-stories-1M",
+            "dataset_path": "apollo-research/roneneldan-TinyStories-tokenizer-gpt2",
+            "hook_name": "blocks.1.hook_resid_pre",
+            "d_in": 64,
+        },
+        {
+            "model_name": "tiny-stories-1M",
+            "dataset_path": "NeelNanda/c4-10k",
+            "hook_name": "blocks.1.attn.hook_z",
+            "d_in": 16 * 4,
+        },
+        {
+            "model_name": "tiny-stories-1M",
+            "dataset_path": "NeelNanda/c4-10k",
+            "hook_name": "blocks.1.attn.hook_q",
+            "d_in": 16 * 4,
+        },
+        {
+            "model_name": "tiny-stories-1M",
+            "dataset_path": "NeelNanda/c4-10k",
+            "hook_name": "blocks.1.attn.hook_q",
+            "d_in": 4,
+            "hook_head_index": 2,
+        },
+    ],
+    ids=[
+        "tiny-stories-1M-resid-pre",
+        "tiny-stories-1M-resid-pre-pretokenized",
+        "tiny-stories-1M-hook-z",
+        "tiny-stories-1M-hook-q",
+        "tiny-stories-1M-hook-q-head-index-2",
+    ],
+)
+def cfg(request: pytest.FixtureRequest):
+    """
+    Pytest fixture to create a mock instance of LanguageModelSAERunnerConfig.
+    """
+    params = request.param
+    return build_runner_cfg(**params)
+
+
+@pytest.fixture
+def model():
+    return load_model_cached(TINYSTORIES_MODEL)
+
+
+@pytest.fixture
+def activation_store(model: HookedTransformer, cfg: LanguageModelSAERunnerConfig[Any]):
+    return ActivationsStore.from_config(
+        model, cfg, override_dataset=Dataset.from_list([{"text": "hello world"}] * 2000)
+    )
+
+
+@pytest.fixture
+def base_sae(training_sae: TrainingSAE[Any]):  # type: ignore
+    return SAE.from_dict(training_sae.cfg.get_inference_sae_cfg_dict())
+
+
+@pytest.fixture
+def training_sae(cfg: LanguageModelSAERunnerConfig[Any]):  # type: ignore
+    return TrainingSAE.from_dict(cfg.get_training_sae_cfg_dict())
+
+
+all_possible_keys = [
+    "model_behavior_preservation",
+    "model_performance_preservation",
+    "reconstruction_quality",
+    "shrinkage",
+    "sparsity",
+    "token_stats",
+]
+
+all_featurewise_keys_expected = [
+    "feature_density",
+    "consistent_activation_heuristic",
+    "encoder_bias",
+    "encoder_decoder_cosine_sim",
+    "encoder_norm",
+]
+
+
+@pytest.fixture(
+    params=[
+        ("blocks.0.hook_resid_pre", "none"),
+        ("blocks.0.attn.hook_z", "hook_z"),
+    ],
+    ids=["resid_pre", "hook_z"],
+)
+def feature_density_eval_inputs(request: pytest.FixtureRequest):
+    hook_name, reshape_activations = request.param
+    model = HookedTransformer(
+        HookedTransformerConfig(
+            n_layers=1,
+            d_model=8,
+            n_ctx=4,
+            d_head=4,
+            n_heads=2,
+            d_mlp=16,
+            d_vocab=20,
+            act_fn="relu",
+            device="cpu",
+        )
+    )
+    sae = StandardSAE(
+        StandardSAEConfig(
+            d_in=8,
+            d_sae=4,
+            reshape_activations=reshape_activations,
+            metadata=SAEMetadata(
+                hook_name=hook_name,
+                context_size=4,
+                prepend_bos=False,
+            ),
+        )
+    )
+    with torch.no_grad():
+        sae.W_enc.zero_()
+        sae.b_enc.copy_(torch.tensor([1.0, -1.0, 1.0, -1.0]))
+    store = ActivationsStore.from_sae(
+        model,
+        sae,
+        Dataset.from_dict({"tokens": [[0, 2, 3, 4], [0, 5, 6, 7]]}),
+        store_batch_size_prompts=2,
+        total_tokens=2,
+        disable_concat_sequences=True,
+        sequence_separator_token=None,
+    )
+    return model, sae, store
+
+
+@pytest.mark.parametrize("exclude_special_tokens", [False, [0]])
+def test_run_evals_feature_density_only(
+    feature_density_eval_inputs: tuple[
+        HookedTransformer, StandardSAE, ActivationsStore
+    ],
+    exclude_special_tokens: bool | list[int],
+):
+    model, sae, store = feature_density_eval_inputs
+    original_hook_z_reshaping_mode = sae.hook_z_reshaping_mode
+    metrics, feature_metrics = run_evals(
+        sae,
+        store,
+        model,
+        ActivationScaler(),
+        eval_config=EvalConfig(compute_featurewise_density_statistics=True),
+        exclude_special_tokens=exclude_special_tokens,
+    )
+
+    assert sae.hook_z_reshaping_mode is original_hook_z_reshaping_mode
+    assert set(metrics) == {"token_stats"}
+    assert feature_metrics["feature_density"] == [1.0, 0.0, 1.0, 0.0]
+    expected_per_prompt = 3.0 if exclude_special_tokens else 4.0
+    assert feature_metrics["consistent_activation_heuristic"][::2] == [
+        expected_per_prompt,
+        expected_per_prompt,
+    ]
+
+
+@pytest.mark.parametrize("n_batches", [0, -1])
+def test_run_evals_feature_density_requires_positive_batches(
+    feature_density_eval_inputs: tuple[
+        HookedTransformer, StandardSAE, ActivationsStore
+    ],
+    n_batches: int,
+):
+    model, sae, store = feature_density_eval_inputs
+    original_hook_z_reshaping_mode = sae.hook_z_reshaping_mode
+    with pytest.raises(
+        ValueError, match="n_eval_sparsity_variance_batches must be > 0"
+    ):
+        run_evals(
+            sae,
+            store,
+            model,
+            ActivationScaler(),
+            eval_config=EvalConfig(
+                compute_featurewise_density_statistics=True,
+                n_eval_sparsity_variance_batches=n_batches,
+            ),
+            exclude_special_tokens=False,
+        )
+    assert sae.hook_z_reshaping_mode is original_hook_z_reshaping_mode
+
+
+@pytest.mark.parametrize("use_attention_mask", [False, True])
+def test_run_evals_reconstruction_uses_model_kwargs(
+    feature_density_eval_inputs: tuple[
+        HookedTransformer, StandardSAE, ActivationsStore
+    ],
+    use_attention_mask: bool,
+):
+    model, sae, store = feature_density_eval_inputs
+    random_params(sae)
+    original_hook_z_reshaping_mode = sae.hook_z_reshaping_mode
+    sae.turn_off_forward_pass_hook_z_reshaping()
+    tokens = store.get_batch_tokens(2)
+    store.reset_input_dataset()
+    attention_mask = torch.tensor([[1, 0, 1, 1], [1, 1, 0, 1]])
+    model_kwargs = {"attention_mask": attention_mask} if use_attention_mask else {}
+    scaler = ActivationScaler()
+    expected = get_recons_loss(
+        sae,
+        model,
+        scaler,
+        tokens,
+        compute_kl=True,
+        compute_ce_loss=True,
+        model_kwargs=model_kwargs,
+    )
+    if use_attention_mask:
+        unmasked = get_recons_loss(
+            sae, model, scaler, tokens, compute_kl=True, compute_ce_loss=True
+        )
+        assert expected["ce_loss_without_sae"].mean().item() != pytest.approx(
+            unmasked["ce_loss_without_sae"].mean().item()
+        )
+    if original_hook_z_reshaping_mode:
+        sae.turn_on_forward_pass_hook_z_reshaping()
+
+    metrics, _ = run_evals(
+        sae,
+        store,
+        model,
+        scaler,
+        eval_config=EvalConfig(
+            n_eval_reconstruction_batches=1, compute_kl=True, compute_ce_loss=True
+        ),
+        model_kwargs=model_kwargs,
+        exclude_special_tokens=False,
+    )
+
+    actual = {
+        **metrics["model_behavior_preservation"],
+        **metrics["model_performance_preservation"],
+    }
+    for name, values in expected.items():
+        assert actual[name] == pytest.approx(values.mean().item())
+    assert sae.hook_z_reshaping_mode is original_hook_z_reshaping_mode
+    assert torch.equal(attention_mask, torch.tensor([[1, 0, 1, 1], [1, 1, 0, 1]]))
+
+
+def test_run_evals_base_sae(
+    base_sae: SAE[Any],
+    activation_store: ActivationsStore,
+    model: HookedTransformer,
+):
+    eval_metrics, _ = run_evals(
+        sae=base_sae,
+        activation_store=activation_store,
+        activation_scaler=ActivationScaler(),
+        model=model,
+        eval_config=get_eval_everything_config(),
+    )
+
+    assert set(eval_metrics.keys()).issubset(set(all_possible_keys))
+    assert len(eval_metrics) > 0
+
+
+@pytest.mark.parametrize("use_sparse_activations", [True, False])
+def test_run_evals_sparse_topk_sae(
+    model: HookedTransformer,
+    use_sparse_activations: bool,
+):
+    cfg = build_topk_runner_cfg(
+        use_sparse_activations=use_sparse_activations,
+        model_name="tiny-stories-1M",
+        dataset_path="roneneldan/TinyStories",
+        hook_name="blocks.1.hook_resid_pre",
+        d_in=64,
+    )
+    sae = TopKTrainingSAE(cfg.sae)
+    activation_store = ActivationsStore.from_config(
+        model, cfg, override_dataset=Dataset.from_list([{"text": "hello world"}] * 2000)
+    )
+    eval_metrics, _ = run_evals(
+        sae=sae,
+        activation_store=activation_store,
+        activation_scaler=ActivationScaler(),
+        model=model,
+        eval_config=get_eval_everything_config(),
+    )
+
+    assert set(eval_metrics.keys()).issubset(set(all_possible_keys))
+    assert len(eval_metrics) > 0
+
+
+def test_run_evals_training_sae(
+    training_sae: TrainingSAE[Any],
+    activation_store: ActivationsStore,
+    model: HookedTransformer,
+):
+    eval_metrics, feature_metrics = run_evals(
+        sae=training_sae,
+        activation_store=activation_store,
+        activation_scaler=ActivationScaler(),
+        model=model,
+        eval_config=get_eval_everything_config(),
+    )
+
+    assert set(eval_metrics.keys()).issubset(set(all_possible_keys))
+    assert len(eval_metrics) > 0
+    assert set(feature_metrics.keys()).issubset(set(all_featurewise_keys_expected))
+
+
+def test_run_evals_training_sae_ignore_bos(
+    training_sae: TrainingSAE[Any],
+    activation_store: ActivationsStore,
+    model: HookedTransformer,
+):
+    eval_metrics, _ = run_evals(
+        sae=training_sae,
+        activation_store=activation_store,
+        activation_scaler=ActivationScaler(),
+        model=model,
+        eval_config=get_eval_everything_config(),
+        exclude_special_tokens={
+            model.tokenizer.bos_token_id,  # type: ignore
+            model.tokenizer.eos_token_id,  # type: ignore
+            model.tokenizer.pad_token_id,  # type: ignore
+        },
+    )
+
+    assert set(eval_metrics.keys()).issubset(set(all_possible_keys))
+    assert len(eval_metrics) > 0
+
+
+@pytest.mark.parametrize(
+    "hook_name,head_index",
+    [
+        ("blocks.0.hook_resid_pre", None),
+        ("blocks.0.attn.hook_z", None),
+        ("blocks.0.attn.hook_v", 1),
+    ],
+)
+@pytest.mark.parametrize("normalization", ["none", "scaling", "whitening"])
+def test_reconstruction_preserves_excluded_tokens_and_other_heads(
+    hook_name: str, head_index: int | None, normalization: str
+):
+    tokens = torch.tensor([[0, 2, 9], [4, 0, 5]])
+    activations = torch.arange(1, 25, dtype=torch.float32).reshape(2, 3, 4)
+    if "attn" in hook_name:
+        activations = activations.reshape(2, 3, 2, 2)
+    d_in = 2 if head_index is not None else 4
+    scaler = ActivationScaler()
+    replacement = torch.full((d_in,), 6.0)
+    if normalization == "scaling":
+        scaler.scaling_factor = 3.0
+        replacement = torch.full((d_in,), 2.0)
+    elif normalization == "whitening":
+        mean = torch.arange(d_in, dtype=torch.float32)
+        scaler.whitening = ActivationWhitening(
+            mean=mean,
+            matrix=2 * torch.eye(d_in),
+            inverse_matrix=0.5 * torch.eye(d_in),
+        )
+        replacement = 3 + mean
+
+    sae_inputs: list[torch.Tensor] = []
+
+    def encode(x: torch.Tensor) -> torch.Tensor:
+        sae_inputs.append(x.clone())
+        return torch.zeros_like(x)
+
+    sae = MagicMock()
+    sae.cfg.metadata.hook_name = hook_name
+    sae.cfg.metadata.hook_head_index = head_index
+    sae.device = torch.device("cpu")
+    sae.encode.side_effect = encode
+    sae.decode.side_effect = lambda x: torch.full_like(x, 6.0)
+
+    hook_outputs: list[torch.Tensor] = []
+
+    def run_with_hooks(*_args: Any, fwd_hooks: Any, **_kwargs: Any):
+        hook_outputs.append(fwd_hooks[0][1](activations.clone(), None))
+        return torch.zeros(2, 3, 4), torch.zeros(2, 2)
+
+    model = MagicMock(return_value=(torch.zeros(2, 3, 4), torch.zeros(2, 2)))
+    model.run_with_hooks.side_effect = run_with_hooks
+    get_recons_loss(
+        sae,
+        model,
+        scaler,
+        tokens,
+        compute_kl=False,
+        compute_ce_loss=True,
+        ignore_tokens=[0, 9],
+    )
+
+    expected = activations.clone()
+    included = (tokens != 0) & (tokens != 9)
+    if head_index is not None:
+        expected[:, :, head_index][included] = replacement
+    else:
+        expected[included] = replacement.reshape(expected.shape[2:])
+    assert torch.equal(hook_outputs[0], expected)
+
+    sae_input = (
+        activations.flatten(2) if head_index is None else activations[:, :, head_index]
+    )
+    assert torch.equal(sae_inputs[0], scaler.scale(sae_input))
+
+
+def test_run_evals_reconstructs_and_scores_only_non_excluded_tokens(
+    model: HookedTransformer,
+):
+    hook_name = "blocks.0.hook_resid_pre"
+    tokens = torch.tensor([[0, 2, 3, 4], [0, 5, 0, 6]])
+    included = tokens != 0
+
+    sae = MagicMock()
+    sae.cfg.metadata.hook_name = hook_name
+    sae.cfg.metadata.hook_head_index = None
+    sae.device = torch.device("cpu")
+    sae.encode.side_effect = lambda x: x
+    sae.decode.side_effect = torch.zeros_like
+    activation_store = MagicMock()
+    activation_store.get_batch_tokens.return_value = tokens
+
+    def zero_included_tokens(activations: torch.Tensor, hook: Any):  # noqa: ARG001
+        return torch.where(included[..., None], 0, activations)
+
+    expected_ce_loss = model.run_with_hooks(
+        tokens,
+        return_type="loss",
+        loss_per_token=True,
+        fwd_hooks=[(hook_name, zero_included_tokens)],
+    )[included[:, :-1]].mean()
+
+    metrics, _ = run_evals(
+        sae=sae,
+        activation_store=activation_store,
+        model=model,
+        activation_scaler=ActivationScaler(),
+        eval_config=EvalConfig(
+            batch_size_prompts=2,
+            n_eval_reconstruction_batches=1,
+            compute_ce_loss=True,
+        ),
+        exclude_special_tokens=[0],
+    )
+    assert metrics["model_performance_preservation"][
+        "ce_loss_with_sae"
+    ] == pytest.approx(expected_ce_loss.item())
+
+
+def test_identity_reconstruction_preserves_predictions_with_excluded_tokens():
+    model = HookedTransformer(
+        HookedTransformerConfig(
+            n_layers=2,
+            d_model=8,
+            n_ctx=8,
+            d_head=4,
+            n_heads=2,
+            d_mlp=16,
+            d_vocab=20,
+            act_fn="relu",
+            device="cpu",
+        )
+    )
+    sae = MagicMock()
+    sae.cfg.metadata.hook_name = "blocks.0.hook_resid_pre"
+    sae.cfg.metadata.hook_head_index = None
+    sae.device = torch.device("cpu")
+    sae.encode.side_effect = lambda x: x
+    sae.decode.side_effect = lambda x: x
+
+    metrics = get_recons_loss(
+        sae,
+        model,
+        ActivationScaler(3.0),
+        torch.tensor([[0, 2, 3, 4]]),
+        compute_kl=True,
+        compute_ce_loss=True,
+        ignore_tokens=[0],
+    )
+    assert metrics["ce_loss_with_sae"].numpy() == pytest.approx(
+        metrics["ce_loss_without_sae"].numpy()
+    )
+    assert metrics["kl_div_with_sae"].numpy() == pytest.approx(0, abs=1e-6)
+
+
+def test_training_eval_config(
+    base_sae: SAE[Any],
+    activation_store: ActivationsStore,
+    model: HookedTransformer,
+):
+    expected_keys = [
+        "model_performance_preservation",
+        "shrinkage",
+        "token_stats",
+    ]
+    eval_config = TRAINER_EVAL_CONFIG
+    eval_metrics, _ = run_evals(
+        sae=base_sae,
+        activation_store=activation_store,
+        activation_scaler=ActivationScaler(),
+        model=model,
+        eval_config=eval_config,
+    )
+    assert set(eval_metrics.keys()) == set(expected_keys)
+
+
+def test_training_eval_config_ignore_control_tokens(
+    base_sae: SAE[Any],
+    activation_store: ActivationsStore,
+    model: HookedTransformer,
+):
+    expected_keys = [
+        "model_performance_preservation",
+        "shrinkage",
+        "token_stats",
+    ]
+    eval_config = TRAINER_EVAL_CONFIG
+    eval_metrics, _ = run_evals(
+        sae=base_sae,
+        activation_store=activation_store,
+        activation_scaler=ActivationScaler(),
+        model=model,
+        eval_config=eval_config,
+        exclude_special_tokens={
+            model.tokenizer.pad_token_id,  # type: ignore
+            model.tokenizer.eos_token_id,  # type: ignore
+            model.tokenizer.bos_token_id,  # type: ignore
+        },
+    )
+    assert set(eval_metrics.keys()) == set(expected_keys)
+
+
+def test_run_empty_evals(
+    base_sae: SAE[Any],
+    activation_store: ActivationsStore,
+    model: HookedTransformer,
+):
+    empty_config = EvalConfig(
+        n_eval_reconstruction_batches=0,
+        n_eval_sparsity_variance_batches=0,
+        compute_ce_loss=False,
+        compute_kl=False,
+        compute_l2_norms=False,
+        compute_sparsity_metrics=False,
+        compute_variance_metrics=False,
+        compute_featurewise_density_statistics=False,
+    )
+    eval_metrics, feature_metrics = run_evals(
+        sae=base_sae,
+        activation_store=activation_store,
+        activation_scaler=ActivationScaler(),
+        model=model,
+        eval_config=empty_config,
+    )
+
+    assert len(eval_metrics) == 1, "Expected only token_stats in eval_metrics"
+    assert "token_stats" in eval_metrics, "Expected token_stats in eval_metrics"
+    assert len(feature_metrics) == 0, "Expected empty feature_metrics"
+
+
+@pytest.fixture
+def mock_args():
+    args = argparse.Namespace()
+    args.sae_regex_pattern = "test_pattern"
+    args.sae_block_pattern = "test_block"
+    args.num_eval_batches = 2
+    args.batch_size_prompts = 4
+    args.eval_batch_size_prompts = 4
+    args.n_eval_reconstruction_batches = 1
+    args.n_eval_sparsity_variance_batches = 1
+    args.datasets = ["test_dataset"]
+    args.ctx_lens = [64]
+    args.output_dir = "test_output"
+    args.dataset_trust_remote_code = False
+    args.verbose = False
+    return args
+
+
+@patch("sae_lens.evals.get_saes_from_regex")
+@patch("sae_lens.evals.multiple_evals")
+def test_run_evaluations(
+    mock_multiple_evals: MagicMock,
+    mock_get_saes_from_regex: MagicMock,
+    mock_args: argparse.Namespace,
+):
+    mock_get_saes_from_regex.return_value = [
+        ("release1", "sae1", 0.8, 10),
+        ("release2", "sae2", 0.7, 8),
+    ]
+    mock_multiple_evals.return_value = [{"test": "result"}]
+
+    result = run_evaluations(mock_args)
+
+    mock_get_saes_from_regex.assert_called_once_with(
+        mock_args.sae_regex_pattern, mock_args.sae_block_pattern
+    )
+    mock_multiple_evals.assert_called_once_with(
+        sae_regex_pattern=mock_args.sae_regex_pattern,
+        sae_block_pattern=mock_args.sae_block_pattern,
+        eval_batch_size_prompts=mock_args.eval_batch_size_prompts,
+        n_eval_reconstruction_batches=mock_args.n_eval_reconstruction_batches,
+        n_eval_sparsity_variance_batches=mock_args.n_eval_sparsity_variance_batches,
+        datasets=mock_args.datasets,
+        ctx_lens=mock_args.ctx_lens,
+        output_dir=mock_args.output_dir,
+        verbose=mock_args.verbose,
+        dataset_trust_remote_code=mock_args.dataset_trust_remote_code,
+    )
+    assert result == [{"test": "result"}]
+
+
+@patch("sae_lens.evals.run_evals")
+@patch("sae_lens.evals.ActivationsStore")
+@patch("sae_lens.evals.HookedTransformer", MagicMock())
+@patch("sae_lens.evals.SAE")
+@patch("sae_lens.evals.get_saes_from_regex")
+def test_multiple_evals_default_datasets_match_cli_default(
+    mock_get_saes_from_regex: MagicMock,
+    mock_sae: MagicMock,
+    mock_activations_store: MagicMock,
+    mock_run_evals: MagicMock,
+    tmp_path: Path,
+):
+    mock_get_saes_from_regex.return_value = [("release1", "sae1", 0.8, 10)]
+    mock_sae.from_pretrained.return_value.cfg.metadata.model_from_pretrained_kwargs = {}
+    mock_run_evals.return_value = ({}, {})
+
+    multiple_evals(
+        sae_regex_pattern="release1",
+        sae_block_pattern="sae1",
+        n_eval_reconstruction_batches=1,
+        n_eval_sparsity_variance_batches=1,
+        output_dir=str(tmp_path),
+    )
+
+    evaluated_datasets = [
+        call.kwargs["dataset"]
+        for call in mock_activations_store.from_sae.call_args_list
+    ]
+    assert evaluated_datasets == process_args(["release1", "sae1"]).datasets
+
+
+def test_process_results(tmp_path: Path):
+    eval_results = [
+        {
+            "unique_id": "test-sae",
+            "eval_cfg": {"context_size": 64, "dataset": "test/dataset"},
+            "metrics": {"metric1": 0.5, "metric2": 0.7},
+            "sae_cfg": {"config1": "value1"},
+        }
+    ]
+    output_dir = tmp_path / "test_output"
+
+    process_results(eval_results, str(output_dir))  # type: ignore
+
+    # Check if individual JSON file is created
+    individual_json_path = output_dir / "test-sae_64_test_dataset.json"
+    assert individual_json_path.exists()
+    with open(individual_json_path) as f:
+        assert json.load(f) == eval_results[0]
+
+    # Check if combined JSON file is created
+    combined_json_path = output_dir / "all_eval_results.json"
+    assert combined_json_path.exists()
+    with open(combined_json_path) as f:
+        assert json.load(f) == eval_results
+
+    # Check if CSV file is created
+    csv_path = output_dir / "all_eval_results.csv"
+    assert csv_path.exists()
+
+
+def test_get_downstream_reconstruction_metrics_with_hf_model_gives_same_results_as_tlens_model(
+    gpt2_res_jb_l4_sae: SAE[Any], example_dataset: Dataset
+):
+    hf_model = load_model(
+        model_class_name="AutoModelForCausalLM",
+        model_name="gpt2",
+        device="cpu",
+    )
+    tlens_model = HookedTransformer.from_pretrained_no_processing("gpt2", device="cpu")
+
+    cfg = build_runner_cfg(hook_name="transformer.h.3")
+    gpt2_res_jb_l4_sae.cfg.metadata.hook_name = "transformer.h.3"
+    hf_store = ActivationsStore.from_config(
+        hf_model, cfg, override_dataset=example_dataset
+    )
+    hf_metrics = get_downstream_reconstruction_metrics(
+        sae=gpt2_res_jb_l4_sae,
+        model=hf_model,
+        activation_store=hf_store,
+        activation_scaler=ActivationScaler(),
+        compute_kl=True,
+        compute_ce_loss=True,
+        n_batches=1,
+        eval_batch_size_prompts=4,
+    )
+
+    cfg = build_runner_cfg(hook_name="blocks.4.hook_resid_pre")
+    gpt2_res_jb_l4_sae.cfg.metadata.hook_name = "blocks.4.hook_resid_pre"
+    tlens_store = ActivationsStore.from_config(
+        tlens_model, cfg, override_dataset=example_dataset
+    )
+    tlens_metrics = get_downstream_reconstruction_metrics(
+        sae=gpt2_res_jb_l4_sae,
+        model=tlens_model,
+        activation_store=tlens_store,
+        activation_scaler=ActivationScaler(),
+        compute_kl=True,
+        compute_ce_loss=True,
+        n_batches=1,
+        eval_batch_size_prompts=4,
+    )
+
+    for key in hf_metrics:
+        assert hf_metrics[key] == pytest.approx(tlens_metrics[key], abs=1e-3)
+
+
+def test_get_sparsity_and_variance_metrics_with_hf_model_gives_same_results_as_tlens_model(
+    gpt2_res_jb_l4_sae: StandardSAE,
+    example_dataset: Dataset,
+):
+    hf_model = load_model(
+        model_class_name="AutoModelForCausalLM",
+        model_name="gpt2",
+        device="cpu",
+    )
+    tlens_model = HookedTransformer.from_pretrained_no_processing("gpt2", device="cpu")
+
+    cfg = build_runner_cfg(hook_name="transformer.h.3")
+    gpt2_res_jb_l4_sae.cfg.metadata.hook_name = "transformer.h.3"
+    hf_store = ActivationsStore.from_config(
+        hf_model, cfg, override_dataset=example_dataset
+    )
+    hf_metrics, hf_feat_metrics = get_sparsity_and_variance_metrics(
+        sae=gpt2_res_jb_l4_sae,
+        model=hf_model,
+        activation_store=hf_store,
+        activation_scaler=ActivationScaler(),
+        n_batches=1,
+        compute_l2_norms=True,
+        compute_sparsity_metrics=True,
+        compute_variance_metrics=True,
+        compute_featurewise_density_statistics=True,
+        eval_batch_size_prompts=4,
+        model_kwargs={},
+    )
+
+    cfg = build_runner_cfg(hook_name="blocks.4.hook_resid_pre")
+    gpt2_res_jb_l4_sae.cfg.metadata.hook_name = "blocks.4.hook_resid_pre"
+    tlens_store = ActivationsStore.from_config(
+        tlens_model, cfg, override_dataset=example_dataset
+    )
+    tlens_metrics, tlens_feat_metrics = get_sparsity_and_variance_metrics(
+        sae=gpt2_res_jb_l4_sae,
+        model=tlens_model,
+        activation_store=tlens_store,
+        activation_scaler=ActivationScaler(),
+        n_batches=1,
+        compute_l2_norms=True,
+        compute_sparsity_metrics=True,
+        compute_variance_metrics=True,
+        compute_featurewise_density_statistics=True,
+        eval_batch_size_prompts=4,
+        model_kwargs={},
+    )
+
+    for key in hf_metrics:
+        assert hf_metrics[key] == pytest.approx(tlens_metrics[key], rel=1e-4)
+    for key in hf_feat_metrics:
+        assert _replace_nan(hf_feat_metrics[key]) == pytest.approx(
+            _replace_nan(tlens_feat_metrics[key]), rel=1e-4
+        )
+
+
+@patch("sae_lens.evals.get_pretrained_saes_directory")
+def test_all_loadable_saes(mock_get_pretrained_saes_directory: MagicMock):
+    mock_get_pretrained_saes_directory.return_value = {
+        "release1": PretrainedSAELookup(
+            release="release1",
+            repo_id="repo1",
+            model="model1",
+            conversion_func=None,
+            saes_map={"sae1": "path1", "sae2": "path2"},
+            expected_var_explained={"sae1": 0.9, "sae2": 0.85},
+            expected_l0={"sae1": 0.1, "sae2": 0.15},
+            neuronpedia_id={},
+            norm_scaling_factor={},
+            config_overrides=None,
+        ),
+        "release2": PretrainedSAELookup(
+            release="release2",
+            repo_id="repo2",
+            model="model2",
+            conversion_func=None,
+            saes_map={"sae3": "path3"},
+            expected_var_explained={"sae3": 0.8},
+            expected_l0={"sae3": 0.2},
+            neuronpedia_id={},
+            norm_scaling_factor={},
+            config_overrides=None,
+        ),
+    }
+
+    result = all_loadable_saes()
+
+    expected = [
+        ("release1", "sae1", 0.9, 0.1),
+        ("release1", "sae2", 0.85, 0.15),
+        ("release2", "sae3", 0.8, 0.2),
+    ]
+    assert result == expected
+
+
+mock_all_saes = [
+    ("release1", "sae1", 0.9, 0.1),
+    ("release1", "sae2", 0.85, 0.15),
+    ("release2", "sae3", 0.8, 0.2),
+    ("release2", "block1", 0.95, 0.05),
+]
+
+
+@patch("sae_lens.evals.all_loadable_saes")
+def test_get_saes_from_regex_no_match(mock_all_loadable_saes: MagicMock):
+    mock_all_loadable_saes.return_value = mock_all_saes
+
+    result = get_saes_from_regex("release1", "sae3")
+
+    assert not result
+
+
+@patch("sae_lens.evals.all_loadable_saes")
+def test_get_saes_from_regex_single_match(mock_all_loadable_saes: MagicMock):
+    mock_all_loadable_saes.return_value = mock_all_saes
+
+    result = get_saes_from_regex("release1", "sae1")
+
+    expected = [("release1", "sae1", 0.9, 0.1)]
+    assert result == expected
+
+
+@patch("sae_lens.evals.all_loadable_saes")
+def test_get_saes_from_regex_multiple_matches(mock_all_loadable_saes: MagicMock):
+    mock_all_loadable_saes.return_value = mock_all_saes
+
+    result = get_saes_from_regex("release.*", "sae.*")
+
+    expected = [
+        ("release1", "sae1", 0.9, 0.1),
+        ("release1", "sae2", 0.85, 0.15),
+        ("release2", "sae3", 0.8, 0.2),
+    ]
+    assert result == expected
+
+
+@pytest.mark.parametrize("compute_density", [False, True])
+def test_density_mask_is_only_allocated_when_requested(compute_density: bool):
+    hook_name = "blocks.0.hook_resid_pre"
+    tokens = torch.tensor([[0, 1, 2], [1, 2, 0]])
+    inputs = torch.tensor(
+        [[[1.0, 2.0], [2.0, 1.0], [3.0, 4.0]], [[4.0, 3.0], [1.0, 4.0], [2.0, 5.0]]]
+    )
+    features = torch.tensor(
+        [
+            [[9.0, 9.0, 9.0, 9.0], [1.0, -2.0, 0.0, 0.0], [0.0, 3.0, 4.0, 0.0]],
+            [[-1.0, 0.0, 0.0, 0.0], [2.0, -3.0, 0.0, 0.0], [9.0, 9.0, 9.0, 9.0]],
+        ]
+    )
+    sae = MagicMock()
+    sae.cfg.d_sae = features.shape[-1]
+    sae.cfg.metadata.hook_name = hook_name
+    sae.cfg.metadata.hook_head_index = None
+    sae.device = torch.device("cpu")
+    sae.encode.return_value = features
+    sae.decode.return_value = inputs * 0.5
+    model = MagicMock()
+    model.run_with_cache.return_value = (None, {hook_name: inputs})
+    store = MagicMock()
+    store.get_batch_tokens.return_value = tokens
+
+    with torch.profiler.profile(
+        activities=[torch.profiler.ProfilerActivity.CPU],
+        profile_memory=True,
+        record_shapes=True,
+    ) as profile:
+        metrics, feature_metrics = get_sparsity_and_variance_metrics(
+            sae=sae,
+            model=model,
+            activation_store=store,
+            activation_scaler=ActivationScaler(),
+            n_batches=1,
+            compute_l2_norms=True,
+            compute_sparsity_metrics=True,
+            compute_variance_metrics=True,
+            compute_featurewise_density_statistics=compute_density,
+            eval_batch_size_prompts=2,
+            model_kwargs={},
+            ignore_tokens=[0],
+        )
+
+    assert metrics["l0"] == pytest.approx(1.75)
+    assert metrics["l1"] == pytest.approx(4.0)
+    assert metrics["l2_ratio"] == pytest.approx(0.5)
+    assert metrics["mse"] == pytest.approx(4.5)
+    if compute_density:
+        assert feature_metrics["feature_density"] == pytest.approx(
+            [0.75, 0.75, 0.25, 0]
+        )
+        assert feature_metrics["consistent_activation_heuristic"] == pytest.approx(
+            [1.5, 1.5, 1.0, float("nan")], nan_ok=True
+        )
+    else:
+        assert not any(
+            event.key == "aten::mul"
+            and event.input_shapes[0] == list(features.shape)
+            and event.cpu_memory_usage > 0
+            for event in profile.key_averages(group_by_input_shape=True)
+        )
+
+
+@pytest.mark.parametrize("scaling_factor", [None, 3.0])
+def test_get_sparsity_and_variance_metrics_identity_sae_perfect_reconstruction(
+    model: HookedTransformer,
+    example_dataset: Dataset,
+    scaling_factor: float | None,
+):
+    """Test that an identity SAE (d_in = d_sae, W_enc = W_dec = Identity, zero biases) gets perfect variance explained."""
+    # Create a special configuration for an identity SAE
+    d_in = 64  # Choose a small dimension for test efficiency
+    identity_cfg = build_runner_cfg(
+        d_in=d_in,
+        d_sae=2 * d_in,  # 2 x d_in, to do both pos and neg identity matrix
+        hook_name="blocks.1.hook_resid_pre",
+    )
+
+    # Create an SAE and manually set weights to identity matrices
+    training_sae = StandardTrainingSAE.from_dict(
+        identity_cfg.get_training_sae_cfg_dict()
+    )
+    identity_sae = StandardSAE.from_dict(training_sae.cfg.get_inference_sae_cfg_dict())
+    with torch.no_grad():
+        # Set encoder and decoder weights to identity matrices
+        identity_sae.W_dec.data = torch.cat([torch.eye(d_in), -1 * torch.eye(d_in)])
+        identity_sae.W_enc.data = identity_sae.W_dec.T.clone()
+        # Set biases to zero
+        identity_sae.b_enc.data = torch.zeros_like(identity_sae.b_enc)
+        identity_sae.b_dec.data = torch.zeros_like(identity_sae.b_dec)
+
+    # Create an activation store
+    activation_store = ActivationsStore.from_config(
+        model, identity_cfg, override_dataset=example_dataset
+    )
+
+    # Get metrics
+    metrics, _ = get_sparsity_and_variance_metrics(
+        sae=identity_sae,
+        model=model,
+        activation_store=activation_store,
+        activation_scaler=ActivationScaler(scaling_factor),
+        n_batches=3,
+        compute_l2_norms=True,
+        compute_sparsity_metrics=True,
+        compute_variance_metrics=True,
+        compute_featurewise_density_statistics=True,
+        eval_batch_size_prompts=4,
+        model_kwargs={},
+    )
+
+    # An identity SAE should perfectly reconstruct the input,
+    # so variance explained should be 1.0 (or very close to it)
+    assert metrics["explained_variance"] == pytest.approx(1.0, abs=1e-5)
+    assert metrics["explained_variance_legacy"] == pytest.approx(1.0, abs=1e-5)
+
+    # Also check that L0 is exactly d_in (all features active)
+    assert metrics["l0"] == pytest.approx(d_in, abs=1e-5)
+
+    # MSE loss should be very close to 0
+    assert metrics["mse"] == pytest.approx(0.0, abs=1e-5)
+
+
+def test_get_sparsity_and_variance_metrics_mse_matches_mean_squared_reconstruction_error(
+    model: HookedTransformer,
+    example_dataset: Dataset,
+):
+    d_in = 64
+    hook_name = "blocks.1.hook_resid_pre"
+    cfg = build_runner_cfg(d_in=d_in, d_sae=2 * d_in, hook_name=hook_name)
+
+    training_sae = StandardTrainingSAE.from_dict(cfg.get_training_sae_cfg_dict())
+    sae = StandardSAE.from_dict(training_sae.cfg.get_inference_sae_cfg_dict())
+    random_params(sae)
+
+    eval_batch_size_prompts = 4
+    activation_store = ActivationsStore.from_config(
+        model, cfg, override_dataset=example_dataset
+    )
+    metrics, _ = get_sparsity_and_variance_metrics(
+        sae=sae,
+        model=model,
+        activation_store=activation_store,
+        activation_scaler=ActivationScaler(None),
+        n_batches=1,
+        compute_l2_norms=False,
+        compute_sparsity_metrics=False,
+        compute_variance_metrics=True,
+        compute_featurewise_density_statistics=True,
+        eval_batch_size_prompts=eval_batch_size_prompts,
+        model_kwargs={},
+    )
+
+    # Recompute the expected MSE by hand on the same batch of tokens: mean over
+    # tokens of ||x - x_hat||^2, matching the training MSE convention.
+    fresh_store = ActivationsStore.from_config(
+        model, cfg, override_dataset=example_dataset
+    )
+    batch_tokens = fresh_store.get_batch_tokens(eval_batch_size_prompts)
+    _, cache = model.run_with_cache(
+        batch_tokens, prepend_bos=False, names_filter=[hook_name]
+    )
+    acts = cache[hook_name].flatten(0, 1)
+    sae_out = sae.decode(sae.encode(acts))
+    expected_mse = (acts - sae_out).pow(2).sum(dim=-1).mean().item()
+
+    assert metrics["mse"] == pytest.approx(expected_mse, rel=1e-4)
+
+
+def test_get_sparsity_and_variance_metrics_mse_is_invariant_to_batch_size(
+    model: HookedTransformer,
+    example_dataset: Dataset,
+):
+    d_in = 64
+    hook_name = "blocks.1.hook_resid_pre"
+    cfg = build_runner_cfg(d_in=d_in, d_sae=2 * d_in, hook_name=hook_name)
+
+    training_sae = StandardTrainingSAE.from_dict(cfg.get_training_sae_cfg_dict())
+    sae = StandardSAE.from_dict(training_sae.cfg.get_inference_sae_cfg_dict())
+    random_params(sae)
+
+    eval_kwargs: dict[str, Any] = dict(
+        sae=sae,
+        model=model,
+        activation_scaler=ActivationScaler(None),
+        compute_l2_norms=False,
+        compute_sparsity_metrics=False,
+        compute_variance_metrics=True,
+        compute_featurewise_density_statistics=True,
+        model_kwargs={},
+    )
+
+    # Evaluate the same 4 prompts as one batch of 4 and as two batches of 2.
+    store_one_batch = ActivationsStore.from_config(
+        model, cfg, override_dataset=example_dataset
+    )
+    metrics_one_batch, _ = get_sparsity_and_variance_metrics(
+        activation_store=store_one_batch,
+        n_batches=1,
+        eval_batch_size_prompts=4,
+        **eval_kwargs,
+    )
+
+    store_two_batches = ActivationsStore.from_config(
+        model, cfg, override_dataset=example_dataset
+    )
+    metrics_two_batches, _ = get_sparsity_and_variance_metrics(
+        activation_store=store_two_batches,
+        n_batches=2,
+        eval_batch_size_prompts=2,
+        **eval_kwargs,
+    )
+
+    assert metrics_two_batches["mse"] == pytest.approx(
+        metrics_one_batch["mse"], rel=1e-4
+    )
+    assert metrics_two_batches["explained_variance"] == pytest.approx(
+        metrics_one_batch["explained_variance"], rel=1e-4
+    )
+
+
+def test_explained_variance_invariant_to_activation_shift(
+    model: HookedTransformer,
+    example_dataset: Dataset,
+):
+    d_in = 64
+    hook_name = "blocks.1.hook_resid_pre"
+    cfg = build_runner_cfg(d_in=d_in, d_sae=2 * d_in, hook_name=hook_name)
+
+    training_sae = StandardTrainingSAE.from_dict(cfg.get_training_sae_cfg_dict())
+    sae = StandardSAE.from_dict(training_sae.cfg.get_inference_sae_cfg_dict())
+    random_params(sae)
+    # The shift invariance requires b_dec to be subtracted from the input during
+    # encoding so that the shift cancels: encode(x+c) with b_dec+c == encode(x) with b_dec.
+    sae.cfg.apply_b_dec_to_input = True
+
+    eval_kwargs: dict[str, Any] = dict(
+        sae=sae,
+        model=model,
+        activation_scaler=ActivationScaler(None),
+        n_batches=3,
+        compute_l2_norms=False,
+        compute_sparsity_metrics=False,
+        compute_variance_metrics=True,
+        compute_featurewise_density_statistics=True,
+        eval_batch_size_prompts=4,
+        model_kwargs={},
+    )
+
+    activation_store = ActivationsStore.from_config(
+        model, cfg, override_dataset=example_dataset
+    )
+    metrics_original, _ = get_sparsity_and_variance_metrics(
+        activation_store=activation_store, **eval_kwargs
+    )
+
+    # Shifting activations by a constant and adjusting b_dec by the same amount
+    # should not change explained_variance: the shift cancels in encoding
+    # (so features are identical) and both input and output shift equally.
+    shift = torch.full((d_in,), 5.0)
+    sae.b_dec.data += shift
+    model.add_hook(hook_name, lambda tensor, **_: tensor + shift, is_permanent=True)
+    try:
+        activation_store_shifted = ActivationsStore.from_config(
+            model, cfg, override_dataset=example_dataset
+        )
+        metrics_shifted, _ = get_sparsity_and_variance_metrics(
+            activation_store=activation_store_shifted, **eval_kwargs
+        )
+    finally:
+        model.reset_hooks(including_permanent=True)
+
+    # Tolerance is limited by float32 catastrophic cancellation in E[||x||^2] - ||E[x]||^2
+    assert metrics_shifted["explained_variance"] == pytest.approx(
+        metrics_original["explained_variance"], rel=1e-3
+    )
+
+
+def _explained_variance(
+    input_batches: list[torch.Tensor], output_batches: list[torch.Tensor]
+) -> float:
+    calc = ExplainedVarianceCalculator()
+    for sae_input, sae_output in zip(input_batches, output_batches):
+        calc.add_batch(sae_output=sae_output, hidden_acts=sae_input)
+    return calc.compute()
+
+
+def test_explained_variance_matches_hand_computed_example():
+    # mu = [1, 2]
+    # total_variance    = E[sum_d (x_d - mu_d)^2] = ((1 + 4) + (1 + 4)) / 2 = 5
+    # residual_variance = E[sum_d (x_d - x_hat_d)^2] = (1 + 1) / 2 = 1
+    # explained_variance = 1 - 1/5 = 0.8
+    x = torch.tensor([[2.0, 0.0], [0.0, 4.0]])
+    x_hat = torch.tensor([[2.0, 1.0], [0.0, 3.0]])
+
+    assert _explained_variance([x], [x_hat]) == pytest.approx(0.8)
+
+
+def test_explained_variance_perfect_reconstruction_returns_one():
+    x = torch.randn(1000, 8) + 5.0
+
+    assert _explained_variance([x], [x]) == pytest.approx(1.0)
+
+
+def test_explained_variance_predicting_the_mean_returns_zero():
+    # Regression canary for GH #659: the buggy formula measured variance
+    # relative to zero, so predicting the mean reported EV near 1 for
+    # activations with a large mean component instead of 0.
+    x = torch.randn(10000, 8, dtype=torch.float64) + 5.0
+    x_hat = x.mean(dim=0, keepdim=True).expand_as(x)
+
+    assert _explained_variance([x], [x_hat]) == pytest.approx(0.0, abs=1e-9)
+
+
+def test_explained_variance_single_batch_matches_formula():
+    d_model = 8
+    n_samples = 10000
+    x = torch.randn(n_samples, d_model) + 5.0
+    x_hat = x + torch.randn(n_samples, d_model) * 0.3
+
+    ev = _explained_variance([x], [x_hat])
+
+    total_var = x.var(dim=0, correction=0).sum()
+    residual_var = (x - x_hat).pow(2).sum(dim=-1).mean()
+    expected_ev = (1 - residual_var / total_var).item()
+
+    assert ev == pytest.approx(expected_ev, rel=1e-5)
+
+
+def test_explained_variance_batched_matches_unbatched_with_unequal_batch_sizes():
+    d_model = 8
+    x = torch.randn(3000, d_model, dtype=torch.float64) + 5.0
+    x_hat = x + torch.randn(3000, d_model, dtype=torch.float64) * 0.3
+
+    ev_single = _explained_variance([x], [x_hat])
+
+    # Unequal batch sizes: every sample must be weighted equally, so the split
+    # must not change the result.
+    sizes = [1500, 1000, 500]
+    ev_batched = _explained_variance(list(x.split(sizes)), list(x_hat.split(sizes)))
+
+    assert ev_batched == pytest.approx(ev_single, rel=1e-12)
+
+
+@pytest.mark.parametrize(
+    "dtype", [torch.float16, torch.bfloat16, torch.float32, torch.float64]
+)
+def test_explained_variance_low_precision_reductions_are_batch_invariant(
+    dtype: torch.dtype,
+):
+    # Each coordinate has variance 1 and squared reconstruction error 0.25.
+    # The full squared-norm sum exceeds float16's range even though every
+    # activation is only +/-1. Casting after the reduction is too late.
+    x = torch.tensor([-1, 1], dtype=dtype).repeat(128)[:, None].repeat(1, 768)
+    x_hat = x + 0.5
+
+    for batch_size in [16, 64, 128, 256]:
+        assert _explained_variance(
+            list(x.split(batch_size)), list(x_hat.split(batch_size))
+        ) == pytest.approx(0.75)
+
+
+@pytest.mark.parametrize(
+    "dtype", [torch.float16, torch.bfloat16, torch.float32, torch.float64]
+)
+def test_explained_variance_low_precision_with_nonzero_mean(dtype: torch.dtype):
+    # These inputs and errors are exactly representable even in bfloat16.
+    # Squaring them in bfloat16 loses the unit variance around the mean;
+    # float16 sums overflow for larger batches.
+    x = torch.tensor([[99, 101], [101, 99]], dtype=dtype).repeat(512, 1)
+    x_hat = x + torch.tensor([0.5, -0.5], dtype=dtype)
+
+    for batch_size in [1, 16, 128, 1024]:
+        assert _explained_variance(
+            list(x.split(batch_size)), list(x_hat.split(batch_size))
+        ) == pytest.approx(0.75)
+
+
+def test_explained_variance_invariant_to_input_bias():
+    # Use float64 to avoid catastrophic cancellation with large biases
+    d_model = 8
+    n_samples = 10000
+    x = torch.randn(n_samples, d_model, dtype=torch.float64)
+    x_hat = x + torch.randn(n_samples, d_model, dtype=torch.float64) * 0.3
+
+    ev_original = _explained_variance([x], [x_hat])
+
+    bias = torch.full((d_model,), 100.0, dtype=torch.float64)
+    ev_biased = _explained_variance([x + bias], [x_hat + bias])
+
+    assert ev_biased == pytest.approx(ev_original, rel=1e-10)
+
+
+def test_explained_variance_zero_total_variance():
+    d_model = 4
+    n_samples = 100
+    x = torch.full((n_samples, d_model), 5.0)
+
+    # Constant input, perfect reconstruction -> 1.0
+    assert _explained_variance([x], [x]) == 1.0
+
+    # Constant input, nonzero residual -> 0.0
+    x_hat = x + 0.5
+    assert _explained_variance([x], [x_hat]) == 0.0
+
+
+def test_explained_variance_with_no_samples_returns_zero():
+    assert ExplainedVarianceCalculator().compute() == 0.0
+
+
+def test_explained_variance_with_known_noise_level():
+    # x ~ N(0, 1), x_hat = x + N(0, 0.5^2) -> EV = 1 - 0.25/1 = 0.75
+    num_samples = 100000
+    x = torch.randn(num_samples, 1)
+    x_hat = x + 0.5 * torch.randn(num_samples, 1)
+
+    assert _explained_variance([x], [x_hat]) == pytest.approx(0.75, abs=0.02)
+
+
+def test_process_args():
+    args = [
+        "gpt2-small-res_scefr-ajt",
+        "blocks.10.*",
+        "--batch_size_prompts",
+        "16",
+        "--n_eval_sparsity_variance_batches",
+        "200",
+        "--n_eval_reconstruction_batches",
+        "20",
+        "--output_dir",
+        "demo_eval_results",
+        "--verbose",
+    ]
+    opts = process_args(args)
+    assert opts.sae_regex_pattern == "gpt2-small-res_scefr-ajt"
+    assert opts.sae_block_pattern == "blocks.10.*"
+    assert opts.batch_size_prompts == 16
+    assert opts.n_eval_sparsity_variance_batches == 200
+    assert opts.n_eval_reconstruction_batches == 20
+    assert opts.output_dir == "demo_eval_results"
+    assert opts.verbose is True
+
+
+def test_run_evals_cli(tmp_path: Path):
+    args = [
+        "gpt2-small-res-jb",
+        "blocks.10.*",
+        "--batch_size_prompts",
+        "1",
+        "--n_eval_sparsity_variance_batches",
+        "2",
+        "--output_dir",
+        str(tmp_path),
+        "--datasets",
+        NEEL_NANDA_C4_10K_DATASET,
+    ]
+    run_evals_cli(args)
+
+    assert (tmp_path / "all_eval_results.json").exists()
+    assert (tmp_path / "all_eval_results.csv").exists()
+    assert (
+        tmp_path
+        / "gpt2-small-res-jb-blocks.10.hook_resid_pre_128_NeelNanda_c4-10k.json"
+    ).exists()
+
+    with open(tmp_path / "all_eval_results.json") as f:
+        eval_results = json.load(f)
+    assert len(eval_results) == 1
+    assert eval_results[0]["unique_id"] == "gpt2-small-res-jb-blocks.10.hook_resid_pre"
+    assert eval_results[0]["eval_cfg"]["context_size"] == 128
+    assert eval_results[0]["eval_cfg"]["dataset"] == NEEL_NANDA_C4_10K_DATASET
+    for metric in [
+        "ce_loss_score",
+        "ce_loss_with_ablation",
+        "ce_loss_with_sae",
+        "ce_loss_without_sae",
+    ]:
+        assert (
+            eval_results[0]["metrics"]["model_performance_preservation"][metric] > 0.1
+        )
+
+
+def _original_kl(original_logits: torch.Tensor, new_logits: torch.Tensor):
+    original_probs = torch.nn.functional.softmax(original_logits, dim=-1)
+    log_original_probs = torch.log(original_probs)
+    new_probs = torch.nn.functional.softmax(new_logits, dim=-1)
+    log_new_probs = torch.log(new_probs)
+    kl_div = original_probs * (log_original_probs - log_new_probs)
+    return kl_div.sum(dim=-1)
+
+
+def test_kl_matches_old_implementation():
+    test_original_logits = torch.randn(2, 10, 30)
+    test_new_logits = torch.randn(2, 10, 30)
+    assert _original_kl(test_original_logits, test_new_logits) == pytest.approx(
+        _kl(test_original_logits, test_new_logits)
+    )
+
+
+def test_get_sparsity_and_variance_metrics_works_with_batchtopk_saes(
+    ts_model: HookedTransformer,
+):
+    example_dataset = Dataset.from_list(
+        [
+            {"text": "hello world1"},
+            {"text": "hello world2"},
+            {"text": "hello world3"},
+        ]
+        * 20
+    )
+    runner_cfg = build_batchtopk_runner_cfg(
+        k=2,
+        d_in=64,
+        d_sae=10,
+        rescale_acts_by_decoder_norm=True,
+    )
+    sae = BatchTopKTrainingSAE(runner_cfg.sae)
+    random_params(sae)
+    sae.b_enc.data = torch.randn(10) + 10.0
+
+    store = ActivationsStore.from_config(
+        ts_model, runner_cfg, override_dataset=example_dataset
+    )
+
+    # Get metrics
+    sparsity, _ = get_sparsity_and_variance_metrics(
+        sae=sae,
+        model=ts_model,
+        activation_store=store,
+        activation_scaler=ActivationScaler(),
+        n_batches=2,
+        compute_l2_norms=False,
+        compute_sparsity_metrics=True,
+        compute_variance_metrics=False,
+        compute_featurewise_density_statistics=False,
+        eval_batch_size_prompts=2,
+        model_kwargs={"device": "cpu"},
+    )
+
+    # Check that l0 is close to k
+    assert sparsity["l0"] == pytest.approx(2.0)

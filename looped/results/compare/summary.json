@@ -1,0 +1,102 @@
+{
+ "ouro_gsm8k_L4_colsum_conc": {
+  "range_within_loop(last loop)": 0.34267210960388184,
+  "llama_range": 0.3688260614871979,
+  "pearson_vs_llama_per_loop": [
+   0.531,
+   0.336,
+   0.299,
+   0.305
+  ]
+ },
+ "ouro_gsm8k_L4_sink_rate": {
+  "range_within_loop(last loop)": 0.338134765625,
+  "llama_range": 0.189453125,
+  "pearson_vs_llama_per_loop": [
+   -0.025,
+   0.405,
+   0.314,
+   0.278
+  ]
+ },
+ "ouro_gsm8k_L4_mixing_norm": {
+  "range_within_loop(last loop)": 0.37692734599113464,
+  "llama_range": 0.32902631163597107,
+  "pearson_vs_llama_per_loop": [
+   0.694,
+   0.569,
+   0.454,
+   0.457
+  ]
+ },
+ "ouro_gsm8k_L4_resid_entropy": {
+  "range_within_loop(last loop)": 0.42308399081230164,
+  "llama_range": 0.26926657743752,
+  "pearson_vs_llama_per_loop": [
+   0.363,
+   0.532,
+   0.483,
+   0.745
+  ]
+ },
+ "huginn_gsm8k_L8_colsum_conc": {
+  "range_within_loop(last loop)": 0.18115657567977905,
+  "llama_range": 0.3688260614871979,
+  "pearson_vs_llama_per_loop": null
+ },
+ "huginn_gsm8k_L8_sink_rate": {
+  "range_within_loop(last loop)": 0.23998552560806274,
+  "llama_range": 0.189453125,
+  "pearson_vs_llama_per_loop": null
+ },
+ "huginn_gsm8k_L8_mixing_norm": {
+  "range_within_loop(last loop)": 0.10147154331207275,
+  "llama_range": 0.32902631163597107,
+  "pearson_vs_llama_per_loop": null
+ },
+ "huginn_gsm8k_L8_resid_entropy": {
+  "range_within_loop(last loop)": 0.02036464214324951,
+  "llama_range": 0.26926657743752,
+  "pearson_vs_llama_per_loop": null
+ },
+ "huginn_gsm8k_L32_colsum_conc": {
+  "range_within_loop(last loop)": 0.18074607849121094,
+  "llama_range": 0.3688260614871979,
+  "pearson_vs_llama_per_loop": null
+ },
+ "huginn_gsm8k_L32_sink_rate": {
+  "range_within_loop(last loop)": 0.2433946132659912,
+  "llama_range": 0.189453125,
+  "pearson_vs_llama_per_loop": null
+ },
+ "huginn_gsm8k_L32_mixing_norm": {
+  "range_within_loop(last loop)": 0.10542041063308716,
+  "llama_range": 0.32902631163597107,
+  "pearson_vs_llama_per_loop": null
+ },
+ "huginn_gsm8k_L32_resid_entropy": {
+  "range_within_loop(last loop)": 0.02008110284805298,
+  "llama_range": 0.26926657743752,
+  "pearson_vs_llama_per_loop": null
+ },
+ "fig9_Ouro (layer output, unnormed residual)": {
+  "min": 1.9770267009735107,
+  "max": 32.46852111816406,
+  "max/min": 16.42290496826172
+ },
+ "fig9_Huginn layer output (after norm_4)": {
+  "min": 70.16329956054688,
+  "max": 76.36793518066406,
+  "max/min": 1.0884313583374023
+ },
+ "fig9_Huginn before norm_4": {
+  "min": 66.06355285644531,
+  "max": 78.3580551147461,
+  "max/min": 1.1861010789871216
+ },
+ "fig9_llama": {
+  "min": 1.6240702867507935,
+  "max": 27.04612159729004,
+  "max/min": 16.65329500695443
+ }
+}

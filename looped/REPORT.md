@@ -27,7 +27,7 @@ numbers `looped/results/{ouro,huginn,compare}/summary.json`, raw per-example dat
   conclusions (`H:*_gsm8k_L32_seed1000.png`).
 - "Residual after layer l" = output of recurrent-block layer l (Ouro: before end-of-loop norm; Huginn: after
   norm_4, with the pre-norm value also stored). Metrics averaged over tokens, heads, examples.
-- Feedforward reference: Llama-3.2-1B (`looped/results/llama/llama_baseline.json`).
+- Feedforward reference: Llama-3.2-1B (`code/baseline.py` -> `looped/results/llama/llama_baseline.json`).
 - Ouro bf16 vs fp32: all 8-loop attention metrics agree to <= 0.002 and the 128-loop dynamics are the same
   (`O:*_gsm8k_L128_fp32.png`), so nothing below is a precision artifact.
 

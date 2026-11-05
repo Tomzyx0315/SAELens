@@ -4,6 +4,39 @@ Goal: train one SAE shared across loops on Huginn's loop state, then use per-fea
 ask whether loops reuse the same features (and which features appear only early / only after convergence).
 Data provenance: `DATA.md`. Reproduction of the looped-model paper: `REPORT.md`.
 
+## Feasibility check before training (no SAE)
+
+`code/support_check.py`, results `results/{huginn,ouro}/support_check_gsm8k_*.{json,npz}`,
+figure `results/huginn/figs/support_check_gsm8k_L48.png`. Question: across loops, does the *set* of active units
+change, or do the same units just get stronger? If the active set never changed, an SAE would have little to say
+about loop dynamics. Basis: the MLP hidden activation of each core layer (Huginn 17920-d, Ouro 5632-d); per token the
+top-k units by |h| (k = 32 and 128, same conclusions); Jaccard overlap with the reference loop (train depth: Huginn 32,
+Ouro 4). 256 GSM8k questions (Huginn 14.5k tokens), position 0 excluded. Baselines at the reference loop: adjacent
+tokens 0.07-0.09, distant tokens 0.015-0.018.
+
+Huginn, k = 128, mean over the 4 core layers:
+
+| loop | 1 | 2 | 4 | 8 | 16 | 32 | 48 |
+|---|---|---|---|---|---|---|---|
+| Jaccard with loop 32 | 0.06 | 0.11 | 0.25 | 0.52 | 0.82 | 1 | 0.89 |
+| same loop, other init seed | 0.27 | 0.41 | 0.59 | 0.76 | 0.91 | 0.96 | 0.90 |
+| population unit-usage overlap with loop 32 | 0.53 | 0.62 | 0.83 | 0.95 | 0.98 | 1 | 0.99 |
+| units used at loop 32 but (almost) unused here | ~1100 | ~700 | ~28 | 0 | 0 | – | 0 |
+
+- A token's active set at loop 1 overlaps the converged one less than two adjacent tokens do; it converges
+  monotonically by loops 16-24. So the active set is replaced, not just re-weighted.
+- Units entering / leaving the population are confined to loops 1-4; afterwards only per-token combinations change.
+- Early-loop differences are partly init noise (seed-vs-seed Jaccard only 0.27 at loop 1), but the gap to the
+  converged state (0.06) is well beyond it.
+- The neuron basis is dense (top-128 units carry only 8.6% of |h|), so this is a proxy; it motivated learning a
+  sparse basis (the SAE).
+- Ouro for contrast: at loop 8 (2x its train depth) the overlap with loop 4 is only 0.44-0.53, below the successive
+  loop-to-loop overlap (0.72-0.81): the support drifts as soon as Ouro leaves its train depth. One reason to prefer
+  Huginn for the SAE study.
+
+Design consequences taken over into the SAE: loops 1-32 with emphasis on 1-8 (log-spaced loops), two init seeds per
+document to separate init noise from computation, and the loop state as the site.
+
 ## Pipeline (no activations on disk)
 
 | piece | file | what it does |
@@ -41,7 +74,7 @@ same budget.
 
 `huginn_loopstate_bt32k_k32_v1`: BatchTopK, d_sae 32768, k 32, lr 3e-4 constant, no decay; target 1e9 vectors.
 Stopped after 3.0e8 vectors: MSE plateaued from ~1e4 steps on. Snapshot at 2.8e8 vectors (`sae_snapshot.py`,
-24 held-out docs):
+24 held-out docs; numbers in `results/sae/v1_snapshot_280M.json`):
 
 - FVU ~0.47 at every loop (0.45-0.49).
 - Feature usage overlap with loop 32: 0.21 (loop 1), 0.41 (2), 0.61 (3), 0.75 (4), 0.88 (6), 0.92 (8), >= 0.96 (12+).
@@ -54,7 +87,8 @@ Stopped after 3.0e8 vectors: MSE plateaued from ~1e4 steps on. Snapshot at 2.8e8
 
 ## Config sweep (100M vectors per config, same data stream, held-out cache)
 
-Round 1 (`/data_fs/zhangyuxuan/looped/sae/sweep_r1/`), d_sae 32768, decay = linear decay to 0 over the last 20% of steps:
+Round 1 (full eval results incl. per-loop FVU: `results/sae/sweep_r1_results.json`; checkpoints deleted),
+d_sae 32768, decay = linear decay to 0 over the last 20% of steps:
 
 | config | FVU @20M | 40M | 60M | 80M | 100M | dead (eval) |
 |---|---|---|---|---|---|---|

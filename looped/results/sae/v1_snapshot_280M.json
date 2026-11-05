@@ -1,0 +1,110 @@
+{
+ "1": {
+  "n": 11862,
+  "fvu": 0.4599069665215528,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 9089,
+  "usage_overlap_with_loop32": 0.21333855390548706,
+  "usage_overlap_seed0_vs_seed1": 0.9510632753372192,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 479,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 3487
+ },
+ "2": {
+  "n": 11895,
+  "fvu": 0.44949790563439057,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 12938,
+  "usage_overlap_with_loop32": 0.41049858927726746,
+  "usage_overlap_seed0_vs_seed1": 0.9391414523124695,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 495,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 1430
+ },
+ "3": {
+  "n": 11890,
+  "fvu": 0.47271026322933973,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 14967,
+  "usage_overlap_with_loop32": 0.6074164509773254,
+  "usage_overlap_seed0_vs_seed1": 0.9385063052177429,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 349,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 432
+ },
+ "4": {
+  "n": 11881,
+  "fvu": 0.4847100749237134,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 15848,
+  "usage_overlap_with_loop32": 0.7470564842224121,
+  "usage_overlap_seed0_vs_seed1": 0.9423662424087524,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 178,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 101
+ },
+ "6": {
+  "n": 11842,
+  "fvu": 0.48298362113127813,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 16272,
+  "usage_overlap_with_loop32": 0.8809118866920471,
+  "usage_overlap_seed0_vs_seed1": 0.9513776898384094,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 22,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 12
+ },
+ "8": {
+  "n": 11893,
+  "fvu": 0.4772401819570068,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 16345,
+  "usage_overlap_with_loop32": 0.9229061603546143,
+  "usage_overlap_seed0_vs_seed1": 0.9615050554275513,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 4,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 1
+ },
+ "12": {
+  "n": 11864,
+  "fvu": 0.47295251245878966,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 16357,
+  "usage_overlap_with_loop32": 0.9560114145278931,
+  "usage_overlap_seed0_vs_seed1": 0.96992027759552,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 0,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 0
+ },
+ "16": {
+  "n": 11884,
+  "fvu": 0.4720523839497319,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 16383,
+  "usage_overlap_with_loop32": 0.9695413112640381,
+  "usage_overlap_seed0_vs_seed1": 0.9754430055618286,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 0,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 0
+ },
+ "24": {
+  "n": 11881,
+  "fvu": 0.47200830898929486,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 16388,
+  "usage_overlap_with_loop32": 0.9803321361541748,
+  "usage_overlap_seed0_vs_seed1": 0.9795354604721069,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 0,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 0
+ },
+ "32": {
+  "n": 11892,
+  "fvu": 0.4720706431430065,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 16393,
+  "usage_overlap_with_loop32": 1.0,
+  "usage_overlap_seed0_vs_seed1": 0.9796449542045593,
+  "n_feat_only_here(>1e-3, <1e-4 at L32)": 0,
+  "n_feat_only_L32(>1e-3, <1e-4 here)": 0
+ },
+ "all": {
+  "n": 118784,
+  "fvu": 0.4655581678699522,
+  "l0": 32.0,
+  "alive_features(freq>1e-4)": 16997
+ },
+ "dead_overall(freq<1e-6)": 12474,
+ "d_sae": 32768
+}

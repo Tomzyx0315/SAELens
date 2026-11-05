@@ -110,10 +110,12 @@ def main():
     p.add_argument("--out", required=True)
     p.add_argument("--total", type=int, default=1_000_000_000, help="total activation vectors to train on")
     p.add_argument("--d_sae", type=int, default=32768)
-    p.add_argument("--k", type=float, default=32)
+    p.add_argument("--k", type=float, default=128)
     p.add_argument("--batch", type=int, default=4096)
     p.add_argument("--context_size", type=int, default=512)
-    p.add_argument("--lr", type=float, default=3e-4)
+    p.add_argument("--lr", type=float, default=1e-4)
+    p.add_argument("--decay_frac", type=float, default=0.2,
+                   help="fraction of steps with linear lr decay to 0 at the end (sweep: worth ~0.03-0.04 FVU)")
     p.add_argument("--device", default="cuda")
     p.add_argument("--producer_gpus", default="", help="comma-separated GPU ids running Huginn; empty = in-process")
     p.add_argument("--buffer", type=int, default=1_000_000, help="shuffle-buffer size in activation vectors")
@@ -131,10 +133,10 @@ def main():
     gpus = tuple(int(g) for g in args.producer_gpus.split(",") if g != "")  # -1 = CPU producer (smoke only)
     json.dump({**vars(args), "d_in": D_IN, "loops": list(LOOPS)}, open(out / "run_args.json", "w"), indent=1)
 
-    def make_provider(shuffle_seed, max_rows):
+    def make_provider(shuffle_seed, max_rows, split):
         return HuginnActivationProvider(
             train_batch_size=args.batch, context_size=args.context_size, n_seeds=args.n_seeds, device=args.device,
-            producer_gpus=gpus, buffer_vectors=args.buffer, max_rows=max_rows, shuffle_seed=shuffle_seed,
+            producer_gpus=gpus, buffer_vectors=args.buffer, max_rows=max_rows, shuffle_seed=shuffle_seed, split=split,
         )
 
     # resume: load SAE weights + trainer state from the latest `resume_*` checkpoint if present
@@ -150,19 +152,20 @@ def main():
             d_in=D_IN, d_sae=args.d_sae, k=args.k, device=args.device, dtype="float32",
             normalize_activations="expected_average_only_in",  # single-scalar norm; folded into weights at the end
         ))
-    provider = make_provider(0, args.max_rows)
+    provider = make_provider(0, args.max_rows, "train")
     trainer_cfg = SAETrainerConfig(
         total_training_samples=args.total,
         train_batch_size_samples=args.batch,
         lr=args.lr,
         lr_end=args.lr / 10,  # SAETrainerConfig has no post-init default when built directly
-        lr_scheduler_name="constant",
-        lr_warm_up_steps=max(args.total // args.batch // 20, 1),
+        lr_scheduler_name="constant",  # constant + linear decay to 0 over the last decay_frac of steps (sweep-chosen)
+        lr_warm_up_steps=0,  # SAELens default; the sweep used no warmup
+        lr_decay_steps=int(args.decay_frac * (args.total // args.batch)),
         device=args.device,
         n_checkpoints=0,
         checkpoint_path=str(out),
         save_final_checkpoint=True,
-        dead_feature_window=2000,
+        dead_feature_window=1000,  # SAELens defaults, same as the sweep
         feature_sampling_window=2000,
         logger=LoggingConfig(log_to_wandb=args.wandb, wandb_project="looped-sae"),
         n_batches_for_norm_estimate=args.norm_batches,
@@ -178,8 +181,8 @@ def main():
     # inference export: BatchTopK -> JumpReLU with the learned threshold; load with sae_lens.SAE.load_from_disk
     sae.save_inference_model(str(out / "inference"))
 
-    # held-out tagging stream (different shuffle seed -> different documents first)
-    tag_provider = make_provider(999, None if args.max_rows is None else max(args.max_rows // 4, 8))
+    # tagging stream from the held-out shard (never trained on)
+    tag_provider = make_provider(999, None if args.max_rows is None else max(args.max_rows // 4, 8), "heldout")
     tags = tag_features(sae, tag_provider, LOOPS, args.tag_batches)
     np.savez(out / "feature_loop_tags.npz", **tags)
 

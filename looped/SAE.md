@@ -70,7 +70,7 @@ the block re-normalises), and loop identity explains only 1.4% of variance. Loop
 (PR ~287 vs ~1200 for loops >= 4). An FVU of ~0.35-0.45 is therefore far better than linear compression at the
 same budget.
 
-## v1 run (stopped at 30%)
+## v1 run (stopped at 30%; superseded by v2 below)
 
 `huginn_loopstate_bt32k_k32_v1`: BatchTopK, d_sae 32768, k 32, lr 3e-4 constant, no decay; target 1e9 vectors.
 Stopped after 3.0e8 vectors: MSE plateaued from ~1e4 steps on. Snapshot at 2.8e8 vectors (`sae_snapshot.py`,
@@ -102,5 +102,30 @@ not move there) and is what v1 lacked; (2) larger k gives lower FVU and all stil
 dictionary; (4) trainer-side dead features are 3-4 for every lr-3e-4 config; (5) per-loop FVU is balanced
 (k128: 0.37 / 0.35 / 0.38 / 0.36 / 0.36 at loops 1/2/4/8/32).
 
-Round 2 (`sweep_r2/`, running): k64 lr 3e-4 const (decay control), k64 lr 1e-4 decay, k96 lr 3e-4 decay,
-k128 lr 1e-4 decay. The full run uses the best config with the final lr decay.
+Round 2 (`results/sae/sweep_r2_results.json`; checkpoints in `/data_fs/zhangyuxuan/looped/sae/sweep_r2/`):
+
+| config | FVU @20M | 40M | 60M | 80M | 100M | dead (eval) | dead (trainer) | per-loop FVU 1/2/4/8/32 |
+|---|---|---|---|---|---|---|---|---|
+| k64, lr 3e-4, const | 0.448 | 0.435 | 0.433 | 0.429 | 0.430 | 3141 | 1 | 0.42 / 0.41 / 0.45 / 0.44 / 0.44 |
+| k64, lr 1e-4, decay | 0.463 | 0.428 | 0.419 | 0.412 | 0.393 | 470 | 0 | 0.41 / 0.39 / 0.41 / 0.40 / 0.39 |
+| k96, lr 3e-4, decay | 0.422 | 0.410 | 0.407 | 0.404 | 0.376 | 2021 | 2 | 0.39 / 0.37 / 0.39 / 0.38 / 0.38 |
+| **k128, lr 1e-4, decay** | 0.414 | 0.385 | 0.376 | 0.370 | **0.352** | **86** | 0 | 0.37 / 0.35 / 0.37 / 0.36 / 0.35 |
+
+Findings: (1) decay control confirmed: k64 lr 3e-4 const ends at 0.430 vs 0.401 with decay (identical up to 80M,
+diverging only in the decay phase); (2) lr 1e-4 beats 3e-4 at the same k (k64: 0.393 vs 0.401; k128: 0.352 vs 0.358):
+slower start but keeps improving, and it nearly removes eval-dead features (86 vs 1945 at k128) - with 3e-4, some
+features drift to near-zero frequency; (3) k is monotone (k64 < k96 < k128 in FVU), with no sign of the larger k
+being worse on per-loop balance; (4) all configs still improving at 80M, so 1e9 vectors should help further.
+
+**Chosen config for the full run:** BatchTopK, d_sae 32768, **k 128, lr 1e-4, constant + linear decay over the last
+20% of steps**, no warmup, batch 4096 (SAELens default), dead_feature_window 1000 (SAELens default).
+k was not pushed beyond 128: it is the largest value tested, and larger k makes individual features less
+interpretable (the FVU gain per doubling of k shrinks: k64 -> k128 gives 0.04).
+
+## Full run v2 (running)
+
+`huginn_loopstate_bt32k_k128_v2`: chosen config above, 1e9 vectors (~5e7 text tokens x 10 loops x 2 seeds),
+23 training shards (held-out shard excluded), feature tagging on the held-out shard. GPU 0 trains the SAE,
+GPUs 1-7 run Huginn producers, sharing GPUs with an sglang server. Throughput ~15k vectors/s -> ~18 h.
+Resumable checkpoints every 20M vectors in `/data_fs/zhangyuxuan/looped/sae/huginn_loopstate_bt32k_k128_v2/`;
+log `results/logs/sae_huginn_loopstate_bt32k_k128_v2.log`. Started 2026-11-05 23:34.

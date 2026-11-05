@@ -25,10 +25,11 @@ echo "[$(date)] waiting for all 8 GPUs to have >= ${MINFREE} MiB free" > "$LOG"
 for attempt in $(seq 1 1000); do
   wait_for_gpus
   echo "[$(date)] GPUs free, starting training (attempt $attempt)" >> "$LOG"
+  # config chosen by the sweep (looped/SAE.md): BatchTopK k=128, lr 1e-4 + linear decay over the last 20%
   PYTHONWARNINGS=ignore PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True "$PY" train_sae.py --out "$OUT" \
     --device cuda:0 --producer_gpus 1,2,3,4,5,6,7 \
-    --total 1000000000 --d_sae 32768 --k 32 --batch 4096 --context_size 512 --n_seeds 2 \
-    --buffer 2000000 --norm_batches 200 --tag_batches 500 --checkpoint_every 20000000 >> "$LOG" 2>&1
+    --total 1000000000 --d_sae 32768 --k 128 --lr 1e-4 --decay_frac 0.2 --batch 4096 --context_size 512 \
+    --n_seeds 2 --buffer 2000000 --norm_batches 200 --tag_batches 500 --checkpoint_every 20000000 >> "$LOG" 2>&1
   rc=$?
   if [ "$rc" -eq 0 ]; then echo "[$(date)] JOBDONE exit=0" >> "$LOG"; break; fi
   echo "[$(date)] training exited rc=$rc; will wait for GPUs and resume from latest checkpoint" >> "$LOG"

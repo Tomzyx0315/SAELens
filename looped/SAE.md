@@ -1,0 +1,72 @@
+# Cross-loop SAE on Huginn-0125
+
+Goal: train one SAE shared across loops on Huginn's loop state, then use per-feature firing statistics by loop to
+ask whether loops reuse the same features (and which features appear only early / only after convergence).
+Data provenance: `DATA.md`. Reproduction of the looped-model paper: `REPORT.md`.
+
+## Pipeline (no activations on disk)
+
+| piece | file | what it does |
+|---|---|---|
+| activation stream | `code/sae_data.py` | Huginn producers (one process per GPU) read huginn-dataset validation rows (context 512, BOS dropped), run 32 loops x 2 random init seeds, emit the loop state at loops {1,2,3,4,6,8,12,16,24,32} tagged (loop, seed); a 2M-vector shuffle buffer mixes documents/loops/seeds |
+| site | `models/huginn.py::run_states` | output of the last core-block layer per loop (the latent passed to the next loop), d_in = 5280 |
+| training | `code/train_sae.py` | SAELens `BatchTopKTrainingSAE` + `SAETrainer.step`; resumable checkpoints every 20M vectors; input-norm scale estimated once and folded at the end; exports JumpReLU inference model; tags features by loop/seed on a held-out stream |
+| launcher | `code/launch_sae.sh`, `code/_sae_job.sh` | waits until every GPU has >= 12 GB free (GPUs are shared with an sglang server), restarts from the latest checkpoint on failure |
+| sweep | `code/sweep_sae.py` | several SAEs trained on the *same* batches (one GPU each), evaluated on the fixed held-out cache |
+| eval cache | `code/cache_eval.py` | 647k held-out loop-state vectors, see `DATA.md` |
+| snapshot | `code/sae_snapshot.py` | per-loop analysis of a mid-training checkpoint |
+
+Hardware constraint: each 4090 has ~13.3 GB free next to the sglang server. One SAE with d_sae 32768 peaks at
+9.2 GB (independent of k); one Huginn producer needs ~8 GB; they cannot share a GPU. d_sae 65536 does not fit.
+Batch size is the SAELens default 4096 (not reduced for memory).
+
+## How we judge SAE training
+
+| metric | meaning | where |
+|---|---|---|
+| FVU | sum ||x - x_hat||^2 / sum ||x - mean||^2 on held-out data; 1 - FVU = explained variance | sweep evals (overall and per loop) |
+| per-loop FVU | FVU on each loop separately; flags a dictionary biased towards converged loops | sweep evals |
+| L0 | mean number of active features per vector; fixed to k by BatchTopK in training; checked against the exported JumpReLU model (threshold must have converged) | end of `train_sae.py` |
+| dead features | trainer: no firing for > 2000 steps; eval: frequency 0 on the eval subsample (small samples over-count rare features as dead) | sweep evals |
+| loss / aux loss | MSE should keep decreasing; aux loss > 0 means dead features are being revived | training log |
+| downstream (TODO) | splice the reconstruction back into Huginn at one loop, measure CE increase and whether the error is amplified or damped by later loops | after the full run |
+
+Reference point: Huginn loop states are very high-dimensional (participation ratio ~1230; PCA needs 657 components
+for 50% variance; rank-128 PCA leaves FVU 0.78, rank-512 leaves 0.55), norms are nearly constant (76.4 +- 0.02,
+the block re-normalises), and loop identity explains only 1.4% of variance. Loop 1 states are lower-dimensional
+(PR ~287 vs ~1200 for loops >= 4). An FVU of ~0.35-0.45 is therefore far better than linear compression at the
+same budget.
+
+## v1 run (stopped at 30%)
+
+`huginn_loopstate_bt32k_k32_v1`: BatchTopK, d_sae 32768, k 32, lr 3e-4 constant, no decay; target 1e9 vectors.
+Stopped after 3.0e8 vectors: MSE plateaued from ~1e4 steps on. Snapshot at 2.8e8 vectors (`sae_snapshot.py`,
+24 held-out docs):
+
+- FVU ~0.47 at every loop (0.45-0.49).
+- Feature usage overlap with loop 32: 0.21 (loop 1), 0.41 (2), 0.61 (3), 0.75 (4), 0.88 (6), 0.92 (8), >= 0.96 (12+).
+  ~3500 features used at loop 32 are (almost) unused at loop 1; ~480 are used at loop 1 only. Turnover is
+  confined to loops 1-6.
+- Per-loop feature frequencies agree between the two init seeds (overlap 0.94-0.98, correlation 0.995-0.998), so
+  which features early loops use is not init noise (individual tokens' feature sets at loop 1 still are noisy).
+- Correction: the snapshot reported 38% dead features; the trainer's own statistics show only 1 feature without
+  firing for > 2000 steps. The snapshot sample (119k vectors) was too small. The real problem was the FVU plateau.
+
+## Config sweep (100M vectors per config, same data stream, held-out cache)
+
+Round 1 (`/data_fs/zhangyuxuan/looped/sae/sweep_r1/`), d_sae 32768, decay = linear decay to 0 over the last 20% of steps:
+
+| config | FVU @20M | 40M | 60M | 80M | 100M | dead (eval) |
+|---|---|---|---|---|---|---|
+| k32, lr 3e-4, const (= v1) | 0.496 | 0.480 | 0.478 | 0.474 | 0.475 | 3900 |
+| k32, lr 1e-3, decay | 0.557 | 0.556 | 0.561 | 0.559 | 0.513 | 13132 |
+| k64, lr 3e-4, decay | 0.449 | 0.435 | 0.433 | 0.429 | 0.401 | 2281 |
+| k128, lr 3e-4, decay | 0.404 | 0.391 | 0.389 | 0.386 | 0.358 | 1945 |
+
+Findings: (1) the final lr decay is worth ~0.03 FVU (the decay phase is 80M -> 100M; the constant-lr baseline does
+not move there) and is what v1 lacked; (2) larger k gives lower FVU and all still improve; (3) lr 1e-3 kills half the
+dictionary; (4) trainer-side dead features are 3-4 for every lr-3e-4 config; (5) per-loop FVU is balanced
+(k128: 0.37 / 0.35 / 0.38 / 0.36 / 0.36 at loops 1/2/4/8/32).
+
+Round 2 (`sweep_r2/`, running): k64 lr 3e-4 const (decay control), k64 lr 1e-4 decay, k96 lr 3e-4 decay,
+k128 lr 1e-4 decay. The full run uses the best config with the final lr decay.

@@ -12,6 +12,7 @@ Full (8 GPUs):            python train_sae.py --out <dir> --device cuda:0 --prod
 
 import argparse
 import json
+import shutil
 from pathlib import Path
 
 import numpy as np
@@ -63,6 +64,47 @@ def tag_features(sae, provider: HuginnActivationProvider, loops, n_batches: int)
     }
 
 
+def _save_resume(trainer, out: Path):
+    """Save a resumable checkpoint (unfolded weights + trainer state incl. activation scaler) and keep only the latest."""
+    name = f"resume_{trainer.n_training_samples}"
+    trainer.save_checkpoint(checkpoint_name=name)
+    for old in sorted(out.glob("resume_*"), key=lambda p: int(p.name.split("_")[1]))[:-1]:
+        shutil.rmtree(old, ignore_errors=True)
+    print(f"checkpoint {name}", flush=True)
+
+
+def run_training_with_checkpoints(trainer, provider, args, out: Path):
+    """Mirror SAETrainer.fit() but save a resumable checkpoint every args.checkpoint_every vectors and fold the
+    input-norm scaling into the weights only once, at the very end. Checkpoints store unfolded weights + the
+    activation scaler, so resuming reuses the original scaling estimate instead of re-estimating it."""
+    from tqdm.auto import tqdm
+
+    trainer.sae.to(trainer.cfg.device)
+    if (trainer.sae.cfg.normalize_activations == "expected_average_only_in"
+            and trainer.activation_scaler.scaling_factor is None):
+        trainer.activation_scaler.estimate_scaling_factor(
+            d_in=trainer.sae.cfg.d_in, data_provider=provider,
+            n_batches_for_norm_estimate=trainer.cfg.n_batches_for_norm_estimate,
+        )
+    pbar = tqdm(total=args.total, initial=trainer.n_training_samples, desc="Training SAE")
+    next_ckpt = (trainer.n_training_samples // args.checkpoint_every + 1) * args.checkpoint_every
+    while trainer.n_training_samples < args.total:
+        trainer.maybe_reset_sparsity()
+        out_step = trainer.step(next(provider))
+        trainer.n_training_steps += 1
+        trainer._update_pbar(out_step, pbar)
+        if trainer.n_training_samples >= next_ckpt and trainer.n_training_samples < args.total:
+            _save_resume(trainer, out)
+            next_ckpt += args.checkpoint_every
+    pbar.close()
+    # fold the scaling into the weights once, record final metadata, save the final checkpoint
+    if trainer.activation_scaler.scaling_factor is not None:
+        trainer.sae.fold_activation_norm_scaling_factor(trainer.activation_scaler.scaling_factor)
+        trainer.activation_scaler.scaling_factor = None
+    trainer.set_final_sae_metadata()
+    trainer.save_checkpoint(checkpoint_name=f"final_{trainer.n_training_samples}")
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--out", required=True)
@@ -79,6 +121,8 @@ def main():
     p.add_argument("--n_seeds", type=int, default=2)
     p.add_argument("--tag_batches", type=int, default=500)
     p.add_argument("--norm_batches", type=int, default=200, help="batches used to estimate the input-norm scale")
+    p.add_argument("--checkpoint_every", type=int, default=20_000_000,
+                   help="save a resumable checkpoint every N activation vectors (for preemption on shared GPUs)")
     p.add_argument("--wandb", action="store_true")
     args = p.parse_args()
 
@@ -93,12 +137,20 @@ def main():
             producer_gpus=gpus, buffer_vectors=args.buffer, max_rows=max_rows, shuffle_seed=shuffle_seed,
         )
 
+    # resume: load SAE weights + trainer state from the latest `resume_*` checkpoint if present
+    resume_ckpts = sorted(out.glob("resume_*"), key=lambda p: int(p.name.split("_")[1]))
+    resume_from = resume_ckpts[-1] if resume_ckpts else None
+    if resume_from is not None:
+        from sae_lens.saes.sae import TrainingSAE
+
+        sae = TrainingSAE.load_from_disk(str(resume_from), device=args.device)
+        print(f"resuming from {resume_from}", flush=True)
+    else:
+        sae = BatchTopKTrainingSAE(BatchTopKTrainingSAEConfig(
+            d_in=D_IN, d_sae=args.d_sae, k=args.k, device=args.device, dtype="float32",
+            normalize_activations="expected_average_only_in",  # single-scalar norm; folded into weights at the end
+        ))
     provider = make_provider(0, args.max_rows)
-    sae_cfg = BatchTopKTrainingSAEConfig(
-        d_in=D_IN, d_sae=args.d_sae, k=args.k, device=args.device, dtype="float32",
-        normalize_activations="expected_average_only_in",  # single-scalar norm; folded into weights at the end
-    )
-    sae = BatchTopKTrainingSAE(sae_cfg)
     trainer_cfg = SAETrainerConfig(
         total_training_samples=args.total,
         train_batch_size_samples=args.batch,
@@ -107,7 +159,7 @@ def main():
         lr_scheduler_name="constant",
         lr_warm_up_steps=max(args.total // args.batch // 20, 1),
         device=args.device,
-        n_checkpoints=4,
+        n_checkpoints=0,
         checkpoint_path=str(out),
         save_final_checkpoint=True,
         dead_feature_window=2000,
@@ -116,8 +168,12 @@ def main():
         n_batches_for_norm_estimate=args.norm_batches,
     )
     trainer = SAETrainer(cfg=trainer_cfg, sae=sae, data_provider=provider)
-    sae = trainer.fit()
-    n_train_vectors = provider.n_emitted
+    if resume_from is not None:
+        trainer.load_trainer_state(resume_from)
+        print(f"resumed at {trainer.n_training_samples} / {args.total} vectors", flush=True)
+    run_training_with_checkpoints(trainer, provider, args, out)
+    sae = trainer.sae
+    n_train_vectors = trainer.n_training_samples
     provider.close()
     # inference export: BatchTopK -> JumpReLU with the learned threshold; load with sae_lens.SAE.load_from_disk
     sae.save_inference_model(str(out / "inference"))

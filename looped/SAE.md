@@ -122,13 +122,16 @@ being worse on per-loop balance; (4) all configs still improving at 80M, so 1e9 
 k was not pushed beyond 128: it is the largest value tested, and larger k makes individual features less
 interpretable (the FVU gain per doubling of k shrinks: k64 -> k128 gives 0.04).
 
-## Full run v2 (running)
+## Full run v2 (done)
 
 `huginn_loopstate_bt32k_k128_v2`: chosen config above, 1e9 vectors (~5e7 text tokens x 10 loops x 2 seeds),
-23 training shards (held-out shard excluded), feature tagging on the held-out shard. GPU 0 trains the SAE,
-GPUs 1-7 run Huginn producers, sharing GPUs with an sglang server. Throughput ~15k vectors/s -> ~18 h.
-Resumable checkpoints every 20M vectors in `/data_fs/zhangyuxuan/looped/sae/huginn_loopstate_bt32k_k128_v2/`;
-log `results/logs/sae_huginn_loopstate_bt32k_k128_v2.log`. Started 2026-11-05 23:34.
+23 training shards (held-out shard excluded), feature tagging on the held-out shard. GPU 0 trained the SAE,
+GPUs 1-7 ran Huginn producers, sharing GPUs with an sglang server. ~19 h wall-clock (one auto-resumed OOM restart).
+Checkpoint `final_1000001536/`, JumpReLU export `inference/`, `feature_loop_tags.npz`, all under
+`/data_fs/zhangyuxuan/looped/sae/huginn_loopstate_bt32k_k128_v2/`.
+
+**Final metrics (held-out shard):** FVU **0.322** (train-mode) / 0.322 (inference JumpReLU); L0 128 / 127.6
+(threshold converged, inference model is faithful); 64 dead features of 32768. Big improvement on v1's 0.47 plateau.
 
 ### Mid-training snapshot at 5.6e8 vectors (56%)
 
@@ -161,8 +164,43 @@ per-loop feature usage agrees across the two init seeds (overlap 0.95-0.99).
 - 12598: the builtin `len(`
 - 1109: ".0" in floats
 
-These are at a single loop on a mid-training checkpoint; the point is that the SAE yields usable features. Planned
-analyses (see the TODO list): (1) interpret the "early" (loop-1-only) vs "late-emerging" (loop-32-only) features and
-compare their semantics; (2) feature *flow* within a single sentence — track how features switch on/off across loops
-(same layer and across layers) along the recurrent trajectory. Both wait for the final v2 SAE, where we will also
-splice the reconstruction back into Huginn and measure the CE increase and how the error propagates through loops.
+## Feature dynamics across loops (final SAE)
+
+`feature_loop_tags.npz` (firing frequency per latent by loop and init seed, held-out shard). With
+early = freq@loop1 > 1e-3 AND freq@loop32 < freq@loop1/5; late-emerging = symmetric; persistent = active at both:
+
+- **early 1741, late-emerging 11940, persistent 6029** (of 32768; 64 fully dead). So the recurrence mostly *adds*
+  features: ~12k latents only become active after the first loops, ~1.7k are used only early.
+- Features active at loop 1 grow from 9447 (loop 1) to ~21000 (loop 3+). seed0-vs-seed1 firing-frequency
+  correlation is 1.00 over live features: the per-loop feature usage is fully determined by computation, not by the
+  random initial state.
+- Early features fire more broadly (median freq@1 0.019, mean 0.044) than late features (median freq@32 0.005,
+  mean 0.008): early loops use a small set of high-frequency, generic features; later loops add many sparse,
+  specific ones.
+
+### Early vs late-emerging semantics (`code/interpret_feats.py`, final SAE, 300 features each)
+
+Interpreting the actual early set at loop 1 and the late set at loop 32 (max-activating contexts over the per-domain
+corpora; `results/sae/interp_feats_early_late.json`):
+
+- **Early (loop 1):** generic, high-frequency, often syntactic/positional features — common function words and
+  punctuation in context ("[[ look]] into", "[[ It]] is", "https[[://]]", answer markers "[[Answer]]:"), firing on a
+  large fraction of tokens. Domain mix 29% web / 30% code / 17% math.
+- **Late-emerging (loop 32):** sparser, more specific features — particular code tokens (`.txt'`, `body_[[query]]`,
+  `name`Last, license boilerplate "subject[[ to]]"), specific lexical/semantic items, numeric-result tokens in math
+  ("<<300-12[[=]]288>>"). Domain mix 33% web / 28% code; slightly more web-weighted than early.
+- Both classes are ~40% single-domain in their top contexts; the difference is firing breadth and specificity,
+  not domain exclusivity.
+
+Interpretation: Huginn's first loop sets up a generic, dense scaffold (syntax, position, frequent tokens); later
+loops progressively switch on many sparse, content-specific features. This matches the geometry (loop 1 is
+lower-dimensional, PR ~287 vs ~1200) and the stages-of-inference view.
+
+### Max-activating examples (final SAE, loops 1/8/32)
+
+`code/interpret_loops.py` interprets a sampled set of features at several loops in one forward pass per doc
+(`results/sae/interp_final_loops.json`), used for spot-checking and the early/late example contexts above.
+
+Still to do (TODO list): feature *flow* within a single sentence — track how features switch on/off across loops
+(same layer and across layers) along the recurrent trajectory; and splicing the SAE reconstruction back into Huginn
+to measure the CE increase and how the error propagates through loops.

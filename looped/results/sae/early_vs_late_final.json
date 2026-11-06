@@ -1,0 +1,213 @@
+{
+ "n_features": 32768,
+ "counts": {
+  "early": 1937,
+  "late_emerging": 8975,
+  "persistent": 6629
+ },
+ "domain_profile_early(at loop 1)": {
+  "web": 0.2,
+  "code": 0.227,
+  "math": 0.217,
+  "gsm8k_full": 0.183,
+  "wiki": 0.172
+ },
+ "domain_profile_late(at loop 32)": {
+  "web": 0.251,
+  "code": 0.245,
+  "math": 0.171,
+  "gsm8k_full": 0.147,
+  "wiki": 0.187
+ },
+ "domain_profile_persistent(at loop 32)": {
+  "web": 0.243,
+  "code": 0.219,
+  "math": 0.138,
+  "gsm8k_full": 0.151,
+  "wiki": 0.248
+ },
+ "early_examples": [
+  {
+   "feat": 9110,
+   "freq_e": 0.00594,
+   "freq_c": 0.00086,
+   "ctx_loop1": [
+    " Indigenous Protected Area?\nAn Indigenous Protected Area ([[IP]]A) is an area of land or sea cared for by",
+    " a component party of the Barisan Nasional ([[BN]]) coalition.\n\nDebate on the Domestic Vi",
+    " its closure, the plant was operated by Tennessee Valley Authority ([[TV]]A).\n\nHistory\nMemphis Light, Gas"
+   ]
+  },
+  {
+   "feat": 20765,
+   "freq_e": 0.01346,
+   "freq_c": 0.00178,
+   "ctx_loop1": [
+    ">.\n\"\"\"Pyplis module containing mathematical model functions.[[\"\"\"]]\nfrom __future__ import (absolute_import, division",
+    "):\n    \"\"\"The main ST3 plugin class.[[\"\"\"]]\n\n    # We use this to match linter settings filenames",
+    "):\n    \"\"\"Set up the Apple TV integration.[[\"\"\"]]\n    return True\n\n\nasync def async_setup_entry"
+   ]
+  }
+ ],
+ "late_examples": [
+  {
+   "feat": 1360,
+   "freq_e": 0.00014,
+   "freq_c": 0.00525,
+   "ctx_loop32": [
+    "filepath = loader.get_filename(import_name)[[\n]]    else:\n        # Fall back to imports.\n",
+    ".http_stream.stream.readinto(buf)[[\n]]            if recved is None:\n                break\n\n            ",
+    "Image(acct.avatar, file=False)[[\n]]        if av.good():\n            rv["
+   ]
+  },
+  {
+   "feat": 5788,
+   "freq_e": 8e-05,
+   "freq_c": 0.00173,
+   "ctx_loop32": [
+    "ccades. This effect of intra-saccadic motion[[ was]] independent of the saccade’s landing position, as well",
+    " that Prozac and Tricyclics inhibit this pathway[[ and]] trigger stem cells in the brain to produce more neurons. These",
+    "criflavine produce an immune response in cultured cells,[[ enhancing]] their capacity to fight off pathogens.\n“We have s"
+   ]
+  },
+  {
+   "feat": 9858,
+   "freq_e": 0.00071,
+   "freq_c": 0.00497,
+   "ctx_loop32": [
+    " the pear tree over to the new hole. Place the tree[[ in]] the new hole so it's planted at the same level in the",
+    ".\nOn your second visit, the permanent crown is fixed[[ into]] place with a special adhesive that holds it firmly on the ",
+    " two cardboard circles edges. Next thread a piece of the wool[[ into]] one of the smaller sides of the opening circle, m"
+   ]
+  },
+  {
+   "feat": 10103,
+   "freq_e": 0.00015,
+   "freq_c": 0.00558,
+   "ctx_loop32": [
+    " speed and productivity, but it’s expensive. Comparable productivity gains[[ could]] be had by the welder position and s",
+    " in widespread use early last century, but abandoned with the discovery[[ of]] Penicillin, could help tackle the rise of",
+    " are new to carnivorous plants, location is far more[[ important]] than feeding. A pitcher plant growing in the right lo"
+   ]
+  },
+  {
+   "feat": 17786,
+   "freq_e": 0.00066,
+   "freq_c": 0.00507,
+   "ctx_loop32": [
+    " spatial frequencies and orientations parallel to an object’s retinal motion[[ trajectory]], remain well resolvable even",
+    " including versions that go\n# through the origin of the coordinate[[ system]]\n# (e.g. used in doascalib",
+    " the non-shaded region to the area of the entire dart[[board]]. The area of the entire dartboard is $\\pi \\cdot"
+   ]
+  },
+  {
+   "feat": 18209,
+   "freq_e": 0.00045,
+   "freq_c": 0.00601,
+   "ctx_loop32": [
+    " an Indigenous Protected Area?\nOperations on IPAs vary[[ because]] when traditional owners enter into an IPA agreement w",
+    " case, their star), and no two are exactly alike[[.]] There are big planets, medium planets, and then there are",
+    "-life science presented in each book. These differences in presentation[[ make]] some books more appealing than others.\n"
+   ]
+  },
+  {
+   "feat": 18387,
+   "freq_e": 0.0009,
+   "freq_c": 0.01253,
+   "ctx_loop32": [
+    "This greenhood was first formally described in 2016[[ by]] David Jones and Lachlan Copeland and given the name",
+    "FSF), either version 3 of the License, or[[ (]]at your\n * option) any later version.\n *",
+    ", INCLUDING BUT NOT LIMITED TO THE WARRANTIES \n#  [[OF]] MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND \n#  NON"
+   ]
+  },
+  {
+   "feat": 21301,
+   "freq_e": 0.00021,
+   "freq_c": 0.00496,
+   "ctx_loop32": [
+    "We’ll talk about diet and aging. This is occasioned[[ by]] the study Samieri et al. (2013",
+    " against the French Protectorate authorities. The protests were sparked[[ by]] food shortages which threatened local tri",
+    " it makes contact with an obstacle.\nThe project was inspired[[ by]] the use of touch in the animal kingdom – specificall"
+   ]
+  },
+  {
+   "feat": 23920,
+   "freq_e": 0.00073,
+   "freq_c": 0.00572,
+   "ctx_loop32": [
+    ", but traffic was much heavier. The one benefit was that[[ we]] were able to see—and hear Fabrizio’s commentary",
+    " much does it cost you for lunch today at Subway if[[ you]] pay $40 for a foot-long fish sub and",
+    "vern and call for Jerry’s cab. They tell him they[[ are]] running late and need him to rush them to Victoria Station to"
+   ]
+  },
+  {
+   "feat": 26615,
+   "freq_e": 0.00143,
+   "freq_c": 0.0265,
+   "ctx_loop32": [
+    "0=8>>8 cars from his car collection.\n[[After]] selling 8 cars, Joe remains with 40-8=",
+    " <<8/2=4>>4 oranges.\nTogether[[ they]] wash 8 oranges + 4 oranges =<<8+4=",
+    " 2 \\times 1 = \\boxed{120}$ ways[[ to]] stack 5 books."
+   ]
+  },
+  {
+   "feat": 27744,
+   "freq_e": 0.00066,
+   "freq_c": 0.00453,
+   "ctx_loop32": [
+    "<|begin_text|>Question: At the trip[[ to]] the county-level scavenger hunt competition, 90 people",
+    " want to find something tasty for supper and that mammoth[[ over]] the ridge sure looks good. So you pull out your trust",
+    " easily you fit into your new home!\nDo you remember[[ that]] “large plot” we talked to you about? Forego"
+   ]
+  },
+  {
+   "feat": 27848,
+   "freq_e": 0.00047,
+   "freq_c": 0.00614,
+   "ctx_loop32": [
+    " Somalia\n\nReferences\n\nEthiopia\nTransport in[[ Ethiop]]ia\nEthiopia transport-related lists",
+    "asties. It became known as the Ling River ([[�]]�河) in the Liao dynasty, which was",
+    " Ole Miss Rebels football team represented the University of Mississippi[[ during]] the 1982 NCAA Division I-A"
+   ]
+  },
+  {
+   "feat": 28101,
+   "freq_e": 0.00058,
+   "freq_c": 0.00373,
+   "ctx_loop32": [
+    ", making the sap to flow.\nWhy Do Trees[[ Produ]]ce Sap?\nWe now know that sap is",
+    " years of striking down protective labor laws, the Supreme Court finally[[ uph]]eld a state maximum-hours law because th",
+    ", and abject definitions of blackness and Black life that[[ perv]]aded 20th century America.\n\nCareer \nAfter earning her"
+   ]
+  },
+  {
+   "feat": 29893,
+   "freq_e": 3e-05,
+   "freq_c": 0.00995,
+   "ctx_loop32": [
+    "=2800>>2800 spots.[[\n]]60 mambas in a snake park, each having",
+    "*5=220>>220 pounds.[[\n]]#### 220",
+    " <<6*2=12>>12 hours.[[\n]]If she slept 1 hour more for the rest of the week"
+   ]
+  },
+  {
+   "feat": 30639,
+   "freq_e": 0.00029,
+   "freq_c": 0.00199,
+   "ctx_loop32": [
+    ". Though it does not mention the name of God, His[[ provid]]ential oversight is clearly seen. It is not a coincidence th",
+    " that she realizes that what seemed at the time to be really[[ unfortunate]] events were an integral part of her eventua",
+    " as well. When you are facing adversity, hardship and mis[[fort]]une, your brain will react to protect you from it,"
+   ]
+  },
+  {
+   "feat": 31790,
+   "freq_e": 0.00052,
+   "freq_c": 0.01213,
+   "ctx_loop32": [
+    " 1924, it was merged into the family brew[[ery]]. After the death of his father in 1872",
+    ".\n\nAs Calgary returns to the Argyll[[ estate]], a car tries to run him down. The car crashes",
+    "ch and Tamil) that allows direct engagement with the source[[ texts]], the exegetical materials and the lexicographic wo"
+   ]
+  }
+ ]
+}

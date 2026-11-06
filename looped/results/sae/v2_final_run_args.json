@@ -1,0 +1,43 @@
+{
+ "out": "/data_fs/zhangyuxuan/looped/sae/huginn_loopstate_bt32k_k128_v2",
+ "total": 1000000000,
+ "d_sae": 32768,
+ "k": 128.0,
+ "batch": 4096,
+ "context_size": 512,
+ "lr": 0.0001,
+ "decay_frac": 0.2,
+ "device": "cuda:0",
+ "producer_gpus": "1,2,3,4,5,6,7",
+ "buffer": 2000000,
+ "max_rows": null,
+ "n_seeds": 2,
+ "tag_batches": 500,
+ "norm_batches": 200,
+ "checkpoint_every": 20000000,
+ "wandb": false,
+ "d_in": 5280,
+ "loops": [
+  1,
+  2,
+  3,
+  4,
+  6,
+  8,
+  12,
+  16,
+  24,
+  32
+ ],
+ "n_train_vectors": 1000001536,
+ "heldout_check": {
+  "train_batchtopk": {
+   "fvu": 0.3215462565422058,
+   "l0": 128.0
+  },
+  "inference_jumprelu": {
+   "fvu": 0.3217039108276367,
+   "l0": 127.644287109375
+  }
+ }
+}

@@ -1,0 +1,3617 @@
+{
+ "ckpt": "/data_fs/zhangyuxuan/looped/sae/huginn_loopstate_bt32k_k128_v2/final_1000001536",
+ "loops": [
+  1,
+  8,
+  32
+ ],
+ "domains": [
+  "web",
+  "code",
+  "math",
+  "gsm8k_full",
+  "wiki"
+ ],
+ "features": {
+  "90": {
+   "freq_by_loop": {
+    "1": 0.01179,
+    "8": 0.00317,
+    "32": 0.00275
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 11.405,
+      "domain": "web",
+      "text": "–chimpanzee lineages split.||[[”]]|\nThe late twentieth century saw an explosion in"
+     },
+     {
+      "value": 11.328,
+      "domain": "code",
+      "text": " = r'([+&|!(){}[\\][[\"]]~*?:\\\\^-])'\nre_qvar"
+     },
+     {
+      "value": 10.751,
+      "domain": "code",
+      "text": "-Za-z0-9_-]*$[[\"]], name)\n    except TypeError:\n        match ="
+     },
+     {
+      "value": 10.727,
+      "domain": "code",
+      "text": ", season, episode FROM tv_episodes WHERE status =?[[\"]], [common.ARCHIVED]\n        )\n"
+     },
+     {
+      "value": 10.577,
+      "domain": "web",
+      "text": "it should not be fired!\n15 1/4[[\"]] LOA Diameter at each reinforcing ring 2”, 2 1/"
+     }
+    ],
+    "8": [
+     {
+      "value": 20.961,
+      "domain": "web",
+      "text": ". A new or original idea can often lead to innovation.[[\"]]\n- Etymology 1\n- Innate and ad"
+     },
+     {
+      "value": 14.522,
+      "domain": "web",
+      "text": ", independent of the action of sex steroids.||[[”]]|\nSkuse, David H (2006"
+     },
+     {
+      "value": 13.995,
+      "domain": "code",
+      "text": "GE RUNOFF ELECTION % (LA),[[\"]]COMBINED GE PARTY TOTALS (CT"
+     },
+     {
+      "value": 13.976,
+      "domain": "code",
+      "text": "self):\n        # The action based click doesn[[\"]]t check for visibility.\n        test_html = self"
+     },
+     {
+      "value": 13.077,
+      "domain": "code",
+      "text": ".search(r'^VERSION\\s*=\\s*[\\'[[\"]]]([^\\'\"]*)[\\'\"]',\n"
+     }
+    ],
+    "32": [
+     {
+      "value": 19.462,
+      "domain": "web",
+      "text": ". A new or original idea can often lead to innovation.[[\"]]\n- Etymology 1\n- Innate and ad"
+     },
+     {
+      "value": 16.911,
+      "domain": "web",
+      "text": "–chimpanzee lineages split.||[[”]]|\nThe late twentieth century saw an explosion in"
+     },
+     {
+      "value": 13.105,
+      "domain": "web",
+      "text": " friends, and neighbors in a grand effort to find out.[[\"]] --Publisher's website\n\"Fatima's life is bes"
+     },
+     {
+      "value": 12.915,
+      "domain": "code",
+      "text": "self):\n        # The action based click doesn[[\"]]t check for visibility.\n        test_html = self"
+     },
+     {
+      "value": 12.838,
+      "domain": "web",
+      "text": " Moon and Sun apparent angular diameters are ∠1771[[\"]] and ∠1913\".\nNext Full Moon"
+     }
+    ]
+   }
+  },
+  "558": {
+   "freq_by_loop": {
+    "1": 0.00136,
+    "8": 0.00142,
+    "32": 0.00138
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 18.727,
+      "domain": "web",
+      "text": "ighted work used.\nThe amount and substantiality of the[[ work]] being used.\nThe effect of the use on markets for"
+     },
+     {
+      "value": 16.211,
+      "domain": "web",
+      "text": " Conservancy is working to expand the scope of their[[ work]] beyond the scale permitted by philanthropic donations. As an example"
+     },
+     {
+      "value": 15.903,
+      "domain": "wiki",
+      "text": " Novello in 1902. Stanford orchestrated the[[ work]] in 1903, with additional organ.\n\nHistory"
+     },
+     {
+      "value": 15.855,
+      "domain": "wiki",
+      "text": ", Oliver Wolcott Gibbs, he set about improving on the[[ work]] of Babbage and Per Georg Scheutz. He published this"
+     },
+     {
+      "value": 15.829,
+      "domain": "web",
+      "text": "In its larger context, The Moth works well as a[[ work]] of art on a college campus. The puzzle-like,"
+     }
+    ],
+    "8": [
+     {
+      "value": 24.074,
+      "domain": "web",
+      "text": " soda manufacturers for instance – there will be even greater demand for[[ work]] in the style of the Conservancy’s. And"
+     },
+     {
+      "value": 23.961,
+      "domain": "wiki",
+      "text": ", Oliver Wolcott Gibbs, he set about improving on the[[ work]] of Babbage and Per Georg Scheutz. He published this"
+     },
+     {
+      "value": 21.343,
+      "domain": "gsm8k_full",
+      "text": " something to do while the others were working. Amalia's[[ work]] was to mow the lawn, which took her 4 hours"
+     },
+     {
+      "value": 20.162,
+      "domain": "web",
+      "text": " Ages, however, Venice had the unique phenomenon of a[[ work]]-force of, by 1423, 16"
+     },
+     {
+      "value": 18.841,
+      "domain": "web",
+      "text": " to an environmental and cultural plan specific to that country.\n[[Work]] on IPAs typically includes clearing weeds, trapping feral animals"
+     }
+    ],
+    "32": [
+     {
+      "value": 22.28,
+      "domain": "web",
+      "text": " soda manufacturers for instance – there will be even greater demand for[[ work]] in the style of the Conservancy’s. And"
+     },
+     {
+      "value": 22.054,
+      "domain": "web",
+      "text": " to an environmental and cultural plan specific to that country.\n[[Work]] on IPAs typically includes clearing weeds, trapping feral animals"
+     },
+     {
+      "value": 20.816,
+      "domain": "wiki",
+      "text": ", Oliver Wolcott Gibbs, he set about improving on the[[ work]] of Babbage and Per Georg Scheutz. He published this"
+     },
+     {
+      "value": 20.22,
+      "domain": "web",
+      "text": " Ages, however, Venice had the unique phenomenon of a[[ work]]-force of, by 1423, 16"
+     },
+     {
+      "value": 19.525,
+      "domain": "web",
+      "text": "ger effectively creates multiple instances of your desktop that give you more[[ work]] spaces to use. So instead of having a single screen to"
+     }
+    ]
+   }
+  },
+  "732": {
+   "freq_by_loop": {
+    "1": 0.00215,
+    "8": 0.00237,
+    "32": 0.00233
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 10.197,
+      "domain": "web",
+      "text": "énie Pasco, the delivery of the programme is supported[[ by]] teachers, parents and Kingswood alumni, as well as carefully"
+     },
+     {
+      "value": 10.043,
+      "domain": "wiki",
+      "text": " fire departments in the basement. The gym's roof is supported[[ by]] early laminated wooden arches.\n\nReferences\n\nCity and town"
+     },
+     {
+      "value": 9.32,
+      "domain": "web",
+      "text": " world through our own eyes, and our eyes have been shaped[[ by]] the culture we grew up in. Germans are seen as"
+     },
+     {
+      "value": 8.904,
+      "domain": "web",
+      "text": " in Belgium. A beverage of immense popularity, beer was affected[[ by]] the direct consequences of the war. Indeed, a large number"
+     },
+     {
+      "value": 8.561,
+      "domain": "web",
+      "text": " adventitious ideas which are images or concepts which are accompanied[[ by]] the judgment that they are caused or occasioned by an external"
+     }
+    ],
+    "8": [
+     {
+      "value": 16.169,
+      "domain": "web",
+      "text": " over time.\nAdministration and management mechanisms, supported[[ by]] the design and development of new organizational structures and processes, as"
+     },
+     {
+      "value": 14.574,
+      "domain": "wiki",
+      "text": " establish football clubs in Argentina and Uruguay, helped[[ by]] the immigration of British citizens that had arrived to work for British"
+     },
+     {
+      "value": 12.947,
+      "domain": "web",
+      "text": "\nPrevious attempts to store information in DNA have been held up[[ by]] difficulties in making perfect long strands. Shorter molecules present less"
+     },
+     {
+      "value": 12.529,
+      "domain": "web",
+      "text": "4, 1862.\n- Bolstered[[ by]] two divisions of the Army of West Tennessee, the Army of"
+     },
+     {
+      "value": 12.514,
+      "domain": "web",
+      "text": " Two of the wheels of the\ncarriage are held on[[ by]] replacement shims and two are original.\nThis fine example"
+     }
+    ],
+    "32": [
+     {
+      "value": 15.372,
+      "domain": "web",
+      "text": " over time.\nAdministration and management mechanisms, supported[[ by]] the design and development of new organizational structures and processes, as"
+     },
+     {
+      "value": 12.246,
+      "domain": "web",
+      "text": " in its natural setting: The seed grows, is nurtured[[ by]] soil and water, matures, dies and breaks down into"
+     },
+     {
+      "value": 11.572,
+      "domain": "wiki",
+      "text": " establish football clubs in Argentina and Uruguay, helped[[ by]] the immigration of British citizens that had arrived to work for British"
+     },
+     {
+      "value": 11.344,
+      "domain": "web",
+      "text": " sent because the Indians exchanged with each other. Caused[[ by]] that it contact with Western european bacteria is terrible."
+     },
+     {
+      "value": 10.97,
+      "domain": "web",
+      "text": " stage. This opamp is biased to half the supply voltage[[ by]] means of the two 1 megaohm resistors. It has a"
+     }
+    ]
+   }
+  },
+  "1120": {
+   "freq_by_loop": {
+    "1": 0.00028,
+    "8": 0.00096,
+    "32": 0.00096
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 2.664,
+      "domain": "web",
+      "text": "<|begin_text|>Chapter 35 Summary\nJack has[[ never]] met a better man than his new master, Jerry Barker"
+     },
+     {
+      "value": 2.367,
+      "domain": "code",
+      "text": "Error(Exception):\n    \"\"\" A page object was[[ not]] configured correctly. \"\"\"\n    pass\n\n\nclass BaseAssessmentPage"
+     },
+     {
+      "value": 2.176,
+      "domain": "code",
+      "text": "        \"\"\"\n        \"\"\"\n        if self.__nfa[[!=]] None:\n\n            start_state = self.__nfa"
+     },
+     {
+      "value": 2.122,
+      "domain": "code",
+      "text": "join(rel_path, f))\n\n        if[[ ignore]]_dirs and root == base_dir:\n            for"
+     },
+     {
+      "value": 2.067,
+      "domain": "web",
+      "text": " language mean?\nWhen a dog is relaxed, they will[[ not]] show any unusual signs. They will have a normal stance,"
+     }
+    ],
+    "8": [
+     {
+      "value": 5.316,
+      "domain": "web",
+      "text": ", learning the most advanced techniques behind dental correction. Although we[[ can't]] learn them all, there are different techniques that are interesting to"
+     },
+     {
+      "value": 5.292,
+      "domain": "web",
+      "text": " fires a half-pound of black powder. But, instead[[ of]] a six-pound steel ball, the powder is packed in"
+     },
+     {
+      "value": 4.714,
+      "domain": "web",
+      "text": " they need to eat bugs to survive right? Actually they do[[ not]]. Unlike carnivorous animals, these plants can make their"
+     },
+     {
+      "value": 4.436,
+      "domain": "web",
+      "text": "ticles narrated by Mabel)\nIt’s sad that dogs[[ can’t]] talk to humans. It would be so much easier to let"
+     },
+     {
+      "value": 4.403,
+      "domain": "web",
+      "text": " and across the bell in any direction—not that you ever[[ would]], of course!—the two halves would be exactly the"
+     }
+    ],
+    "32": [
+     {
+      "value": 5.872,
+      "domain": "web",
+      "text": " CPU. These waits are system bottlenecks. Fortunately, you don't[[ need]] a stopwatch to measure how SQL Server waits. The data"
+     },
+     {
+      "value": 5.477,
+      "domain": "web",
+      "text": ", learning the most advanced techniques behind dental correction. Although we[[ can't]] learn them all, there are different techniques that are interesting to"
+     },
+     {
+      "value": 5.344,
+      "domain": "web",
+      "text": " fires a half-pound of black powder. But, instead[[ of]] a six-pound steel ball, the powder is packed in"
+     },
+     {
+      "value": 4.975,
+      "domain": "web",
+      "text": " the center and across the bell in any direction—not that[[ you]] ever would, of course!—the two halves would be"
+     },
+     {
+      "value": 4.534,
+      "domain": "web",
+      "text": "ticles narrated by Mabel)\nIt’s sad that dogs[[ can’t]] talk to humans. It would be so much easier to let"
+     }
+    ]
+   }
+  },
+  "1360": {
+   "freq_by_loop": {
+    "1": 0.00022,
+    "8": 0.00691,
+    "32": 0.00688
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 2.238,
+      "domain": "code",
+      "text": "Actual = self.oFile.get_lines()[[\n\n]]        self.assertEqual(lExpected, lActual)\n\n"
+     },
+     {
+      "value": 2.213,
+      "domain": "code",
+      "text": ".execute(bytes(buf), recved)\n[[            ]]if nparsed!= recved:\n                return None\n\n"
+     },
+     {
+      "value": 2.067,
+      "domain": "code",
+      "text": " pkgutil.get_loader(import_name)[[\n\n]]    # Loader does not exist or we're referring to an"
+     },
+     {
+      "value": 2.03,
+      "domain": "code",
+      "text": "basename = os.path.basename(info.filename)[[\n]]                ext = ext.lower()\n                if ext"
+     },
+     {
+      "value": 1.964,
+      "domain": "code",
+      "text": "input_shape, classes=d['n_classes'])[[\n\n]]\t\t# Compiling current network\n\t\tcnet.compile("
+     }
+    ],
+    "8": [
+     {
+      "value": 26.94,
+      "domain": "code",
+      "text": ".http_stream.stream.readinto(buf)[[\n]]            if recved is None:\n                break\n\n            "
+     },
+     {
+      "value": 25.16,
+      "domain": "code",
+      "text": "Image(acct.avatar, file=False)[[\n]]        if av.good():\n            rv["
+     },
+     {
+      "value": 24.901,
+      "domain": "code",
+      "text": "filepath = loader.get_filename(import_name)[[\n]]    else:\n        # Fall back to imports.\n"
+     },
+     {
+      "value": 23.79,
+      "domain": "code",
+      "text": " (ndim - i)],\n                                   shape)[[\n]]        result.append(reshaped)\n    return result"
+     },
+     {
+      "value": 23.509,
+      "domain": "code",
+      "text": "method = parse_method(verb, op, path)[[\n]]        if method is None:\n            continue\n        methods"
+     }
+    ],
+    "32": [
+     {
+      "value": 27.223,
+      "domain": "code",
+      "text": "filepath = loader.get_filename(import_name)[[\n]]    else:\n        # Fall back to imports.\n"
+     },
+     {
+      "value": 25.908,
+      "domain": "code",
+      "text": ".http_stream.stream.readinto(buf)[[\n]]            if recved is None:\n                break\n\n            "
+     },
+     {
+      "value": 25.831,
+      "domain": "code",
+      "text": "Image(acct.avatar, file=False)[[\n]]        if av.good():\n            rv["
+     },
+     {
+      "value": 23.928,
+      "domain": "code",
+      "text": "(graph, item[0], end, path)[[\n]]            if newpath:\n                if not shortest or len"
+     },
+     {
+      "value": 23.366,
+      "domain": "code",
+      "text": "method = parse_method(verb, op, path)[[\n]]        if method is None:\n            continue\n        methods"
+     }
+    ]
+   }
+  },
+  "2482": {
+   "freq_by_loop": {
+    "1": 0.00036,
+    "8": 0.00034,
+    "32": 0.00035
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 33.636,
+      "domain": "web",
+      "text": "<|begin_text|>Android is a[[ mobile]] operating system developed by Google, based on a modified version of"
+     },
+     {
+      "value": 30.304,
+      "domain": "web",
+      "text": "-15 minutes to record the electrocardiogram.[[ Mobile]] consumer technology, on the other hand, has produced compact,"
+     },
+     {
+      "value": 27.973,
+      "domain": "code",
+      "text": " pandas as pd\nimport json\n\nfrom gmusicapi import[[ Mobile]]client\n\n## Set of file paths for the configuration file."
+     },
+     {
+      "value": 10.636,
+      "domain": "web",
+      "text": " whereas control mice were more likely to give up and become imm[[obile]]. The mice were then put in a maze with secluded"
+     },
+     {
+      "value": 7.959,
+      "domain": "web",
+      "text": " switch from one desktop to another you can either click the desired[[ desktop]] with the mouse or you can hit the key combination Ctrl"
+     }
+    ],
+    "8": [
+     {
+      "value": 41.822,
+      "domain": "web",
+      "text": ", and iPod Touch. It is the second most popular[[ mobile]] operating system globally after Android.\nCombined with Xcode,"
+     },
+     {
+      "value": 40.621,
+      "domain": "code",
+      "text": " pandas as pd\nimport json\n\nfrom gmusicapi import[[ Mobile]]client\n\n## Set of file paths for the configuration file."
+     },
+     {
+      "value": 37.947,
+      "domain": "web",
+      "text": "-15 minutes to record the electrocardiogram.[[ Mobile]] consumer technology, on the other hand, has produced compact,"
+     },
+     {
+      "value": 10.541,
+      "domain": "wiki",
+      "text": ", including patents for an inflatable solar lamp design and[[ portable]] solar-powered devices.\n\nCurrent Models\n \n Build-"
+     },
+     {
+      "value": 8.221,
+      "domain": "web",
+      "text": " whereas control mice were more likely to give up and become imm[[obile]]. The mice were then put in a maze with secluded"
+     }
+    ],
+    "32": [
+     {
+      "value": 41.793,
+      "domain": "web",
+      "text": ", and iPod Touch. It is the second most popular[[ mobile]] operating system globally after Android.\nCombined with Xcode,"
+     },
+     {
+      "value": 39.201,
+      "domain": "code",
+      "text": " pandas as pd\nimport json\n\nfrom gmusicapi import[[ Mobile]]client\n\n## Set of file paths for the configuration file."
+     },
+     {
+      "value": 38.116,
+      "domain": "web",
+      "text": "-15 minutes to record the electrocardiogram.[[ Mobile]] consumer technology, on the other hand, has produced compact,"
+     },
+     {
+      "value": 10.189,
+      "domain": "wiki",
+      "text": ", including patents for an inflatable solar lamp design and[[ portable]] solar-powered devices.\n\nCurrent Models\n \n Build-"
+     },
+     {
+      "value": 8.475,
+      "domain": "web",
+      "text": " whereas control mice were more likely to give up and become imm[[obile]]. The mice were then put in a maze with secluded"
+     }
+    ]
+   }
+  },
+  "2654": {
+   "freq_by_loop": {
+    "1": 0.00016,
+    "8": 0.00022,
+    "32": 0.00023
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 21.955,
+      "domain": "gsm8k_full",
+      "text": "  How much money profit did he make?\nAnswer: The[[ cheaper]] cards are worth a total of 30*50="
+     },
+     {
+      "value": 19.425,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: The red car is 40%[[ cheaper]] than the blue car. The price of the blue car is"
+     },
+     {
+      "value": 9.937,
+      "domain": "gsm8k_full",
+      "text": "=5>>5.\nOne orange is three times more[[ expensive]] than a banana, so it costs 1 * 3 = $"
+     },
+     {
+      "value": 9.455,
+      "domain": "web",
+      "text": " so harvesting them from the wild is both extremely challenging and prohibitively[[ expensive]]. This in part explains why cordyceps was so"
+     },
+     {
+      "value": 9.144,
+      "domain": "web",
+      "text": " has been reduced to one to two weeks and will become more[[ affordable]] for routine use as the price continues to fall.\n“"
+     }
+    ],
+    "8": [
+     {
+      "value": 27.117,
+      "domain": "gsm8k_full",
+      "text": "  How much money profit did he make?\nAnswer: The[[ cheaper]] cards are worth a total of 30*50="
+     },
+     {
+      "value": 24.762,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: The red car is 40%[[ cheaper]] than the blue car. The price of the blue car is"
+     },
+     {
+      "value": 13.224,
+      "domain": "web",
+      "text": " has been reduced to one to two weeks and will become more[[ affordable]] for routine use as the price continues to fall.\n“"
+     },
+     {
+      "value": 11.066,
+      "domain": "web",
+      "text": " hot arc, which improves cut speed and productivity, but it’s[[ expensive]]. Comparable productivity gains could be had by the welder"
+     },
+     {
+      "value": 10.068,
+      "domain": "web",
+      "text": " so harvesting them from the wild is both extremely challenging and prohibitively[[ expensive]]. This in part explains why cordyceps was so"
+     }
+    ],
+    "32": [
+     {
+      "value": 26.536,
+      "domain": "gsm8k_full",
+      "text": "  How much money profit did he make?\nAnswer: The[[ cheaper]] cards are worth a total of 30*50="
+     },
+     {
+      "value": 25.16,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: The red car is 40%[[ cheaper]] than the blue car. The price of the blue car is"
+     },
+     {
+      "value": 13.097,
+      "domain": "web",
+      "text": " has been reduced to one to two weeks and will become more[[ affordable]] for routine use as the price continues to fall.\n“"
+     },
+     {
+      "value": 11.651,
+      "domain": "web",
+      "text": " hot arc, which improves cut speed and productivity, but it’s[[ expensive]]. Comparable productivity gains could be had by the welder"
+     },
+     {
+      "value": 9.952,
+      "domain": "web",
+      "text": " so harvesting them from the wild is both extremely challenging and prohibitively[[ expensive]]. This in part explains why cordyceps was so"
+     }
+    ]
+   }
+  },
+  "2936": {
+   "freq_by_loop": {
+    "1": 0.00019,
+    "8": 0.0002,
+    "32": 0.0002
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 24.328,
+      "domain": "web",
+      "text": " and then intercept unprotected personal data. Internet service providers can[[ monitor]] traffic and basically collect everything about which sites you visit, as"
+     },
+     {
+      "value": 23.084,
+      "domain": "wiki",
+      "text": " groundwater, and nearby McKellar Lake.  Groundwater[[ monitoring]] equipment would also be installed at the site.\n\nSee also"
+     },
+     {
+      "value": 23.017,
+      "domain": "web",
+      "text": "formed\nThis test may be commonly ordered to help diagnose and[[ monitor]] a disorder called\nThis test also helps confirm\nNormal values"
+     },
+     {
+      "value": 20.232,
+      "domain": "web",
+      "text": ". 12 Weekly Epidemiological Record.\n[[Monitoring]] the emergence of new malaria strains for resistance is crucial, said"
+     },
+     {
+      "value": 5.827,
+      "domain": "code",
+      "text": " SHERLOG_SERVER_URL, SHERLOG_[[MON]]GO_HOST, SHERLOG_MONGO_USER"
+     }
+    ],
+    "8": [
+     {
+      "value": 24.393,
+      "domain": "web",
+      "text": ". 12 Weekly Epidemiological Record.\n[[Monitoring]] the emergence of new malaria strains for resistance is crucial, said"
+     },
+     {
+      "value": 23.896,
+      "domain": "web",
+      "text": " and then intercept unprotected personal data. Internet service providers can[[ monitor]] traffic and basically collect everything about which sites you visit, as"
+     },
+     {
+      "value": 23.488,
+      "domain": "wiki",
+      "text": " groundwater, and nearby McKellar Lake.  Groundwater[[ monitoring]] equipment would also be installed at the site.\n\nSee also"
+     },
+     {
+      "value": 22.629,
+      "domain": "web",
+      "text": "formed\nThis test may be commonly ordered to help diagnose and[[ monitor]] a disorder called\nThis test also helps confirm\nNormal values"
+     },
+     {
+      "value": 9.354,
+      "domain": "code",
+      "text": " SHERLOG_SERVER_URL, SHERLOG_[[MON]]GO_HOST, SHERLOG_MONGO_USER"
+     }
+    ],
+    "32": [
+     {
+      "value": 24.762,
+      "domain": "web",
+      "text": ". 12 Weekly Epidemiological Record.\n[[Monitoring]] the emergence of new malaria strains for resistance is crucial, said"
+     },
+     {
+      "value": 24.028,
+      "domain": "wiki",
+      "text": " groundwater, and nearby McKellar Lake.  Groundwater[[ monitoring]] equipment would also be installed at the site.\n\nSee also"
+     },
+     {
+      "value": 22.784,
+      "domain": "web",
+      "text": " and then intercept unprotected personal data. Internet service providers can[[ monitor]] traffic and basically collect everything about which sites you visit, as"
+     },
+     {
+      "value": 22.246,
+      "domain": "web",
+      "text": "formed\nThis test may be commonly ordered to help diagnose and[[ monitor]] a disorder called\nThis test also helps confirm\nNormal values"
+     },
+     {
+      "value": 9.217,
+      "domain": "code",
+      "text": " SHERLOG_SERVER_URL, SHERLOG_[[MON]]GO_HOST, SHERLOG_MONGO_USER"
+     }
+    ]
+   }
+  },
+  "5788": {
+   "freq_by_loop": {
+    "1": 9e-05,
+    "8": 0.00229,
+    "32": 0.00224
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 2.212,
+      "domain": "web",
+      "text": "919. The disease caused by a soil-borne[[ virus]] was later found in a number of localities in the eastern"
+     },
+     {
+      "value": 1.911,
+      "domain": "web",
+      "text": "-saccadic target were congruent with the target’s post[[-]]saccadic location, which would almost exclusively be the case"
+     },
+     {
+      "value": 1.875,
+      "domain": "wiki",
+      "text": "<|begin_text|>Sacred Heart[[ of]] Jesus School may refer to:\n\n Sacred Heart of Jesus"
+     },
+     {
+      "value": 1.86,
+      "domain": "web",
+      "text": ") spaces.\nThe Noggin mice were less anxious[[ and]] explored more mazes than the control mice. \"The biochemical"
+     },
+     {
+      "value": 1.794,
+      "domain": "code",
+      "text": "html = self.marionette.absolute_url([[\"]]double_click.html\")\n        self.mari"
+     }
+    ],
+    "8": [
+     {
+      "value": 12.806,
+      "domain": "web",
+      "text": "ccades. This effect of intra-saccadic motion[[ was]] independent of the saccade’s landing position, as well"
+     },
+     {
+      "value": 10.987,
+      "domain": "web",
+      "text": " sure,\" Brooker said. They discovered Noggin[[ blocks]] the pathway more precisely and effectively than Prozac or tric"
+     },
+     {
+      "value": 9.431,
+      "domain": "web",
+      "text": "criflavine produce an immune response in cultured cells,[[ enhancing]] their capacity to fight off pathogens.\n“We have shown for"
+     },
+     {
+      "value": 6.474,
+      "domain": "wiki",
+      "text": " high-sensitivity loci. These NamiRNAs are able[[ to]] activate the related enhancers and co-work with them to"
+     },
+     {
+      "value": 5.872,
+      "domain": "web",
+      "text": " in southeastern Illinois in 1919. The disease[[ caused]] by a soil-borne virus was later found in a number"
+     }
+    ],
+    "32": [
+     {
+      "value": 13.393,
+      "domain": "web",
+      "text": "ccades. This effect of intra-saccadic motion[[ was]] independent of the saccade’s landing position, as well"
+     },
+     {
+      "value": 11.74,
+      "domain": "web",
+      "text": " that Prozac and Tricyclics inhibit this pathway[[ and]] trigger stem cells in the brain to produce more neurons. These"
+     },
+     {
+      "value": 9.675,
+      "domain": "web",
+      "text": "criflavine produce an immune response in cultured cells,[[ enhancing]] their capacity to fight off pathogens.\n“We have shown for"
+     },
+     {
+      "value": 6.723,
+      "domain": "web",
+      "text": "parasitic disease of barley, was recently shown to[[ be]] caused by a virus which is seedborne. In 19"
+     },
+     {
+      "value": 6.556,
+      "domain": "wiki",
+      "text": " high-sensitivity loci. These NamiRNAs are able[[ to]] activate the related enhancers and co-work with them to"
+     }
+    ]
+   }
+  },
+  "5807": {
+   "freq_by_loop": {
+    "1": 0.00049,
+    "8": 0.00043,
+    "32": 0.00044
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 32.04,
+      "domain": "wiki",
+      "text": " country went through a rapid economic transformation. This also affected the[[ media]] that became free of the heavy-handed control of the Commun"
+     },
+     {
+      "value": 31.053,
+      "domain": "web",
+      "text": " the epidermis and left to incubate. The culture[[ media]] is then collected for analysis where changes in inflammatory markers and other"
+     },
+     {
+      "value": 30.922,
+      "domain": "web",
+      "text": " has helped remote communities around the world by teaching critical thinking,[[ media]] literacy and the use of communication technology.\nTo do this"
+     },
+     {
+      "value": 30.441,
+      "domain": "code",
+      "text": " import Repository\nfrom..lib.mediaobj import[[ Media]]Object\nfrom..lib.note import Note\nfrom"
+     },
+     {
+      "value": 30.307,
+      "domain": "code",
+      "text": "ow_client.apis.media_sources_api import[[ Media]]SourcesApi\n\n\nclass TestMediaSourcesApi(unittest.TestCase"
+     }
+    ],
+    "8": [
+     {
+      "value": 38.89,
+      "domain": "wiki",
+      "text": "<|begin_text|>Intermedia Systems Corporation was an American[[ media]] technology company, co-founded in Cambridge, Massachusetts in 1"
+     },
+     {
+      "value": 37.465,
+      "domain": "web",
+      "text": " has helped remote communities around the world by teaching critical thinking,[[ media]] literacy and the use of communication technology.\nTo do this"
+     },
+     {
+      "value": 37.395,
+      "domain": "code",
+      "text": " ApiException\nfrom kinow_client.apis.[[media]]_sources_api import MediaSourcesApi\n\n\nclass TestMedia"
+     },
+     {
+      "value": 37.305,
+      "domain": "code",
+      "text": "lib.repo import Repository\nfrom..lib.[[media]]obj import MediaObject\nfrom..lib.note import"
+     },
+     {
+      "value": 35.773,
+      "domain": "wiki",
+      "text": "<|begin_text|>The mass[[ media]] in the Czech Republic refers to mass communication methods through broadcasting,"
+     }
+    ],
+    "32": [
+     {
+      "value": 39.577,
+      "domain": "wiki",
+      "text": "<|begin_text|>Intermedia Systems Corporation was an American[[ media]] technology company, co-founded in Cambridge, Massachusetts in 1"
+     },
+     {
+      "value": 37.823,
+      "domain": "web",
+      "text": " has helped remote communities around the world by teaching critical thinking,[[ media]] literacy and the use of communication technology.\nTo do this"
+     },
+     {
+      "value": 35.637,
+      "domain": "wiki",
+      "text": "<|begin_text|>The mass[[ media]] in the Czech Republic refers to mass communication methods through broadcasting,"
+     },
+     {
+      "value": 34.804,
+      "domain": "code",
+      "text": "lib.repo import Repository\nfrom..lib.[[media]]obj import MediaObject\nfrom..lib.note import"
+     },
+     {
+      "value": 33.342,
+      "domain": "wiki",
+      "text": "\n\nPreseason media poll\nThe MAC released their preseason[[ media]] poll on July 24, 2018, with"
+     }
+    ]
+   }
+  },
+  "8860": {
+   "freq_by_loop": {
+    "1": 0.00011,
+    "8": 0.00014,
+    "32": 0.00013
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 18.924,
+      "domain": "code",
+      "text": "\n# distributed under the License is distributed on an \"AS[[ IS]]\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND"
+     },
+     {
+      "value": 18.515,
+      "domain": "code",
+      "text": "\n# distributed under the License is distributed on an \"AS[[ IS]]\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND"
+     },
+     {
+      "value": 18.206,
+      "domain": "code",
+      "text": "#    distributed under the License is distributed on an \"AS[[ IS]]\" BASIS, WITHOUT\n#    WARRANTIES OR"
+     },
+     {
+      "value": 18.2,
+      "domain": "code",
+      "text": ".\n#\n# THE SOFTWARE IS PROVIDED \"AS[[ IS]]\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR"
+     },
+     {
+      "value": 18.109,
+      "domain": "code",
+      "text": "\n# distributed under the License is distributed on an \"AS[[ IS]]\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND"
+     }
+    ],
+    "8": [
+     {
+      "value": 49.633,
+      "domain": "code",
+      "text": "\n# distributed under the License is distributed on an \"AS[[ IS]]\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND"
+     },
+     {
+      "value": 49.541,
+      "domain": "code",
+      "text": "\n    distributed under the License is distributed on an \"AS[[ IS]]\" BASIS,\n    WITHOUT WARRANTIES OR CONDITIONS OF"
+     },
+     {
+      "value": 49.445,
+      "domain": "code",
+      "text": "#    distributed under the License is distributed on an \"AS[[ IS]]\" BASIS, WITHOUT\n#    WARRANTIES OR"
+     },
+     {
+      "value": 49.249,
+      "domain": "code",
+      "text": "\n# distributed under the License is distributed on an \"AS[[ IS]]\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND"
+     },
+     {
+      "value": 49.226,
+      "domain": "code",
+      "text": "#    distributed under the License is distributed on an \"AS[[ IS]]\" BASIS, WITHOUT\n#    WARRANTIES OR"
+     }
+    ],
+    "32": [
+     {
+      "value": 50.128,
+      "domain": "code",
+      "text": "#    distributed under the License is distributed on an \"AS[[ IS]]\" BASIS, WITHOUT\n#    WARRANTIES OR"
+     },
+     {
+      "value": 50.012,
+      "domain": "code",
+      "text": "#    distributed under the License is distributed on an \"AS[[ IS]]\" BASIS, WITHOUT\n#    WARRANTIES OR"
+     },
+     {
+      "value": 49.996,
+      "domain": "code",
+      "text": "#    distributed under the License is distributed on an \"AS[[ IS]]\" BASIS, WITHOUT\n#    WARRANTIES OR"
+     },
+     {
+      "value": 49.945,
+      "domain": "code",
+      "text": "#    distributed under the License is distributed on an \"AS[[ IS]]\" BASIS, WITHOUT\n#    WARRANTIES OR"
+     },
+     {
+      "value": 49.917,
+      "domain": "code",
+      "text": "\n# distributed under the License is distributed on an \"AS[[ IS]]\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND"
+     }
+    ]
+   }
+  },
+  "9110": {
+   "freq_by_loop": {
+    "1": 0.00632,
+    "8": 0.0011,
+    "32": 0.00095
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 11.68,
+      "domain": "web",
+      "text": " Indigenous Protected Area?\nAn Indigenous Protected Area ([[IP]]A) is an area of land or sea cared for by"
+     },
+     {
+      "value": 11.556,
+      "domain": "wiki",
+      "text": " a component party of the Barisan Nasional ([[BN]]) coalition.\n\nDebate on the Domestic Vi"
+     },
+     {
+      "value": 11.342,
+      "domain": "wiki",
+      "text": " its closure, the plant was operated by Tennessee Valley Authority ([[TV]]A).\n\nHistory\nMemphis Light, Gas"
+     },
+     {
+      "value": 11.276,
+      "domain": "web",
+      "text": " advised to take caution and get Distributed Denial of Service ([[D]]DoS) protection from a reliable company. Such companies are able"
+     },
+     {
+      "value": 11.258,
+      "domain": "web",
+      "text": " by the National Center for Research on Early Childhood Education ([[NC]]RECE).\nThis course addressed a number of teaching"
+     }
+    ],
+    "8": [
+     {
+      "value": 11.933,
+      "domain": "web",
+      "text": " has been replaced by cutting with protection of regeneration and soils ([[CP]]RS). In both types of cutting, all adult trees"
+     },
+     {
+      "value": 11.647,
+      "domain": "web",
+      "text": " used to restrict peak particle velocity to below 6 mm/sec ([[P]].P.V) in residential districts.\n- Tun"
+     },
+     {
+      "value": 10.414,
+      "domain": "code",
+      "text": " Public License as published by the Free\n * Software Foundation ([[F]]SF), either version 3 of the License, or ("
+     },
+     {
+      "value": 8.727,
+      "domain": "wiki",
+      "text": " African American graduate of the Philadelphia School of Design for Women ([[PS]]DW), now Moore College of Art & Design, Anna"
+     },
+     {
+      "value": 8.573,
+      "domain": "wiki",
+      "text": " for the National Self-Government of Germans in Hungary ([[M]]NOÖ). Between 2011 and 20"
+     }
+    ],
+    "32": [
+     {
+      "value": 11.083,
+      "domain": "web",
+      "text": " used to restrict peak particle velocity to below 6 mm/sec ([[P]].P.V) in residential districts.\n- Tun"
+     },
+     {
+      "value": 7.977,
+      "domain": "web",
+      "text": " has been replaced by cutting with protection of regeneration and soils ([[CP]]RS). In both types of cutting, all adult trees"
+     },
+     {
+      "value": 7.859,
+      "domain": "wiki",
+      "text": " for the National Self-Government of Germans in Hungary ([[M]]NOÖ). Between 2011 and 20"
+     },
+     {
+      "value": 7.833,
+      "domain": "web",
+      "text": "-of-care screening for atrial fibrillation ([[A]]-fib) using a new generation of handheld electrocar"
+     },
+     {
+      "value": 7.681,
+      "domain": "code",
+      "text": " Public License as published by the Free\n * Software Foundation ([[F]]SF), either version 3 of the License, or ("
+     }
+    ]
+   }
+  },
+  "9858": {
+   "freq_by_loop": {
+    "1": 0.00063,
+    "8": 0.00482,
+    "32": 0.00483
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 4.787,
+      "domain": "web",
+      "text": ".\nDental implants are substitute tooth roots which are placed[[ in]] the jaw bone. For an implant to be successful the"
+     },
+     {
+      "value": 4.459,
+      "domain": "math",
+      "text": " of 5 she had 3 left over and when she stacked them[[ in]] piles of 7 she had 5 left over. If she has"
+     },
+     {
+      "value": 4.079,
+      "domain": "web",
+      "text": " same color, take them out and put a green marble back[[ in]] the box.\nRepeat this until only one marble remains in"
+     },
+     {
+      "value": 3.806,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: Four dogs sat[[ in]] a line within the veterinarian's waiting room.  The"
+     },
+     {
+      "value": 3.688,
+      "domain": "math",
+      "text": " the other front seat. Then the three remaining people can sit[[ in]] the back seats in any arrangement. There are three choices of"
+     }
+    ],
+    "8": [
+     {
+      "value": 23.418,
+      "domain": "web",
+      "text": " the pear tree over to the new hole. Place the tree[[ in]] the new hole so it's planted at the same level in the"
+     },
+     {
+      "value": 20.108,
+      "domain": "web",
+      "text": ".\nOn your second visit, the permanent crown is fixed[[ into]] place with a special adhesive that holds it firmly on the tooth"
+     },
+     {
+      "value": 18.532,
+      "domain": "web",
+      "text": " two cardboard circles edges. Next thread a piece of the wool[[ into]] one of the smaller sides of the opening circle, making sure"
+     },
+     {
+      "value": 17.945,
+      "domain": "web",
+      "text": ".\nDental implants are substitute tooth roots which are placed[[ in]] the jaw bone. For an implant to be successful the"
+     },
+     {
+      "value": 15.978,
+      "domain": "math",
+      "text": ": There are $7!$ ways to put the beads[[ on]] the grid, not considering rotations and reflections. Arrangements can"
+     }
+    ],
+    "32": [
+     {
+      "value": 23.877,
+      "domain": "web",
+      "text": " the pear tree over to the new hole. Place the tree[[ in]] the new hole so it's planted at the same level in the"
+     },
+     {
+      "value": 20.624,
+      "domain": "web",
+      "text": ".\nOn your second visit, the permanent crown is fixed[[ into]] place with a special adhesive that holds it firmly on the tooth"
+     },
+     {
+      "value": 18.769,
+      "domain": "web",
+      "text": " two cardboard circles edges. Next thread a piece of the wool[[ into]] one of the smaller sides of the opening circle, making sure"
+     },
+     {
+      "value": 17.651,
+      "domain": "web",
+      "text": ".\nDental implants are substitute tooth roots which are placed[[ in]] the jaw bone. For an implant to be successful the"
+     },
+     {
+      "value": 16.343,
+      "domain": "math",
+      "text": ": There are $7!$ ways to put the beads[[ on]] the grid, not considering rotations and reflections. Arrangements can"
+     }
+    ]
+   }
+  },
+  "10103": {
+   "freq_by_loop": {
+    "1": 0.00016,
+    "8": 0.0056,
+    "32": 0.00589
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 2.585,
+      "domain": "wiki",
+      "text": "time Self-Defense Force.\n\nShe was replaced by[[ another]] ship of the same name, JS Chiyoda (AS"
+     },
+     {
+      "value": 2.17,
+      "domain": "web",
+      "text": " on–parts of Rome that were not on our official itinerary[[.]]\nAccording to legend, the city of Rome was founded in"
+     },
+     {
+      "value": 2.038,
+      "domain": "web",
+      "text": " feelings in the North and South were pushed to the edge by[[ other]] events, t…\nE-pasta adrese"
+     },
+     {
+      "value": 1.98,
+      "domain": "wiki",
+      "text": " shopkeeper in Delhi refuses to part with his store despite lucrative[[ offers]]. On his 70th birthday, he tells his past to"
+     },
+     {
+      "value": 1.886,
+      "domain": "web",
+      "text": " giving internet users the strongest protections possible. But the Trump FCC[[ later]] repealed those rules. With a new administration in power,"
+     }
+    ],
+    "8": [
+     {
+      "value": 11.551,
+      "domain": "web",
+      "text": " in widespread use early last century, but abandoned with the discovery[[ of]] Penicillin, could help tackle the rise of antibiotic-"
+     },
+     {
+      "value": 8.966,
+      "domain": "wiki",
+      "text": " confesses that she does not believe in love and that money[[ is]] the most important thing in life for her. Unable to"
+     },
+     {
+      "value": 8.716,
+      "domain": "wiki",
+      "text": "1 MW. TVA announced plans that Allen would be replaced[[ with]] by the Allen Combined Cycle Plant, a natural gas plant,"
+     },
+     {
+      "value": 8.286,
+      "domain": "wiki",
+      "text": " South Carolina to win an ACC tournament championship, even though Cle[[mson]], still remains in the ACC.\n\nRoster\n\nSchedule"
+     },
+     {
+      "value": 8.058,
+      "domain": "code",
+      "text": "\",\n                     \"summary\": \"use post request[[ for]] logout\"}\n        resp.body = (json"
+     }
+    ],
+    "32": [
+     {
+      "value": 10.428,
+      "domain": "web",
+      "text": " speed and productivity, but it’s expensive. Comparable productivity gains[[ could]] be had by the welder position and skill.\n-"
+     },
+     {
+      "value": 10.304,
+      "domain": "web",
+      "text": " in widespread use early last century, but abandoned with the discovery[[ of]] Penicillin, could help tackle the rise of antibiotic-"
+     },
+     {
+      "value": 9.256,
+      "domain": "web",
+      "text": " are new to carnivorous plants, location is far more[[ important]] than feeding. A pitcher plant growing in the right location"
+     },
+     {
+      "value": 9.123,
+      "domain": "web",
+      "text": " adding that the amount of greenhouse gases emitted from decomposing landfills[[ is]] around double the CO2 released by incineration.\n"
+     },
+     {
+      "value": 9.093,
+      "domain": "web",
+      "text": " in our Rona stores, we are offered lower quality Chinese[[ products]]. How do you explain that?\nIs there a deforestation"
+     }
+    ]
+   }
+  },
+  "12956": {
+   "freq_by_loop": {
+    "1": 0.00125,
+    "8": 0.00165,
+    "32": 0.00162
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 14.21,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: G[[omer]] ate 5 less than 23 scoops of mashed potatoes."
+     },
+     {
+      "value": 14.201,
+      "domain": "wiki",
+      "text": " and secondary education in his hometown. He then graduated from G[[az]]iantep High School. Then he studied at Faculty of Political"
+     },
+     {
+      "value": 13.924,
+      "domain": "wiki",
+      "text": "Abdool Razack Mohamed\nAbdul G[[aff]]ar Billoo\nAbdul Rashid Godil\nAbd"
+     },
+     {
+      "value": 13.364,
+      "domain": "wiki",
+      "text": "ule Gießen” (FTH) in G[[ie]]ßen. She is also scientific director of the"
+     },
+     {
+      "value": 13.358,
+      "domain": "wiki",
+      "text": "<|begin_text|>Dorin Alexandru G[[rig]]ore (born 1 August 1985) is a"
+     }
+    ],
+    "8": [
+     {
+      "value": 23.2,
+      "domain": "gsm8k_full",
+      "text": " three groups, Alphas, The finders, and G[[og]]etters to find as many shells as possible. If team"
+     },
+     {
+      "value": 21.772,
+      "domain": "wiki",
+      "text": "<|begin_text|>Lady G[[ou]]yi (; 113–88 BC),"
+     },
+     {
+      "value": 20.542,
+      "domain": "web",
+      "text": " the birds have been spotted as far west as the former G[[rum]]man property in Calverton to as far east as Ori"
+     },
+     {
+      "value": 20.424,
+      "domain": "wiki",
+      "text": "macher studied Islamic studies, history and Modern German literature in G[[ie]]ßen from 1982 to 1985"
+     },
+     {
+      "value": 19.521,
+      "domain": "code",
+      "text": "class.html\n# Typer: Ginny C G[[he]]zzo \n# What I learned: \n\n# why doesn't the"
+     }
+    ],
+    "32": [
+     {
+      "value": 23.179,
+      "domain": "gsm8k_full",
+      "text": " three groups, Alphas, The finders, and G[[og]]etters to find as many shells as possible. If team"
+     },
+     {
+      "value": 22.545,
+      "domain": "wiki",
+      "text": "<|begin_text|>Lady G[[ou]]yi (; 113–88 BC),"
+     },
+     {
+      "value": 21.204,
+      "domain": "code",
+      "text": "class.html\n# Typer: Ginny C G[[he]]zzo \n# What I learned: \n\n# why doesn't the"
+     },
+     {
+      "value": 21.107,
+      "domain": "wiki",
+      "text": "macher studied Islamic studies, history and Modern German literature in G[[ie]]ßen from 1982 to 1985"
+     },
+     {
+      "value": 19.947,
+      "domain": "web",
+      "text": " the birds have been spotted as far west as the former G[[rum]]man property in Calverton to as far east as Ori"
+     }
+    ]
+   }
+  },
+  "13890": {
+   "freq_by_loop": {
+    "1": 0.01149,
+    "8": 0.00261,
+    "32": 0.00242
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 7.663,
+      "domain": "code",
+      "text": "link = self.marionette.find_element([[By]].ID, \"mozLink\")\n        self"
+     },
+     {
+      "value": 7.334,
+      "domain": "code",
+      "text": ".\"\"\"\n        if not session:\n            session =[[ or]]m_session.Session.object_session(self)"
+     },
+     {
+      "value": 7.202,
+      "domain": "code",
+      "text": " parseTitle\n\nfrom.functions import initTree\nfrom.[[who]]oshif import Whoosh\nfrom whoosh.qparser"
+     },
+     {
+      "value": 7.103,
+      "domain": "code",
+      "text": " be running as database user %(db_user)s,[[ was]] running as %(user)s\"))\n\n# setup"
+     },
+     {
+      "value": 6.548,
+      "domain": "code",
+      "text": ":1]:\n\t\tm = mutation.Mutant([[to]]KO[i][1],numMutations="
+     }
+    ],
+    "8": [
+     {
+      "value": 8.993,
+      "domain": "code",
+      "text": ", print_function,\n                        unicode_literals,[[ with]]_statement)\n\nimport os\n\nfrom twitter.common"
+     },
+     {
+      "value": 8.672,
+      "domain": "code",
+      "text": " GRAMPS.\n\"\"\"\nfrom __future__ import[[ with]]_statement\n\n#----------------"
+     },
+     {
+      "value": 8.571,
+      "domain": "code",
+      "text": "e6\\x88\\xb7', blank=True,[[ to]]=settings.AUTH_USER_MODEL, null="
+     },
+     {
+      "value": 8.395,
+      "domain": "code",
+      "text": " absolute_import, nested_scopes, generators, division,[[ with]]_statement, unicode_literals\nimport logging\n\nfrom"
+     },
+     {
+      "value": 8.387,
+      "domain": "code",
+      "text": "SchemaMigration):\n\n    def forwards(self,[[ or]]m):\n        # Adding model 'Sprint'\n"
+     }
+    ],
+    "32": [
+     {
+      "value": 9.386,
+      "domain": "code",
+      "text": "SchemaMigration):\n\n    def forwards(self,[[ or]]m):\n        # Adding model 'Sprint'\n"
+     },
+     {
+      "value": 9.386,
+      "domain": "code",
+      "text": "SchemaMigration):\n\n    def forwards(self,[[ or]]m):\n        # Deleting field 'GroupM"
+     },
+     {
+      "value": 9.386,
+      "domain": "code",
+      "text": "SchemaMigration):\n\n    def forwards(self,[[ or]]m):\n        # Adding field 'Location.has"
+     },
+     {
+      "value": 9.321,
+      "domain": "code",
+      "text": "DataMigration):\n\n    def forwards(self,[[ or]]m):\n        \"Write your forwards methods here."
+     },
+     {
+      "value": 9.273,
+      "domain": "code",
+      "text": ", print_function,\n                        unicode_literals,[[ with]]_statement)\n\nimport os\n\nfrom twitter.common"
+     }
+    ]
+   }
+  },
+  "15800": {
+   "freq_by_loop": {
+    "1": 0.00133,
+    "8": 0.00255,
+    "32": 0.00251
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 10.183,
+      "domain": "web",
+      "text": "0) unincorporated units of that size, and[[ also]] all persons living in the densely settled urban\nfringe,"
+     },
+     {
+      "value": 10.164,
+      "domain": "wiki",
+      "text": " by the first showroom in Scotland opened in Edinburgh, and[[ also]] showrooms in Guildford, Brentwood and Ch"
+     },
+     {
+      "value": 9.476,
+      "domain": "web",
+      "text": ", Part 2, act 4, scene 10, and[[ also]] in A Christmas Carol. Other common forms include doormat,"
+     },
+     {
+      "value": 9.366,
+      "domain": "web",
+      "text": " from the blood, regulates blood flow to the liver, and[[ sometimes]] stores blood cells. At any given time, almost one-"
+     },
+     {
+      "value": 9.355,
+      "domain": "wiki",
+      "text": " the Patterns sold the fair to the Renaissance Entertainment Corporation, and[[ subsequently]] it moved to Vacaville in 1999"
+     }
+    ],
+    "8": [
+     {
+      "value": 16.452,
+      "domain": "wiki",
+      "text": " Philadelphia for graduate work in textile work at PSDW, and[[ subsequently]] studied medical illustration at Howard University in Washington, D.C"
+     },
+     {
+      "value": 16.343,
+      "domain": "web",
+      "text": " continues in the roots and shoots (< 2°C) and[[ thus]] results in the worsening of the water balance in plants."
+     },
+     {
+      "value": 16.311,
+      "domain": "wiki",
+      "text": " the Patterns sold the fair to the Renaissance Entertainment Corporation, and[[ subsequently]] it moved to Vacaville in 1999"
+     },
+     {
+      "value": 16.098,
+      "domain": "web",
+      "text": "—the theory of the interaction between light and matter—and[[ thus]] altered the way science understands the nature of waves and particles."
+     },
+     {
+      "value": 15.016,
+      "domain": "wiki",
+      "text": " higher costs required a second approval in 1972 and[[ then]] construction began. Because of their long construction during a period of"
+     }
+    ],
+    "32": [
+     {
+      "value": 16.919,
+      "domain": "wiki",
+      "text": " Philadelphia for graduate work in textile work at PSDW, and[[ subsequently]] studied medical illustration at Howard University in Washington, D.C"
+     },
+     {
+      "value": 16.142,
+      "domain": "web",
+      "text": " continues in the roots and shoots (< 2°C) and[[ thus]] results in the worsening of the water balance in plants."
+     },
+     {
+      "value": 16.09,
+      "domain": "wiki",
+      "text": " the Patterns sold the fair to the Renaissance Entertainment Corporation, and[[ subsequently]] it moved to Vacaville in 1999"
+     },
+     {
+      "value": 15.477,
+      "domain": "web",
+      "text": " When prices are low, producers are stretched for every penny and[[ subsequently]] they don’t take proper care of their crops, cutting corners and"
+     },
+     {
+      "value": 15.422,
+      "domain": "web",
+      "text": " the day to reflect on their life with this disease, and[[ also]] to spread awareness through social media, blogs, and in person"
+     }
+    ]
+   }
+  },
+  "16525": {
+   "freq_by_loop": {
+    "1": 0.00062,
+    "8": 0.00049,
+    "32": 0.0005
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 28.411,
+      "domain": "web",
+      "text": "<|begin_text|>Tests to Diagnose Lower Respiratory Tra[[ct]] Infection\nThere are several diagnostic tests for lower respiratory tract"
+     },
+     {
+      "value": 26.872,
+      "domain": "wiki",
+      "text": " with a BA.  In 1946 he began le[[ct]]uring in English literature, and in 1948 was"
+     },
+     {
+      "value": 26.657,
+      "domain": "wiki",
+      "text": ")\n Credo\n Sursum corda\n San[[ct]]us\n Gloria in excelsis\n Evening"
+     },
+     {
+      "value": 25.973,
+      "domain": "code",
+      "text": "_link'] = 'http://{}'.format(ac[[ct]].website) if acct.website else None\n        "
+     },
+     {
+      "value": 25.705,
+      "domain": "wiki",
+      "text": " continuo, op. 1\n Symphonie no[[ct]]urne for strings, two oboes, two horns,"
+     }
+    ],
+    "8": [
+     {
+      "value": 32.35,
+      "domain": "wiki",
+      "text": " continuo, op. 1\n Symphonie no[[ct]]urne for strings, two oboes, two horns,"
+     },
+     {
+      "value": 32.271,
+      "domain": "wiki",
+      "text": ")\n Credo\n Sursum corda\n San[[ct]]us\n Gloria in excelsis\n Evening"
+     },
+     {
+      "value": 30.066,
+      "domain": "web",
+      "text": "<|begin_text|>What is a Splene[[ct]]omy?\nThe procedure to remove the spleen is"
+     },
+     {
+      "value": 29.638,
+      "domain": "code",
+      "text": " ImportError:\n        mht = None\n        import dp[[ct]]\n\n\ndef constructFov(shape, t0, t"
+     },
+     {
+      "value": 29.211,
+      "domain": "web",
+      "text": " Cornell.\nUnlike most owls, which are no[[ct]]urnal, the snow white bird is active during all hours —"
+     }
+    ],
+    "32": [
+     {
+      "value": 31.995,
+      "domain": "wiki",
+      "text": " continuo, op. 1\n Symphonie no[[ct]]urne for strings, two oboes, two horns,"
+     },
+     {
+      "value": 31.593,
+      "domain": "wiki",
+      "text": ")\n Credo\n Sursum corda\n San[[ct]]us\n Gloria in excelsis\n Evening"
+     },
+     {
+      "value": 29.777,
+      "domain": "web",
+      "text": " Cornell.\nUnlike most owls, which are no[[ct]]urnal, the snow white bird is active during all hours —"
+     },
+     {
+      "value": 29.37,
+      "domain": "code",
+      "text": " ImportError:\n        mht = None\n        import dp[[ct]]\n\n\ndef constructFov(shape, t0, t"
+     },
+     {
+      "value": 29.015,
+      "domain": "wiki",
+      "text": " with a BA.  In 1946 he began le[[ct]]uring in English literature, and in 1948 was"
+     }
+    ]
+   }
+  },
+  "16759": {
+   "freq_by_loop": {
+    "1": 0.00388,
+    "8": 0.00531,
+    "32": 0.00535
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 3.867,
+      "domain": "code",
+      "text": "check_installed(package) and not smm.install[[(]]package):\n                self.error(\n                    \""
+     },
+     {
+      "value": 3.862,
+      "domain": "code",
+      "text": ")\n    env.Alias('install', os[[.]]path.join(env['INSTALL_PRE"
+     },
+     {
+      "value": 3.834,
+      "domain": "code",
+      "text": "stderr.write('Did you pip install docs/requirements[[.]]txt?\\n')\n        sys.exit(-1"
+     },
+     {
+      "value": 3.421,
+      "domain": "code",
+      "text": " '.format(ver) +\n            'Uninstall it[[ with]] \"pip uninstall azure\".'\n        )\n"
+     },
+     {
+      "value": 3.347,
+      "domain": "code",
+      "text": "setup.fabutils import install_package, install_packages[[,]] flo\nfrom fabsetup.fabutils import install_"
+     }
+    ],
+    "8": [
+     {
+      "value": 13.953,
+      "domain": "code",
+      "text": "stderr.write('Did you pip install docs/requirements[[.]]txt?\\n')\n        sys.exit(-1"
+     },
+     {
+      "value": 12.656,
+      "domain": "code",
+      "text": "format(ver) +\n            'Uninstall it with[[ \"]]pip uninstall azure\".'\n        )\n    "
+     },
+     {
+      "value": 9.695,
+      "domain": "code",
+      "text": " ~/bin/ep2svg\n    install_packages[[(]][\n        'dia',\n        'inkscape',"
+     },
+     {
+      "value": 8.836,
+      "domain": "code",
+      "text": "os.path.join(env['INSTALL[[_]]PREFIX'],'bin'), svg2png)\n"
+     },
+     {
+      "value": 8.486,
+      "domain": "code",
+      "text": " and rubygem packages.'''\n\nimport re\n[[import]] rpm\n\nfrom FedoraReview import CheckBase, Mock"
+     }
+    ],
+    "32": [
+     {
+      "value": 14.824,
+      "domain": "code",
+      "text": "stderr.write('Did you pip install docs/requirements[[.]]txt?\\n')\n        sys.exit(-1"
+     },
+     {
+      "value": 13.727,
+      "domain": "code",
+      "text": "format(ver) +\n            'Uninstall it with[[ \"]]pip uninstall azure\".'\n        )\n    "
+     },
+     {
+      "value": 9.823,
+      "domain": "code",
+      "text": " tools required to compile my latex documents.\n\n    * Install[[ or]] update a lot of latex packages.\n    * Install or"
+     },
+     {
+      "value": 9.583,
+      "domain": "code",
+      "text": ".python import virtualenv\nfrom fabtools.require[[.]]git import working_copy\n\nfrom config import roledefs,"
+     },
+     {
+      "value": 8.784,
+      "domain": "code",
+      "text": "mm.check_installed(package) and not smm[[.]]install(package):\n                self.error(\n"
+     }
+    ]
+   }
+  },
+  "17786": {
+   "freq_by_loop": {
+    "1": 0.00058,
+    "8": 0.00475,
+    "32": 0.00491
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 3.868,
+      "domain": "math",
+      "text": "$ is $6$ units plus the length of the dotted[[ line]] segment, or $6+2=8.$ Thus"
+     },
+     {
+      "value": 3.834,
+      "domain": "math",
+      "text": " and the ratio of the length shortest leg to that of the[[ hypotenuse]] is $1:2$. Therefore, the length of"
+     },
+     {
+      "value": 3.624,
+      "domain": "math",
+      "text": ")$. By the distance formula, the radius of the[[ circle]] is $\\sqrt{(1-(-1))"
+     },
+     {
+      "value": 3.592,
+      "domain": "math",
+      "text": " possible values of $\\log x$ is the logarithm of the[[ product]] of the possible values of $x$. Thus the product"
+     },
+     {
+      "value": 3.416,
+      "domain": "math",
+      "text": "... of the integer have no effect on the units[[ digit]] of the result. In this problem, the units digit of"
+     }
+    ],
+    "8": [
+     {
+      "value": 10.856,
+      "domain": "web",
+      "text": " spatial frequencies and orientations parallel to an object’s retinal motion[[ trajectory]], remain well resolvable even at saccadic eye velocities"
+     },
+     {
+      "value": 9.427,
+      "domain": "code",
+      "text": " including versions that go\n# through the origin of the coordinate[[ system]]\n# (e.g. used in doascalib"
+     },
+     {
+      "value": 8.042,
+      "domain": "math",
+      "text": "0$ are the vertices of a convex polygon in the complex[[ plane]].  The area of this polygon can be expressed in the form"
+     },
+     {
+      "value": 7.875,
+      "domain": "math",
+      "text": " the non-shaded region to the area of the entire dart[[board]]. The area of the entire dartboard is $\\pi \\cdot"
+     },
+     {
+      "value": 7.852,
+      "domain": "math",
+      "text": " that $x-2$ must be a factor of the[[ polynomial]]. Dividing $x^3+3x^2-"
+     }
+    ],
+    "32": [
+     {
+      "value": 10.88,
+      "domain": "web",
+      "text": " spatial frequencies and orientations parallel to an object’s retinal motion[[ trajectory]], remain well resolvable even at saccadic eye velocities"
+     },
+     {
+      "value": 8.209,
+      "domain": "code",
+      "text": " including versions that go\n# through the origin of the coordinate[[ system]]\n# (e.g. used in doascalib"
+     },
+     {
+      "value": 8.109,
+      "domain": "math",
+      "text": " the non-shaded region to the area of the entire dart[[board]]. The area of the entire dartboard is $\\pi \\cdot"
+     },
+     {
+      "value": 8.1,
+      "domain": "math",
+      "text": "$ consecutive integers, they include exactly one integer from each residue[[ class]] $\\pmod 7$. Therefore, their sum is congruent $"
+     },
+     {
+      "value": 7.791,
+      "domain": "web",
+      "text": " transistors do the actual multiplication of the bat signal with the oscillator[[ signal]], by alternatively conducting the inverted or non-inverted bat signal"
+     }
+    ]
+   }
+  },
+  "17848": {
+   "freq_by_loop": {
+    "1": 0.00034,
+    "8": 0.00029,
+    "32": 0.00029
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 35.341,
+      "domain": "wiki",
+      "text": "geridge), a 1978 anthology by[[ Mal]]colm Muggeridge\nThings Past, a 19"
+     },
+     {
+      "value": 35.136,
+      "domain": "web",
+      "text": " is 25 years old and was never detected or fixed.[[ Mal]]icious code can be easily executed through the Command Prompt on PC"
+     },
+     {
+      "value": 34.078,
+      "domain": "wiki",
+      "text": "2017)\n\nReferences \n\nLiving people\n[[Mal]]aysian Muslims\nMalaysian people of Malay descent\n"
+     },
+     {
+      "value": 33.51,
+      "domain": "wiki",
+      "text": "bium and asymmetric maxillae.\n\nGenera\n[[ Mal]]adera Mulsant & Rey, 187"
+     },
+     {
+      "value": 32.864,
+      "domain": "web",
+      "text": " journey to the tables of Rome. The spice capital of the[[ Mal]]abar Coast is Cochin in Kerala – today"
+     }
+    ],
+    "8": [
+     {
+      "value": 49.034,
+      "domain": "wiki",
+      "text": " is given as part of the Gaumee Film Awards for[[ Mal]]divian Films.\n\nThe award was first given in"
+     },
+     {
+      "value": 48.129,
+      "domain": "wiki",
+      "text": "), an episode of the television series\nThings Past ([[Mal]]colm Muggeridge), a 1978"
+     },
+     {
+      "value": 45.127,
+      "domain": "web",
+      "text": " is 25 years old and was never detected or fixed.[[ Mal]]icious code can be easily executed through the Command Prompt on PC"
+     },
+     {
+      "value": 44.64,
+      "domain": "web",
+      "text": " noticed that there is a problem of malnutrition.\n[[Mal]]nutrition comes in the form of Kwashiorkor"
+     },
+     {
+      "value": 43.925,
+      "domain": "wiki",
+      "text": "1: 49-70.\n Scoble,[[ Mal]]colm J. ed. (1999)."
+     }
+    ],
+    "32": [
+     {
+      "value": 47.557,
+      "domain": "wiki",
+      "text": "), an episode of the television series\nThings Past ([[Mal]]colm Muggeridge), a 1978"
+     },
+     {
+      "value": 45.506,
+      "domain": "wiki",
+      "text": " is given as part of the Gaumee Film Awards for[[ Mal]]divian Films.\n\nThe award was first given in"
+     },
+     {
+      "value": 45.005,
+      "domain": "web",
+      "text": " is 25 years old and was never detected or fixed.[[ Mal]]icious code can be easily executed through the Command Prompt on PC"
+     },
+     {
+      "value": 44.481,
+      "domain": "web",
+      "text": "wanda. I have noticed that there is a problem of[[ mal]]nutrition.\nMalnutrition comes in the form of"
+     },
+     {
+      "value": 42.806,
+      "domain": "web",
+      "text": "échamel.\nBlack pepper once only grew on the[[ Mal]]abar – or West – coast of India – a 5"
+     }
+    ]
+   }
+  },
+  "18209": {
+   "freq_by_loop": {
+    "1": 0.00049,
+    "8": 0.00671,
+    "32": 0.00726
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 3.698,
+      "domain": "web",
+      "text": "uses promotes critical thinking\nFour new studies point to evidence that[[ diversity]] can improve colleges students’ critical thinking skills, according to the"
+     },
+     {
+      "value": 3.217,
+      "domain": "web",
+      "text": " and not only does it give us a new appreciation for how[[ diverse]] so-called exoplanets can be, it also causes us to"
+     },
+     {
+      "value": 2.939,
+      "domain": "web",
+      "text": " and decide which one is the best fit. By understanding the[[ different]] types of investments, you can make a wise decision and maximize"
+     },
+     {
+      "value": 2.769,
+      "domain": "web",
+      "text": " Indigenous Protected Area?\nOperations on IPAs vary because[[ when]] traditional owners enter into an IPA agreement with the Commonwealth"
+     },
+     {
+      "value": 2.549,
+      "domain": "web",
+      "text": " materials needed for brewing, as well as due to the varying[[ tastes]] primarily due to the need to substitute – or combine – basic"
+     }
+    ],
+    "8": [
+     {
+      "value": 12.834,
+      "domain": "web",
+      "text": " an Indigenous Protected Area?\nOperations on IPAs vary[[ because]] when traditional owners enter into an IPA agreement with the Common"
+     },
+     {
+      "value": 10.822,
+      "domain": "web",
+      "text": " case, their star), and no two are exactly alike[[.]] There are big planets, medium planets, and then there are"
+     },
+     {
+      "value": 9.549,
+      "domain": "web",
+      "text": "-life science presented in each book. These differences in presentation[[ make]] some books more appealing than others.\nThe fourth section of"
+     },
+     {
+      "value": 8.614,
+      "domain": "web",
+      "text": " brewing, as well as due to the varying tastes primarily due[[ to]] the need to substitute – or combine – basic cereals."
+     },
+     {
+      "value": 8.321,
+      "domain": "web",
+      "text": "TS INJURIES\nSport injuries are diverse in[[ terms]] of the mechanism of injury, how they present in individuals,"
+     }
+    ],
+    "32": [
+     {
+      "value": 12.864,
+      "domain": "web",
+      "text": " an Indigenous Protected Area?\nOperations on IPAs vary[[ because]] when traditional owners enter into an IPA agreement with the Common"
+     },
+     {
+      "value": 12.439,
+      "domain": "web",
+      "text": " case, their star), and no two are exactly alike[[.]] There are big planets, medium planets, and then there are"
+     },
+     {
+      "value": 10.856,
+      "domain": "web",
+      "text": "-life science presented in each book. These differences in presentation[[ make]] some books more appealing than others.\nThe fourth section of"
+     },
+     {
+      "value": 9.226,
+      "domain": "web",
+      "text": " the American diet.\nAll Coffees Are Not Equal[[\n]]In testing coffees with high-tech lab tools, Ar"
+     },
+     {
+      "value": 9.066,
+      "domain": "web",
+      "text": " and underlying traits within populations of four species at two study sites[[ with]] different average climates. Phenotypic trait correlations within species"
+     }
+    ]
+   }
+  },
+  "18387": {
+   "freq_by_loop": {
+    "1": 0.00075,
+    "8": 0.01064,
+    "32": 0.01185
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 3.039,
+      "domain": "math",
+      "text": ". Also, $b^2 = ad$ yields $[[(]]a+r)^2 =\na(a+"
+     },
+     {
+      "value": 3.005,
+      "domain": "math",
+      "text": " we can subtract the sums, to get\n\\begin{align[[*]]}\n5(1 + 2 + \\dots + 20"
+     },
+     {
+      "value": 2.689,
+      "domain": "math",
+      "text": "0 + 6*360/5);\n[[D]] = dir(90 + 9*360/"
+     },
+     {
+      "value": 2.443,
+      "domain": "code",
+      "text": ".util import create_personal_data_fields\n\n\n@pytest[[.]]fixture\ndef dummy_regform(db, dummy_"
+     },
+     {
+      "value": 2.323,
+      "domain": "math",
+      "text": "\\times 1 & 16 \\\\\n2 \\times 2 & 9[[ \\\\]]\n3 \\times 3 & 4 \\\\\n4 \\times 4 &"
+     }
+    ],
+    "8": [
+     {
+      "value": 6.947,
+      "domain": "code",
+      "text": "FSF), either version 3 of the License, or[[ (]]at your\n * option) any later version.\n *"
+     },
+     {
+      "value": 6.477,
+      "domain": "code",
+      "text": "# Software Foundation, either version 3 of the License, or[[ (]]at your option) any\n# later version.\n#"
+     },
+     {
+      "value": 6.464,
+      "domain": "code",
+      "text": ", INCLUDING BUT NOT LIMITED TO THE WARRANTIES \n#  [[OF]] MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND \n#  NON"
+     },
+     {
+      "value": 6.091,
+      "domain": "math",
+      "text": "]\nimport geometry;\n\nunitsize(1 cm);[[\n\n]]pair A, B, C, D, E, F"
+     },
+     {
+      "value": 6.066,
+      "domain": "wiki",
+      "text": "This greenhood was first formally described in 2016[[ by]] David Jones and Lachlan Copeland and given the name"
+     }
+    ],
+    "32": [
+     {
+      "value": 7.562,
+      "domain": "wiki",
+      "text": "This greenhood was first formally described in 2016[[ by]] David Jones and Lachlan Copeland and given the name"
+     },
+     {
+      "value": 7.337,
+      "domain": "code",
+      "text": "FSF), either version 3 of the License, or[[ (]]at your\n * option) any later version.\n *"
+     },
+     {
+      "value": 7.173,
+      "domain": "code",
+      "text": ", INCLUDING BUT NOT LIMITED TO THE WARRANTIES \n#  [[OF]] MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND \n#  NON"
+     },
+     {
+      "value": 7.092,
+      "domain": "math",
+      "text": "]\nimport geometry;\n\nunitsize(1 cm);[[\n\n]]pair A, B, C, D, E, F"
+     },
+     {
+      "value": 6.443,
+      "domain": "code",
+      "text": "                           ##\n##  This program is free software: you can[[ redistribute]] it and/or modify     ##\n##  it under the terms"
+     }
+    ]
+   }
+  },
+  "19916": {
+   "freq_by_loop": {
+    "1": 0.0011,
+    "8": 0.00212,
+    "32": 0.00198
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 10.197,
+      "domain": "web",
+      "text": "’s adventure.\nAn example of a cross country journey of[[ this]] magnitude came only a few years later with no new infrastructure to"
+     },
+     {
+      "value": 9.597,
+      "domain": "web",
+      "text": "\nOne of the many exciting things I learned about researching for[[ this]] blog was the weapon I’m going to talk about today. I’d"
+     },
+     {
+      "value": 9.48,
+      "domain": "web",
+      "text": " on the origin of fairy circles? Looking at the history of[[ this]] problem, I somehow suspect not, but if so, yet"
+     },
+     {
+      "value": 8.447,
+      "domain": "web",
+      "text": " a breakfast beverage for its stimulating principles, and the consumers of[[ this]] beverage started making noticeable improvements in their work versus peers who consumed"
+     },
+     {
+      "value": 7.961,
+      "domain": "web",
+      "text": " Marine Mammals for centuries, yet they are condemned for[[ this]] practice while westerners kill and eat all manner of animals without"
+     }
+    ],
+    "8": [
+     {
+      "value": 19.274,
+      "domain": "web",
+      "text": " on the origin of fairy circles? Looking at the history of[[ this]] problem, I somehow suspect not, but if so, yet"
+     },
+     {
+      "value": 19.149,
+      "domain": "web",
+      "text": " diabetics choose the day to reflect on their life with[[ this]] disease, and also to spread awareness through social media, blogs"
+     },
+     {
+      "value": 16.797,
+      "domain": "web",
+      "text": "vis instead of forcing an imbalance in to the vulnerable joints of[[ this]] area. You’ll also be working your way towards properly opening"
+     },
+     {
+      "value": 16.421,
+      "domain": "web",
+      "text": " contribute to healthy aging? Not a lot of research exists on[[ this]] matter which affects a substantial part of the population; hence there"
+     },
+     {
+      "value": 16.405,
+      "domain": "web",
+      "text": " a breakfast beverage for its stimulating principles, and the consumers of[[ this]] beverage started making noticeable improvements in their work versus peers who consumed"
+     }
+    ],
+    "32": [
+     {
+      "value": 19.054,
+      "domain": "web",
+      "text": " on the origin of fairy circles? Looking at the history of[[ this]] problem, I somehow suspect not, but if so, yet"
+     },
+     {
+      "value": 18.205,
+      "domain": "web",
+      "text": "vis instead of forcing an imbalance in to the vulnerable joints of[[ this]] area. You’ll also be working your way towards properly opening"
+     },
+     {
+      "value": 16.852,
+      "domain": "web",
+      "text": ". Civil War Day brings together reenactors and experts on[[ that]] time period in American history to give students hands-on experience"
+     },
+     {
+      "value": 16.324,
+      "domain": "web",
+      "text": " even heard of this thing before! Yet, as I study[[ this]] out, quite a few of our ancestors would be shocked that"
+     },
+     {
+      "value": 16.178,
+      "domain": "web",
+      "text": " ignored by anyone. Every person on earth is already touched by[[ this]] disease in some way; maybe you have a type of diabetes"
+     }
+    ]
+   }
+  },
+  "20765": {
+   "freq_by_loop": {
+    "1": 0.01526,
+    "8": 0.00295,
+    "32": 0.00199
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 10.386,
+      "domain": "code",
+      "text": ">.\n\"\"\"Pyplis module containing mathematical model functions.[[\"\"\"]]\nfrom __future__ import (absolute_import, division"
+     },
+     {
+      "value": 9.472,
+      "domain": "code",
+      "text": "):\n    \"\"\"The main ST3 plugin class.[[\"\"\"]]\n\n    # We use this to match linter settings filenames"
+     },
+     {
+      "value": 9.221,
+      "domain": "code",
+      "text": "):\n    \"\"\"Set up the Apple TV integration.[[\"\"\"]]\n    return True\n\n\nasync def async_setup_entry"
+     },
+     {
+      "value": 9.11,
+      "domain": "code",
+      "text": "\"\"\"Deamonize class. UNIX double fork mechanism.[[\"\"\"]]\n\n\t\ttry: \n\t\t\tpid = os.fork()"
+     },
+     {
+      "value": 9.098,
+      "domain": "code",
+      "text": "<|begin_text|>\"\"\"A collection of useful utilities for Honeybee[[\"\"\"]]\nimport uuid\nimport re\n\n\ndef random_name("
+     }
+    ],
+    "8": [
+     {
+      "value": 9.891,
+      "domain": "code",
+      "text": " a git archive\n\n__revision__ = '$Format:%H[[$]]'\n\nfrom qgis.core import QgsFeatureRequest"
+     },
+     {
+      "value": 9.796,
+      "domain": "code",
+      "text": ". Specifically this is designed for caches.\n\n\t\t# variables[[ #]]\n\t\t.path\n\t\t  The path on the filesystem"
+     },
+     {
+      "value": 7.761,
+      "domain": "code",
+      "text": "<|begin_text|># --------------[[ #]] USER INSTRUCTIONS\r\n#\r\n# Write a function"
+     },
+     {
+      "value": 7.169,
+      "domain": "code",
+      "text": "'Uninstall it with \"pip uninstall azure\".[[']]\n        )\n    except AttributeError:\n        pass\n"
+     },
+     {
+      "value": 6.903,
+      "domain": "web",
+      "text": "in differentiation, this makes a great writing center as well![[*]]\nYou may also like these writing packs:\nSAVE"
+     }
+    ],
+    "32": [
+     {
+      "value": 8.948,
+      "domain": "code",
+      "text": " a git archive\n\n__revision__ = '$Format:%H[[$]]'\n\nfrom qgis.core import QgsFeatureRequest"
+     },
+     {
+      "value": 7.686,
+      "domain": "code",
+      "text": ". Specifically this is designed for caches.\n\n\t\t# variables[[ #]]\n\t\t.path\n\t\t  The path on the filesystem"
+     },
+     {
+      "value": 6.268,
+      "domain": "web",
+      "text": "in differentiation, this makes a great writing center as well![[*]]\nYou may also like these writing packs:\nSAVE"
+     },
+     {
+      "value": 5.815,
+      "domain": "code",
+      "text": "whitespace(self):\n\n        code = \"\"\"   [[\"\"\"]]\n\n        expected = code\n\n        result = translate(code"
+     },
+     {
+      "value": 5.798,
+      "domain": "code",
+      "text": "<|begin_text|>######################################################\n# _untuned[[_]]modeling.py\n# author: Gert Jacobusse"
+     }
+    ]
+   }
+  },
+  "20899": {
+   "freq_by_loop": {
+    "1": 0.00114,
+    "8": 0.00349,
+    "32": 0.00372
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 3.853,
+      "domain": "web",
+      "text": " units of that size, and also all persons living in the[[ densely]] settled urban\nfringe, including both incorporated and unincor"
+     },
+     {
+      "value": 3.625,
+      "domain": "web",
+      "text": " exabyte is 1018 bytes). Such[[ dense]] packing outstrips inorganic data-storage devices such as flash"
+     },
+     {
+      "value": 3.506,
+      "domain": "web",
+      "text": "0 species of marine invertebrates, mainly found in deep[[ waters]]. Their body resembles a goblet; they have five"
+     },
+     {
+      "value": 3.371,
+      "domain": "web",
+      "text": " or later these types of very first Western explorers spread out across[[ the]] whole continent.\nOver the years, the lifestyle changed while"
+     },
+     {
+      "value": 3.329,
+      "domain": "wiki",
+      "text": " when not flowering, a rosette of five to nine[[ dark]] green, broad egg-shaped leaves that lie flat on the"
+     }
+    ],
+    "8": [
+     {
+      "value": 12.305,
+      "domain": "web",
+      "text": " they have flexible flippers which allow them to swim smoothly through[[ the]] water.\nIt is not uncommon for them to reach out"
+     },
+     {
+      "value": 11.834,
+      "domain": "web",
+      "text": " hope we had formed of penetrating by it some distance into[[ the]] interior of the country“.\nThe first European exploration of"
+     },
+     {
+      "value": 11.445,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: Jake is walking through[[ the]] Museum of Entomology. He sees 80 spiders with"
+     },
+     {
+      "value": 10.535,
+      "domain": "web",
+      "text": " were navigatable, river crossings could be like an impenet[[rable]] obstacle depending on conditions. Railroads, highways, fer"
+     },
+     {
+      "value": 10.377,
+      "domain": "web",
+      "text": " Kite, a large hawk, often seen scavenging[[ among]] rubbish tips in\nthe 17th century, suffered sustained"
+     }
+    ],
+    "32": [
+     {
+      "value": 13.701,
+      "domain": "web",
+      "text": ". These physical characteristics allow marine animals to swim and steer through[[ the]] water with high efficiency.\nList of Animals With Fli"
+     },
+     {
+      "value": 12.057,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: Jake is walking through[[ the]] Museum of Entomology. He sees 80 spiders with"
+     },
+     {
+      "value": 10.946,
+      "domain": "web",
+      "text": " hope we had formed of penetrating by it some distance into[[ the]] interior of the country“.\nThe first European exploration of"
+     },
+     {
+      "value": 10.715,
+      "domain": "web",
+      "text": " largest British birds the Great Bustard a dweller of[[ the]] fenland\nwhich was hunted to extinction by the"
+     },
+     {
+      "value": 10.5,
+      "domain": "web",
+      "text": " looks “dreadfully white and ill.” Moving quickly[[ through]] London is a difficult thing; only when horse and driver are"
+     }
+    ]
+   }
+  },
+  "21301": {
+   "freq_by_loop": {
+    "1": 0.00023,
+    "8": 0.00525,
+    "32": 0.0055
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 3.001,
+      "domain": "web",
+      "text": " it makes contact with an obstacle.\nThe project was inspired[[ by]] the use of touch in the animal kingdom – specifically how rats"
+     },
+     {
+      "value": 2.947,
+      "domain": "web",
+      "text": " the U.S. Supreme Court agreed. The court finally[[ acknowledged]] that students do not shed their constitutional rights of freedom of speech"
+     },
+     {
+      "value": 2.828,
+      "domain": "wiki",
+      "text": " examining board in 1919.\n\nThere was controversy[[ over]] his winning bid for the King County Courthouse.\n\n"
+     },
+     {
+      "value": 2.591,
+      "domain": "wiki",
+      "text": " the time of birth.\"\n\nThe proposition was the result[[ of]] a petition campaign headed by Alaska Family Action, a Christian"
+     },
+     {
+      "value": 2.37,
+      "domain": "math",
+      "text": "G$.  The line through $G$ that is parallel[[ to]] $BC$ intersects $AB$ and $AC$ at"
+     }
+    ],
+    "8": [
+     {
+      "value": 15.029,
+      "domain": "web",
+      "text": "We’ll talk about diet and aging. This is occasioned[[ by]] the study Samieri et al. (2013"
+     },
+     {
+      "value": 13.499,
+      "domain": "wiki",
+      "text": " against the French Protectorate authorities. The protests were sparked[[ by]] food shortages which threatened local tribes, dispossessed of their"
+     },
+     {
+      "value": 12.349,
+      "domain": "web",
+      "text": " PCDH11X transcripts. We relate these findings[[ to]] sexually dimorphic traits in the human brain. Interestingly,"
+     },
+     {
+      "value": 12.142,
+      "domain": "web",
+      "text": "6 - Peace, Justice and Strong Institutions\nThis Practice Note[[ summarizes]] the situation of youth in conflict-affected environments, argues the"
+     },
+     {
+      "value": 11.98,
+      "domain": "web",
+      "text": " it makes contact with an obstacle.\nThe project was inspired[[ by]] the use of touch in the animal kingdom – specifically how rats"
+     }
+    ],
+    "32": [
+     {
+      "value": 15.537,
+      "domain": "web",
+      "text": "We’ll talk about diet and aging. This is occasioned[[ by]] the study Samieri et al. (2013"
+     },
+     {
+      "value": 14.309,
+      "domain": "wiki",
+      "text": " against the French Protectorate authorities. The protests were sparked[[ by]] food shortages which threatened local tribes, dispossessed of their"
+     },
+     {
+      "value": 12.832,
+      "domain": "web",
+      "text": " it makes contact with an obstacle.\nThe project was inspired[[ by]] the use of touch in the animal kingdom – specifically how rats"
+     },
+     {
+      "value": 12.784,
+      "domain": "web",
+      "text": " Session, playwright Mark St. Germain draws his inspiration[[ from]] a book of philosophy entitled The Question of God: C."
+     },
+     {
+      "value": 12.555,
+      "domain": "web",
+      "text": " PCDH11X transcripts. We relate these findings[[ to]] sexually dimorphic traits in the human brain. Interestingly,"
+     }
+    ]
+   }
+  },
+  "22009": {
+   "freq_by_loop": {
+    "1": 0.00278,
+    "8": 0.0013,
+    "32": 0.00126
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 13.235,
+      "domain": "web",
+      "text": " like an adult jellyfish and is then large enough to swim[[ by]] itself and leave."
+     },
+     {
+      "value": 13.231,
+      "domain": "math",
+      "text": " options: we must pick the ball which goes into a box[[ by]] itself.\n\n(2,2,0): There"
+     },
+     {
+      "value": 12.887,
+      "domain": "math",
+      "text": "B}{x - 1}.\\]Multiplying both sides[[ by]] $x^2 + 2x - 3 = (x"
+     },
+     {
+      "value": 12.871,
+      "domain": "gsm8k_full",
+      "text": "0>>20 sections\nThen multiply the number of sections[[ by]] the weight of each section to find the total weight of the"
+     },
+     {
+      "value": 12.334,
+      "domain": "gsm8k_full",
+      "text": " 2*x and 4*(x/2) parts[[ by]] percentage\nThe percentages have to sum up to 100"
+     }
+    ],
+    "8": [
+     {
+      "value": 22.973,
+      "domain": "math",
+      "text": " options: we must pick the ball which goes into a box[[ by]] itself.\n\n(2,2,0): There"
+     },
+     {
+      "value": 22.174,
+      "domain": "web",
+      "text": " like an adult jellyfish and is then large enough to swim[[ by]] itself and leave."
+     },
+     {
+      "value": 20.301,
+      "domain": "code",
+      "text": "2.0/.\n\nfrom marionette_driver.[[by]] import By\nfrom marionette_driver.keys import"
+     },
+     {
+      "value": 19.713,
+      "domain": "wiki",
+      "text": ", Howell is still trying to clear his conscious and his[[ by]]line five years later. Then he and Jude, a"
+     },
+     {
+      "value": 19.217,
+      "domain": "web",
+      "text": " water, playing water games with their friends and spending the day[[ by]] the pool, beach or lake.\n- It is a"
+     }
+    ],
+    "32": [
+     {
+      "value": 24.492,
+      "domain": "math",
+      "text": " options: we must pick the ball which goes into a box[[ by]] itself.\n\n(2,2,0): There"
+     },
+     {
+      "value": 23.664,
+      "domain": "web",
+      "text": " like an adult jellyfish and is then large enough to swim[[ by]] itself and leave."
+     },
+     {
+      "value": 20.094,
+      "domain": "wiki",
+      "text": ", Howell is still trying to clear his conscious and his[[ by]]line five years later. Then he and Jude, a"
+     },
+     {
+      "value": 18.33,
+      "domain": "web",
+      "text": " water, playing water games with their friends and spending the day[[ by]] the pool, beach or lake.\n- It is a"
+     },
+     {
+      "value": 17.912,
+      "domain": "web",
+      "text": "ly set up the town, clearing mallee scrub[[ by]] axe, building a general store and becoming the local harbour"
+     }
+    ]
+   }
+  },
+  "23920": {
+   "freq_by_loop": {
+    "1": 0.00048,
+    "8": 0.0038,
+    "32": 0.00413
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 3.216,
+      "domain": "gsm8k_full",
+      "text": " the bus 7 times during that trip. One night at the[[ hotel]] was a cost of $80, and every bus trip"
+     },
+     {
+      "value": 3.013,
+      "domain": "gsm8k_full",
+      "text": ".  If they are there for 3 days how much did the[[ trip]] cost?\nAnswer: The hotel room is 150"
+     },
+     {
+      "value": 2.603,
+      "domain": "math",
+      "text": " paint my house alone in 36 hours.  I need my[[ house]] painted in 3 hours.  If I can only find 3 good"
+     },
+     {
+      "value": 2.556,
+      "domain": "gsm8k_full",
+      "text": " making sure she has enough in her budget for the items in[[ her]] cart. Her 5 packs of bacon cost $10 in"
+     },
+     {
+      "value": 2.53,
+      "domain": "web",
+      "text": ", peppers, tomatoes and eggplants.\nTo combat mal[[nutri]]tion, we help establish vegetable gardens so that families can permanently"
+     }
+    ],
+    "8": [
+     {
+      "value": 11.188,
+      "domain": "gsm8k_full",
+      "text": " much does it cost you for lunch today at Subway if[[ you]] pay $40 for a foot-long fish sub and"
+     },
+     {
+      "value": 9.599,
+      "domain": "web",
+      "text": ", but traffic was much heavier. The one benefit was that[[ we]] were able to see—and hear Fabrizio’s commentary"
+     },
+     {
+      "value": 9.512,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: My mom went to a gardening shop.[[ She]] bought a set of pots for $19 and a sa"
+     },
+     {
+      "value": 8.806,
+      "domain": "web",
+      "text": "vern and call for Jerry’s cab. They tell him they[[ are]] running late and need him to rush them to Victoria Station to"
+     },
+     {
+      "value": 8.133,
+      "domain": "gsm8k_full",
+      "text": " making sure she has enough in her budget for the items in[[ her]] cart. Her 5 packs of bacon cost $10 in"
+     }
+    ],
+    "32": [
+     {
+      "value": 11.153,
+      "domain": "web",
+      "text": ", but traffic was much heavier. The one benefit was that[[ we]] were able to see—and hear Fabrizio’s commentary"
+     },
+     {
+      "value": 10.741,
+      "domain": "gsm8k_full",
+      "text": " much does it cost you for lunch today at Subway if[[ you]] pay $40 for a foot-long fish sub and"
+     },
+     {
+      "value": 9.199,
+      "domain": "web",
+      "text": "vern and call for Jerry’s cab. They tell him they[[ are]] running late and need him to rush them to Victoria Station to"
+     },
+     {
+      "value": 8.753,
+      "domain": "math",
+      "text": " amusement park, there is a bulk discount for tickets. If[[ you]] buy up to 60 tickets in one order, the price"
+     },
+     {
+      "value": 8.715,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: A new arcade opens up and Jack decides[[ to]] play with his 3 friends.  Jack can play a game"
+     }
+    ]
+   }
+  },
+  "23935": {
+   "freq_by_loop": {
+    "1": 0.0011,
+    "8": 0.00391,
+    "32": 0.00388
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 6.444,
+      "domain": "code",
+      "text": ".implicitly_wait(20)\n            self.[[select]] = self._driver.find_element_by_"
+     },
+     {
+      "value": 4.667,
+      "domain": "code",
+      "text": "cylinder_index += 1\n                info = 'Item %d[[ selected]]' % (scn.custom_cylinder_index +"
+     },
+     {
+      "value": 3.833,
+      "domain": "code",
+      "text": " its values cannot be restored.\")\n\n        # User[[ chose]] to not deal with backwards NULL issues for 'GroupMigration"
+     },
+     {
+      "value": 3.747,
+      "domain": "code",
+      "text": "CharField(u'должность',[[ choices]]=USER_TYPE, max_length=25,"
+     },
+     {
+      "value": 3.635,
+      "domain": "code",
+      "text": "    status = models.IntegerField(choices=STATUS_[[CHO]]ICES, default=DRAFT)\n    url ="
+     }
+    ],
+    "8": [
+     {
+      "value": 8.762,
+      "domain": "code",
+      "text": " \"ENABLE\", \"\")\n        )\n    [[)]]\n\n    def invoke(self, context, event):"
+     },
+     {
+      "value": 8.736,
+      "domain": "code",
+      "text": "_code == 0\n        self.check_manager_[[selection]](result, {mid})\n"
+     },
+     {
+      "value": 8.13,
+      "domain": "code",
+      "text": "CharField(u'должность',[[ choices]]=USER_TYPE, max_length=25,"
+     },
+     {
+      "value": 7.734,
+      "domain": "code",
+      "text": "        last_name=\"Pig\",\n        [[checked]]_in=True,\n        state=RegistrationState"
+     },
+     {
+      "value": 7.598,
+      "domain": "code",
+      "text": "MOVED = 3\n    STATUS_CHOICES =[[ (]]\n        (PUBLISHED, 'Published'),"
+     }
+    ],
+    "32": [
+     {
+      "value": 12.672,
+      "domain": "code",
+      "text": ".ParamType):\n    name = 'commal[[ist]]'\n\n    def convert(self, value, param,"
+     },
+     {
+      "value": 10.33,
+      "domain": "code",
+      "text": "\n\n    def mk_thickness(self):\n        [[options]] = (5, 10, 15, 20"
+     },
+     {
+      "value": 8.681,
+      "domain": "code",
+      "text": "    REMOVED = 3\n    STATUS_CHO[[ICES]] = (\n        (PUBLISHED, 'Publish"
+     },
+     {
+      "value": 8.359,
+      "domain": "code",
+      "text": "CharField(u'должность',[[ choices]]=USER_TYPE, max_length=25,"
+     },
+     {
+      "value": 8.311,
+      "domain": "code",
+      "text": "action = bpy.props.EnumProperty(\n        [[items]]=(\n            ('UP', \"Up\","
+     }
+    ]
+   }
+  },
+  "25097": {
+   "freq_by_loop": {
+    "1": 0.00012,
+    "8": 0.00139,
+    "32": 0.00138
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 2.783,
+      "domain": "code",
+      "text": "visitor.visit(function)\n        self.assertTrue[[(]]visitor.returns)\n        return visitor\n\n    def"
+     },
+     {
+      "value": 2.699,
+      "domain": "code",
+      "text": " None)\n        self.assertEqual(djcache.get[[(]]key), concept)\n\n        djcache.delete("
+     },
+     {
+      "value": 2.016,
+      "domain": "code",
+      "text": ")\n\n        self.assertMultiLineEqual(expected,[[ result]])\n\n    def test_simple_code(self)"
+     },
+     {
+      "value": 1.993,
+      "domain": "code",
+      "text": "result = self.db_client.cursor.fetchall[[(]])\n        sql_list"
+     },
+     {
+      "value": 1.867,
+      "domain": "code",
+      "text": ")\n        try:\n            self._checkClosed[[(]])\n        except AttributeError:\n            pass\n\n        while"
+     }
+    ],
+    "8": [
+     {
+      "value": 11.331,
+      "domain": "code",
+      "text": "('running up tornado to complete')\n\n        def done[[(]]*args, **kwargs):\n            LOGGER.debug"
+     },
+     {
+      "value": 7.062,
+      "domain": "code",
+      "text": " cls.redis_client.pipeline(transaction=True)[[ as]] pipe:\n            while True:\n                try:\n"
+     },
+     {
+      "value": 6.773,
+      "domain": "code",
+      "text": ".db_client.cursor.execute(sql)\n[[        ]]result = self.db_client.cursor.fetchall"
+     },
+     {
+      "value": 5.35,
+      "domain": "code",
+      "text": " Fetch UTF-8 output from the queue...\n[[        ]]data = self.queue.getvalue()\n        "
+     },
+     {
+      "value": 5.242,
+      "domain": "code",
+      "text": "{'year': year, 'title': title})[[\r\n    ]]item = resp['Item']\r\n    item['info"
+     }
+    ],
+    "32": [
+     {
+      "value": 11.278,
+      "domain": "code",
+      "text": "('running up tornado to complete')\n\n        def done[[(]]*args, **kwargs):\n            LOGGER.debug"
+     },
+     {
+      "value": 8.172,
+      "domain": "code",
+      "text": ".db_client.cursor.execute(sql)\n[[        ]]result = self.db_client.cursor.fetchall"
+     },
+     {
+      "value": 7.45,
+      "domain": "code",
+      "text": " 0\n        seen_sentences = set()\n\n        [[for]] sentence_words in sentence_iterator:\n            assert sentence"
+     },
+     {
+      "value": 7.025,
+      "domain": "code",
+      "text": "KEY % state\n                pipe.watch(key)\n[[                ]]next_url = pipe.get(key)\n                "
+     },
+     {
+      "value": 6.367,
+      "domain": "code",
+      "text": "{'year': year, 'title': title})[[\r\n    ]]item = resp['Item']\r\n    item['info"
+     }
+    ]
+   }
+  },
+  "26615": {
+   "freq_by_loop": {
+    "1": 0.00135,
+    "8": 0.02185,
+    "32": 0.0237
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 3.587,
+      "domain": "gsm8k_full",
+      "text": ">>5 analog TVs.\nSo, he was able[[ to]] sell 10 + 5 = <<10+5="
+     },
+     {
+      "value": 3.331,
+      "domain": "gsm8k_full",
+      "text": " points in the second 20 minutes\nSo in total,[[ he]] scored 4+5=<<4+5=9>>"
+     },
+     {
+      "value": 3.266,
+      "domain": "math",
+      "text": "1/4$ of the house, and  each bad worker[[ can]] paint $1/12$ of the house in three"
+     },
+     {
+      "value": 2.854,
+      "domain": "wiki",
+      "text": ". It is found in India and Sri Lanka.\n\n[[References]]\n\nMoths of Asia\nMoths described in"
+     },
+     {
+      "value": 2.804,
+      "domain": "web",
+      "text": " rupees from an exporter in America who may have chosen[[ to]] receive the price of his export to India in rupees,"
+     }
+    ],
+    "8": [
+     {
+      "value": 10.097,
+      "domain": "gsm8k_full",
+      "text": "120*.1=12>>12[[ to]] fill the pool\n#### 12"
+     },
+     {
+      "value": 9.276,
+      "domain": "math",
+      "text": " the same day?\nSolution: The next time he feeds[[ and]] waters them on the same day is after $\\text{lcm"
+     },
+     {
+      "value": 9.139,
+      "domain": "gsm8k_full",
+      "text": " 3/4 represents 45, the number of wires required[[ for]] the connections, then the total fraction which is 4/4"
+     },
+     {
+      "value": 9.118,
+      "domain": "code",
+      "text": "):\n    \"\"\"Return True if target has class files[[ to]] be compiled into dex."
+     },
+     {
+      "value": 9.063,
+      "domain": "web",
+      "text": "Water your pear tree for two or three days before you plan[[ to]] transplant it. This helps loosen the roots before you"
+     }
+    ],
+    "32": [
+     {
+      "value": 10.161,
+      "domain": "gsm8k_full",
+      "text": "0=8>>8 cars from his car collection.\n[[After]] selling 8 cars, Joe remains with 40-8="
+     },
+     {
+      "value": 9.802,
+      "domain": "gsm8k_full",
+      "text": " <<8/2=4>>4 oranges.\nTogether[[ they]] wash 8 oranges + 4 oranges =<<8+4="
+     },
+     {
+      "value": 9.691,
+      "domain": "math",
+      "text": " 2 \\times 1 = \\boxed{120}$ ways[[ to]] stack 5 books."
+     },
+     {
+      "value": 9.491,
+      "domain": "web",
+      "text": "Water your pear tree for two or three days before you plan[[ to]] transplant it. This helps loosen the roots before you"
+     },
+     {
+      "value": 9.479,
+      "domain": "gsm8k_full",
+      "text": " 9 people, the number of people in the 6 groups,[[ who]] found 2 seashells each, was 6*9= <<6"
+     }
+    ]
+   }
+  },
+  "26711": {
+   "freq_by_loop": {
+    "1": 0.0006,
+    "8": 0.00056,
+    "32": 0.00055
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 18.716,
+      "domain": "code",
+      "text": "\n    Server API\n\n    Reference for Server API (RE[[ST]]/Json)\n\n    OpenAPI spec version: 1."
+     },
+     {
+      "value": 17.766,
+      "domain": "code",
+      "text": ", 1)\nsock.bind(('', MCA[[ST]]_PORT))\nmreq = struct.pack("
+     },
+     {
+      "value": 17.59,
+      "domain": "code",
+      "text": ",\n BUT NOT LIMITED TO, PROCUREMENT OF SUB[[ST]]ITUTE GOODS OR SERVICES; LOSS OF"
+     },
+     {
+      "value": 17.584,
+      "domain": "code",
+      "text": ", DOCTYPE_MARKDOWN, DOCTYPE_RE[[ST]], app_name, app_version, globalSettings,"
+     },
+     {
+      "value": 17.116,
+      "domain": "code",
+      "text": "'\nVALID_MEALS = [BREAKFA[[ST]], LUNCH, DINNER, SNACK]"
+     }
+    ],
+    "8": [
+     {
+      "value": 24.803,
+      "domain": "code",
+      "text": ",\n BUT NOT LIMITED TO, PROCUREMENT OF SUB[[ST]]ITUTE GOODS OR SERVICES; LOSS OF"
+     },
+     {
+      "value": 22.337,
+      "domain": "code",
+      "text": " = f.read()\nwith open('HI[[ST]]ORY.rst', encoding='utf-8') as f"
+     },
+     {
+      "value": 20.735,
+      "domain": "code",
+      "text": "\n    Server API\n\n    Reference for Server API (RE[[ST]]/Json)\n\n    OpenAPI spec version: 1."
+     },
+     {
+      "value": 20.293,
+      "domain": "code",
+      "text": ", DOCTYPE_MARKDOWN, DOCTYPE_RE[[ST]], app_name, app_version, globalSettings,"
+     },
+     {
+      "value": 19.711,
+      "domain": "web",
+      "text": "im\n11/16 inch Bore\nHI[[ST]]ORY: Usually the better quality cannons were cast in"
+     }
+    ],
+    "32": [
+     {
+      "value": 25.141,
+      "domain": "code",
+      "text": ",\n BUT NOT LIMITED TO, PROCUREMENT OF SUB[[ST]]ITUTE GOODS OR SERVICES; LOSS OF"
+     },
+     {
+      "value": 21.993,
+      "domain": "code",
+      "text": "\n    Server API\n\n    Reference for Server API (RE[[ST]]/Json)\n\n    OpenAPI spec version: 1."
+     },
+     {
+      "value": 21.388,
+      "domain": "code",
+      "text": " = f.read()\nwith open('HI[[ST]]ORY.rst', encoding='utf-8') as f"
+     },
+     {
+      "value": 19.479,
+      "domain": "web",
+      "text": "im\n11/16 inch Bore\nHI[[ST]]ORY: Usually the better quality cannons were cast in"
+     },
+     {
+      "value": 18.803,
+      "domain": "code",
+      "text": ", DOCTYPE_MARKDOWN, DOCTYPE_RE[[ST]], app_name, app_version, globalSettings,"
+     }
+    ]
+   }
+  },
+  "27744": {
+   "freq_by_loop": {
+    "1": 0.00056,
+    "8": 0.00413,
+    "32": 0.0042
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 3.313,
+      "domain": "web",
+      "text": "<|begin_text|>SCRATCHbot: The robotic rat[[ that]] could save lives\nA team of scientists have developed a robotic"
+     },
+     {
+      "value": 2.565,
+      "domain": "gsm8k_full",
+      "text": " Tom decides to give his wife an anniversary getaway.  The[[ plane]] tickets cost $5000 each.  The hotel is"
+     },
+     {
+      "value": 2.468,
+      "domain": "web",
+      "text": " opening circle, making sure the string went in between the two[[ cardboard]] donuts and out of the other end. Tie a knot"
+     },
+     {
+      "value": 2.424,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: Luke is spending time at the beach[[ building]] sandcastles. He eventually notices that each level of a"
+     },
+     {
+      "value": 2.354,
+      "domain": "web",
+      "text": "as and hiking the remaining distance.\nHe and his large[[ team]] struggled upward for about a month before making the mountain’s very"
+     }
+    ],
+    "8": [
+     {
+      "value": 7.501,
+      "domain": "web",
+      "text": " the corner. He’s the guy tossing the pizza dough in[[ the]] window. For the past year, he’s had an agreement with"
+     },
+     {
+      "value": 7.102,
+      "domain": "web",
+      "text": "Do you remember that “large plot” we talked to you[[ about]]? Forego the lawn (who wants to mow all"
+     },
+     {
+      "value": 6.435,
+      "domain": "gsm8k_full",
+      "text": "\nAnswer: The total number of birds scared away after he[[ threw]] the stone at them is 1/3 * 12 ="
+     },
+     {
+      "value": 5.642,
+      "domain": "wiki",
+      "text": ". During the events that led to Constantin's defeat and d[[rowning]], he became a supporter of the Ottoman-appointed"
+     },
+     {
+      "value": 5.483,
+      "domain": "web",
+      "text": " a square wave, generated by the 555 in its[[ familiar]] astable configuration.\nThe multiplied signal now contains the desired"
+     }
+    ],
+    "32": [
+     {
+      "value": 7.827,
+      "domain": "gsm8k_full",
+      "text": "<|begin_text|>Question: At the trip[[ to]] the county-level scavenger hunt competition, 90 people"
+     },
+     {
+      "value": 7.512,
+      "domain": "web",
+      "text": " want to find something tasty for supper and that mammoth[[ over]] the ridge sure looks good. So you pull out your trusty"
+     },
+     {
+      "value": 6.809,
+      "domain": "web",
+      "text": " easily you fit into your new home!\nDo you remember[[ that]] “large plot” we talked to you about? Forego"
+     },
+     {
+      "value": 6.331,
+      "domain": "web",
+      "text": " the corner. He’s the guy tossing the pizza dough in[[ the]] window. For the past year, he’s had an agreement with"
+     },
+     {
+      "value": 6.3,
+      "domain": "web",
+      "text": "k. (Gen 27: 34).\n[[The]] use of the phrase “On that night”, occurred in the"
+     }
+    ]
+   }
+  },
+  "27848": {
+   "freq_by_loop": {
+    "1": 0.00052,
+    "8": 0.00586,
+    "32": 0.00693
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 4.358,
+      "domain": "wiki",
+      "text": "asties. It became known as the Ling River ([[�]]�河) in the Liao dynasty, which was"
+     },
+     {
+      "value": 4.026,
+      "domain": "web",
+      "text": " elevations, contain more chlorogenic acids and more flavor.[[ Ethiop]]ian and Kenyan beans fall into this category, and higher"
+     },
+     {
+      "value": 3.945,
+      "domain": "web",
+      "text": " heritage of back coffee centuries to the ancient coffee forests on the[[ Ethiop]]ian plateau. Here, legend asserts a goat herder by"
+     },
+     {
+      "value": 3.843,
+      "domain": "wiki",
+      "text": " Somalia\n\nReferences\n\nEthiopia\nTransport in[[ Ethiop]]ia\nEthiopia transport-related lists"
+     },
+     {
+      "value": 3.03,
+      "domain": "wiki",
+      "text": "<|begin_text|>Susan[[ Yan]]et Bejarano Rodríguez (born 7"
+     }
+    ],
+    "8": [
+     {
+      "value": 8.273,
+      "domain": "wiki",
+      "text": " Somalia\n\nReferences\n\nEthiopia\nTransport in[[ Ethiop]]ia\nEthiopia transport-related lists"
+     },
+     {
+      "value": 7.221,
+      "domain": "wiki",
+      "text": "asties. It became known as the Ling River ([[�]]�河) in the Liao dynasty, which was"
+     },
+     {
+      "value": 6.39,
+      "domain": "wiki",
+      "text": " during the 1970–71 men's college basketball[[ season]]. South Carolina won the ACC tournament championship, defeating North"
+     },
+     {
+      "value": 6.221,
+      "domain": "wiki",
+      "text": " Ole Miss Rebels football team represented the University of Mississippi[[ during]] the 1982 NCAA Division I-A"
+     },
+     {
+      "value": 5.68,
+      "domain": "wiki",
+      "text": "13–14 NCAA Division I college basketball[[ season]]. Laurence Wild coached the team in his first season"
+     }
+    ],
+    "32": [
+     {
+      "value": 7.672,
+      "domain": "wiki",
+      "text": " Somalia\n\nReferences\n\nEthiopia\nTransport in[[ Ethiop]]ia\nEthiopia transport-related lists"
+     },
+     {
+      "value": 6.534,
+      "domain": "wiki",
+      "text": "asties. It became known as the Ling River ([[�]]�河) in the Liao dynasty, which was"
+     },
+     {
+      "value": 6.27,
+      "domain": "wiki",
+      "text": " Ole Miss Rebels football team represented the University of Mississippi[[ during]] the 1982 NCAA Division I-A"
+     },
+     {
+      "value": 6.127,
+      "domain": "web",
+      "text": " used to cleanse the sacrifice.\nयत[[्�]]�ुरुषेण"
+     },
+     {
+      "value": 6.058,
+      "domain": "wiki",
+      "text": " during the 1970–71 men's college basketball[[ season]]. South Carolina won the ACC tournament championship, defeating North"
+     }
+    ]
+   }
+  },
+  "28101": {
+   "freq_by_loop": {
+    "1": 0.00058,
+    "8": 0.00362,
+    "32": 0.004
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 6.944,
+      "domain": "web",
+      "text": "\nThe fourth section of each book, Procedures and techniques,[[ emphas]]ises the importance of the practical aspect of the course. This"
+     },
+     {
+      "value": 5.885,
+      "domain": "wiki",
+      "text": " January 2016) was a Turkish athlete. He[[ compe]]ted in the men's shot put and the men's discus throw at"
+     },
+     {
+      "value": 5.664,
+      "domain": "wiki",
+      "text": " to discover his friend being in love with Kiran. He[[ adv]]ises Jeeva to forget Kiran, but Jee"
+     },
+     {
+      "value": 5.562,
+      "domain": "wiki",
+      "text": " Bhumibol Adulyadej, and she[[ compe]]ted in Miss World 2017 held on November 1"
+     },
+     {
+      "value": 5.552,
+      "domain": "wiki",
+      "text": "87) was an American long-distance runner. He[[ compe]]ted in the men's 5000 metres at the 1"
+     }
+    ],
+    "8": [
+     {
+      "value": 16.26,
+      "domain": "web",
+      "text": ", making the sap to flow.\nWhy Do Trees[[ Produ]]ce Sap?\nWe now know that sap is"
+     },
+     {
+      "value": 15.612,
+      "domain": "wiki",
+      "text": ", and abject definitions of blackness and Black life that[[ perv]]aded 20th century America.\n\nCareer \nAfter earning her"
+     },
+     {
+      "value": 15.458,
+      "domain": "web",
+      "text": " years of striking down protective labor laws, the Supreme Court finally[[ uph]]eld a state maximum-hours law because the law applied only"
+     },
+     {
+      "value": 15.057,
+      "domain": "web",
+      "text": " The pediatrician or primary care physician is able to[[ admin]]ister these vaccines.\nWhat is overwhelming postsplenect"
+     },
+     {
+      "value": 15.033,
+      "domain": "wiki",
+      "text": " to discover his friend being in love with Kiran. He[[ adv]]ises Jeeva to forget Kiran, but Jee"
+     }
+    ],
+    "32": [
+     {
+      "value": 16.336,
+      "domain": "web",
+      "text": ", making the sap to flow.\nWhy Do Trees[[ Produ]]ce Sap?\nWe now know that sap is"
+     },
+     {
+      "value": 16.059,
+      "domain": "web",
+      "text": " years of striking down protective labor laws, the Supreme Court finally[[ uph]]eld a state maximum-hours law because the law applied only"
+     },
+     {
+      "value": 15.749,
+      "domain": "wiki",
+      "text": ", and abject definitions of blackness and Black life that[[ perv]]aded 20th century America.\n\nCareer \nAfter earning her"
+     },
+     {
+      "value": 15.576,
+      "domain": "wiki",
+      "text": "0.) It is recorded that Moulay Slimane[[ commission]]ed two marble fountains and a marble water basin which were"
+     },
+     {
+      "value": 15.132,
+      "domain": "web",
+      "text": " The pediatrician or primary care physician is able to[[ admin]]ister these vaccines.\nWhat is overwhelming postsplenect"
+     }
+    ]
+   }
+  },
+  "28306": {
+   "freq_by_loop": {
+    "1": 0.00273,
+    "8": 0.00315,
+    "32": 0.00355
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 15.042,
+      "domain": "wiki",
+      "text": ". managers\nDynamos F.C. (South[[ Africa]]) managers"
+     },
+     {
+      "value": 8.582,
+      "domain": "wiki",
+      "text": "go Youmbi, born in Bangui, Central[[ African]] Republic on March 25, 1973, is"
+     },
+     {
+      "value": 8.125,
+      "domain": "web",
+      "text": " meters that occur in arid regions of Africa, particularly in[[ Nam]]ibia. There has been a great deal of discussion about"
+     },
+     {
+      "value": 6.899,
+      "domain": "web",
+      "text": " more than 75% of the announced project pipeline. While[[ Africa]] captured only 6% of the low-carbon projects globally,"
+     },
+     {
+      "value": 6.657,
+      "domain": "web",
+      "text": " taking care of domestic chores. But as time evolved, and[[ Africa]] evolved too, many now saw the need to campaign for girls"
+     }
+    ],
+    "8": [
+     {
+      "value": 20.994,
+      "domain": "wiki",
+      "text": ", Casares steered the Amakhosi to that year's[[ D]]atsun Challenge, but had an enmity with former"
+     },
+     {
+      "value": 19.301,
+      "domain": "web",
+      "text": " that occur in arid regions of Africa, particularly in Nam[[ib]]ia. There has been a great deal of discussion about their"
+     },
+     {
+      "value": 17.361,
+      "domain": "web",
+      "text": " transitional energy firm Chariot Energy Group.\nIn Nam[[ib]]ia, Germany will invest $9.4-million in"
+     },
+     {
+      "value": 9.604,
+      "domain": "wiki",
+      "text": " horns of the cattle monument (Amahembe g[[']]ente) is a monument in Mbarara Town,"
+     },
+     {
+      "value": 8.704,
+      "domain": "wiki",
+      "text": "<|begin_text|>Bernard Muwan[[ga]] (born 25 August 1993) is an"
+     }
+    ],
+    "32": [
+     {
+      "value": 20.971,
+      "domain": "web",
+      "text": " that occur in arid regions of Africa, particularly in Nam[[ib]]ia. There has been a great deal of discussion about their"
+     },
+     {
+      "value": 20.112,
+      "domain": "wiki",
+      "text": ", Casares steered the Amakhosi to that year's[[ D]]atsun Challenge, but had an enmity with former"
+     },
+     {
+      "value": 18.568,
+      "domain": "web",
+      "text": " transitional energy firm Chariot Energy Group.\nIn Nam[[ib]]ia, Germany will invest $9.4-million in"
+     },
+     {
+      "value": 11.317,
+      "domain": "wiki",
+      "text": " horns of the cattle monument (Amahembe g[[']]ente) is a monument in Mbarara Town,"
+     },
+     {
+      "value": 6.949,
+      "domain": "web",
+      "text": "outledge.\n- Samson, A.V.[[M]]., Wrapson, L.J., Cart"
+     }
+    ]
+   }
+  },
+  "29893": {
+   "freq_by_loop": {
+    "1": 2e-05,
+    "8": 0.00555,
+    "32": 0.00582
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 1.515,
+      "domain": "gsm8k_full",
+      "text": ", Ruiz made 12 hours * 60 pounds/hour[[ =]] <<12*60=720>>7"
+     },
+     {
+      "value": 1.514,
+      "domain": "gsm8k_full",
+      "text": ".\nThere are a total of 48+24[[ =]] <<48+24=72>>72"
+     },
+     {
+      "value": 1.489,
+      "domain": "gsm8k_full",
+      "text": "After downloading some more he now has 52 + 18[[ =]] <<52+18=70>>70"
+     },
+     {
+      "value": 1.473,
+      "domain": "gsm8k_full",
+      "text": "*2=14>>14.\nIn total[[,]] Kelly’s shopping so far costs $10 for bacon +"
+     },
+     {
+      "value": 1.398,
+      "domain": "gsm8k_full",
+      "text": "0 square meters of his land.\nHe has 80[[ -]] 50 = <<80-50=30"
+     }
+    ],
+    "8": [
+     {
+      "value": 16.979,
+      "domain": "gsm8k_full",
+      "text": "=50>>50 square meters of his land.[[\n]]He has 80 - 50 = <<80-"
+     },
+     {
+      "value": 16.601,
+      "domain": "gsm8k_full",
+      "text": "60-24=36>>36.[[\n]]#### 36"
+     },
+     {
+      "value": 16.555,
+      "domain": "gsm8k_full",
+      "text": " <<10*5=50>>50.[[\n]]Therefore, the total number of pens he has is 50"
+     },
+     {
+      "value": 15.191,
+      "domain": "gsm8k_full",
+      "text": "<<54-6=48>>48.[[\n]]You will have to pay $75 + $48"
+     },
+     {
+      "value": 14.909,
+      "domain": "gsm8k_full",
+      "text": "6=24>>24 boys in each class.[[\n]]#### 24"
+     }
+    ],
+    "32": [
+     {
+      "value": 18.362,
+      "domain": "gsm8k_full",
+      "text": "=2800>>2800 spots.[[\n]]60 mambas in a snake park, each having"
+     },
+     {
+      "value": 17.869,
+      "domain": "gsm8k_full",
+      "text": "*5=220>>220 pounds.[[\n]]#### 220"
+     },
+     {
+      "value": 16.937,
+      "domain": "gsm8k_full",
+      "text": " <<6*2=12>>12 hours.[[\n]]If she slept 1 hour more for the rest of the week"
+     },
+     {
+      "value": 16.694,
+      "domain": "gsm8k_full",
+      "text": "30=90>>90 for that land.[[\n]]Therefore, he earned a total of $50 + $"
+     },
+     {
+      "value": 16.689,
+      "domain": "gsm8k_full",
+      "text": " <<10*5=50>>50.[[\n]]Therefore, the total number of pens he has is 50"
+     }
+    ]
+   }
+  },
+  "30639": {
+   "freq_by_loop": {
+    "1": 0.00035,
+    "8": 0.00243,
+    "32": 0.00247
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 4.011,
+      "domain": "web",
+      "text": " involves how the universe is organized. Is there some immutable natural[[ law]] at work, or is it all randomness?\nWe might"
+     },
+     {
+      "value": 3.745,
+      "domain": "web",
+      "text": ". Though it does not mention the name of God, His[[ provid]]ential oversight is clearly seen. It is not a coincidence that"
+     },
+     {
+      "value": 3.574,
+      "domain": "web",
+      "text": "oven composed a quartet that completely belies the gloomy[[ circumstances]] surrounding its composition. Beethoven's Opus 7"
+     },
+     {
+      "value": 2.944,
+      "domain": "web",
+      "text": "\nSpotting 37b at all took a bit of[[ luck]]. It’s not that the Kepler telescope lacks the proper sensitivity,"
+     },
+     {
+      "value": 2.791,
+      "domain": "web",
+      "text": " those who could not pay agricultural tax fled the village. Such[[ traged]]ies were frequently repeated in those times.\nOne important attempt"
+     }
+    ],
+    "8": [
+     {
+      "value": 16.234,
+      "domain": "web",
+      "text": " Though it does not mention the name of God, His provid[[ential]] oversight is clearly seen. It is not a coincidence that Es"
+     },
+     {
+      "value": 10.592,
+      "domain": "web",
+      "text": "Fatima's life is beset with what seems to be[[ disasters]]. Her journey leads her from Morocco to the Mediterranean,"
+     },
+     {
+      "value": 10.012,
+      "domain": "web",
+      "text": " as well. When you are facing adversity, hardship and mis[[fort]]une, your brain will react to protect you from it,"
+     },
+     {
+      "value": 9.67,
+      "domain": "web",
+      "text": "\nSpotting 37b at all took a bit of[[ luck]]. It’s not that the Kepler telescope lacks the proper sensitivity,"
+     },
+     {
+      "value": 8.61,
+      "domain": "code",
+      "text": ", 2015, 5.5, \"Everything[[ happens]] all at once.\",\r\n        [\"Larry\""
+     }
+    ],
+    "32": [
+     {
+      "value": 15.602,
+      "domain": "web",
+      "text": ". Though it does not mention the name of God, His[[ provid]]ential oversight is clearly seen. It is not a coincidence that"
+     },
+     {
+      "value": 11.297,
+      "domain": "web",
+      "text": " that she realizes that what seemed at the time to be really[[ unfortunate]] events were an integral part of her eventual fulfillment.\"--"
+     },
+     {
+      "value": 10.855,
+      "domain": "web",
+      "text": " as well. When you are facing adversity, hardship and mis[[fort]]une, your brain will react to protect you from it,"
+     },
+     {
+      "value": 9.854,
+      "domain": "web",
+      "text": "\nSpotting 37b at all took a bit of[[ luck]]. It’s not that the Kepler telescope lacks the proper sensitivity,"
+     },
+     {
+      "value": 9.231,
+      "domain": "code",
+      "text": ", 2015, 5.5, \"Everything[[ happens]] all at once.\",\r\n        [\"Larry\""
+     }
+    ]
+   }
+  },
+  "31790": {
+   "freq_by_loop": {
+    "1": 0.00052,
+    "8": 0.01167,
+    "32": 0.01235
+   },
+   "top_by_loop": {
+    "1": [
+     {
+      "value": 2.46,
+      "domain": "gsm8k_full",
+      "text": " a company of 50 employees, 20% of the[[ employees]] are management.  Out of this 20%, only 3"
+     },
+     {
+      "value": 2.449,
+      "domain": "wiki",
+      "text": "ma pictipes is a species of harvestman in the[[ family]] Nemastomatidae. It is found in North"
+     },
+     {
+      "value": 2.359,
+      "domain": "wiki",
+      "text": " leguminicola is a species of rust flies in the[[ family]] Psilidae.\n\nReferences\n\nPsilidae\n"
+     },
+     {
+      "value": 2.355,
+      "domain": "code",
+      "text": "\n    op.add_column(\n        'assign[[ee]]',\n        sa.Column(\n            'line_"
+     },
+     {
+      "value": 2.328,
+      "domain": "web",
+      "text": " a prison. Its current name (Castle of the Holy[[ Angel]]) was applied in the late sixth century, after the Ar"
+     }
+    ],
+    "8": [
+     {
+      "value": 10.372,
+      "domain": "wiki",
+      "text": " 1924, it was merged into the family brew[[ery]]. After the death of his father in 1872"
+     },
+     {
+      "value": 9.094,
+      "domain": "wiki",
+      "text": "ina (it is one of the only places inside the med[[ina]] that can be reached by car). Its name means \""
+     },
+     {
+      "value": 8.843,
+      "domain": "wiki",
+      "text": ".\n\nAs Calgary returns to the Argyll[[ estate]], a car tries to run him down. The car crashes"
+     },
+     {
+      "value": 8.224,
+      "domain": "web",
+      "text": "ch and Tamil) that allows direct engagement with the source[[ texts]], the exegetical materials and the lexicographic works, traditional"
+     },
+     {
+      "value": 8.026,
+      "domain": "math",
+      "text": " won't work. The shorter sides will lay flat on the longest[[ side]] and will fail to make a triangle. Next we try making"
+     }
+    ],
+    "32": [
+     {
+      "value": 10.805,
+      "domain": "wiki",
+      "text": " 1924, it was merged into the family brew[[ery]]. After the death of his father in 1872"
+     },
+     {
+      "value": 9.17,
+      "domain": "wiki",
+      "text": ".\n\nAs Calgary returns to the Argyll[[ estate]], a car tries to run him down. The car crashes"
+     },
+     {
+      "value": 8.256,
+      "domain": "web",
+      "text": "ch and Tamil) that allows direct engagement with the source[[ texts]], the exegetical materials and the lexicographic works, traditional"
+     },
+     {
+      "value": 8.025,
+      "domain": "wiki",
+      "text": " this bridge.\n\nA new bridge was constructed parallel to old[[ bridge]] to widen the NH47. The construction of the new"
+     },
+     {
+      "value": 7.732,
+      "domain": "math",
+      "text": " won't work. The shorter sides will lay flat on the longest[[ side]] and will fail to make a triangle. Next we try making"
+     }
+    ]
+   }
+  }
+ }
+}

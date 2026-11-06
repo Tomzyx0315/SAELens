@@ -129,3 +129,40 @@ interpretable (the FVU gain per doubling of k shrinks: k64 -> k128 gives 0.04).
 GPUs 1-7 run Huginn producers, sharing GPUs with an sglang server. Throughput ~15k vectors/s -> ~18 h.
 Resumable checkpoints every 20M vectors in `/data_fs/zhangyuxuan/looped/sae/huginn_loopstate_bt32k_k128_v2/`;
 log `results/logs/sae_huginn_loopstate_bt32k_k128_v2.log`. Started 2026-11-05 23:34.
+
+### Mid-training snapshot at 5.6e8 vectors (56%)
+
+`sae_snapshot.py` on the `resume_560001024` checkpoint, 24 held-out docs:
+
+| loop | 1 | 2 | 3 | 4 | 6 | 8 | 16 | 32 |
+|---|---|---|---|---|---|---|---|---|
+| FVU | 0.368 | 0.352 | 0.371 | 0.377 | 0.372 | 0.365 | 0.356 | 0.356 |
+| feature-usage overlap with loop 32 | 0.26 | 0.45 | 0.65 | 0.78 | 0.91 | 0.94 | 0.98 | 1.00 |
+| overlap seed0 vs seed1 | 0.95 | 0.95 | 0.95 | 0.96 | 0.96 | 0.97 | 0.98 | 0.99 |
+| features used here but ~unused at L32 | 356 | 374 | 267 | 142 | 26 | 5 | 0 | 0 |
+| features used at L32 but ~unused here | 3389 | 1218 | 337 | 101 | 6 | 1 | 0 | 0 |
+
+Overall FVU 0.358 (vs v1's ~0.47 plateau). Confirms the feasibility-check picture on learned sparse features:
+feature turnover is confined to loops 1-4 and converges by loop 8; ~3400 features are used at the converged loop
+but essentially unused at loop 1 ("late-emerging"), ~350 are used only at loop 1 ("early"). It is not init noise:
+per-loop feature usage agrees across the two init seeds (overlap 0.95-0.99).
+
+### Feature interpretability (mid-training)
+
+`code/interpret_sae.py` collects each latent's max-activating token contexts across the per-domain eval corpora
+(`DATA.md`) at a chosen loop. On the 560M checkpoint at loop 8 (160k tokens, 28287 live features;
+`results/sae/interp_v2_560M_loop8.json`), many features are already cleanly interpretable, e.g.:
+
+- 32134: " implied" in software-license boilerplate ("express or implied"), act ~40, freq 0.0004
+- 555: fraction / percentage words ("one-third", "20 percent", "two-thirds")
+- 18361: time-passing phrases ("Over time", "Over the years")
+- 28250: emphatic adverbs ("particularly", "especially")
+- 29853: the identifier "context" in Python (contextlib, context_processors)
+- 12598: the builtin `len(`
+- 1109: ".0" in floats
+
+These are at a single loop on a mid-training checkpoint; the point is that the SAE yields usable features. Planned
+analyses (see the TODO list): (1) interpret the "early" (loop-1-only) vs "late-emerging" (loop-32-only) features and
+compare their semantics; (2) feature *flow* within a single sentence — track how features switch on/off across loops
+(same layer and across layers) along the recurrent trajectory. Both wait for the final v2 SAE, where we will also
+splice the reconstruction back into Huginn and measure the CE increase and how the error propagates through loops.

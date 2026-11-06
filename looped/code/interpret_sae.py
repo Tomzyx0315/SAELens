@@ -113,12 +113,14 @@ def main():
         }
     json.dump(out, open(args.out, "w"), indent=1, ensure_ascii=False)
 
-    # full top-M table for later analysis
+    # full top-M table for later analysis -> /data_fs (large), next to the SAE
     rows = [(feat, v, docs[u][0], u, docs[u][2]) for feat in range(d_sae) for v, u in heaps[feat] if u in docs]
     if rows:
         arr = np.array([(f, v, p) for f, v, _, _, p in rows], dtype=np.float32)
         doms = np.array([r[2] for r in rows])
-        np.savez(Path(args.out).with_suffix(".npz"), feat_val_pos=arr, domain=doms, freq=freq)
+        npz_dir = Path("/data_fs/zhangyuxuan/looped/sae/interp")
+        npz_dir.mkdir(parents=True, exist_ok=True)
+        np.savez(npz_dir / (Path(args.out).stem + ".npz"), feat_val_pos=arr, domain=doms, freq=freq)
 
     print(f"\n{len(live)} live features (freq>1e-4) of {d_sae}; showing {len(show)}:\n")
     for feat in show:

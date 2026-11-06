@@ -201,6 +201,37 @@ lower-dimensional, PR ~287 vs ~1200) and the stages-of-inference view.
 `code/interpret_loops.py` interprets a sampled set of features at several loops in one forward pass per doc
 (`results/sae/interp_final_loops.json`), used for spot-checking and the early/late example contexts above.
 
-Still to do (TODO list): feature *flow* within a single sentence — track how features switch on/off across loops
-(same layer and across layers) along the recurrent trajectory; and splicing the SAE reconstruction back into Huginn
-to measure the CE increase and how the error propagates through loops.
+## Feature flow within a single sentence (`code/feature_flow.py`)
+
+For a fixed prompt, each token has a (loops, d_sae) binary activation map on the loop state. We track how the active
+feature set evolves along the recurrence, and relate it to the model's own per-loop logit-lens prediction.
+Results `results/sae/flow_{math,fact,code}.json`.
+
+**Feature turnover decays as the prediction settles.** Between consecutive loops, the fraction of active features
+that stay on rises and new activations fall off, monotonically (math prompt, mean over tokens):
+
+| loop step | 1->2 | 2->3 | 4->6 | 6->8 | 12->16 | 24->32 |
+|---|---|---|---|---|---|---|
+| frac of active features that stay on | 0.36 | 0.55 | 0.60 | 0.74 | 0.89 | 0.99 |
+| newly-on features per token | 62 | 44 | 43 | 31 | 17 | 2 |
+
+By loop 24->32 only ~1% of features change: the representation has essentially converged (consistent with the
+fixed-point / stages results in `REPORT.md`). L0 is fixed at 128 throughout, so this is genuine turnover of *which*
+features are on, not a change in sparsity.
+
+**The feature flow tracks the forming prediction.** On "...currency is the yen is" the last-token logit-lens
+prediction flips " the" -> " Tokyo" at loop 6 — exactly while feature turnover is still high (stay 0.6-0.7) — and
+then stays " Tokyo" as turnover falls to ~1%. On "17 times 24 equals" the prediction moves 1 -> 4 around loops
+12-16. So the recurrence is doing visible work in the first ~6-16 loops and mostly consolidating afterwards.
+
+**Per (token, feature) activation classes** (math prompt): transient (on then off before the end) 40%, early-only
+21%, late-only 18%, persistent 11%, intermittent 10%. Similar across prompts (fact / code). Most feature
+activations are transient — features fire during the "computation" phase and switch off — rather than persisting to
+the converged state. This is a token-level, dynamical complement to the population-level early/late split above.
+
+Caveat: our SAE site is the end-of-loop state, so this is cross-loop flow at one site, not flow across the 4 core
+layers within a loop (the loop state does not expose intermediate layers). Per-layer flow would need SAEs on the
+core-layer outputs.
+
+Still to do (TODO list): splice the SAE reconstruction back into Huginn to measure the CE increase per loop and how
+the error propagates through loops.

@@ -233,5 +233,34 @@ Caveat: our SAE site is the end-of-loop state, so this is cross-loop flow at one
 layers within a loop (the loop state does not expose intermediate layers). Per-layer flow would need SAEs on the
 core-layer outputs.
 
-Still to do (TODO list): splice the SAE reconstruction back into Huginn to measure the CE increase per loop and how
-the error propagates through loops.
+## Splicing the SAE back into Huginn (`code/splice_eval.py`)
+
+The ultimate test: replace the loop state with `sae.decode(sae.encode(state))` inside the forward pass and let the
+recurrence continue. Next-token CE on the per-domain corpora (math/gsm8k: answer tokens only), 60 docs/domain,
+32 loops. `results/sae/splice_final.json`.
+
+| edit | CE | delta CE | loss recovered |
+|---|---|---|---|
+| clean (no edit) | 1.443 | - | - |
+| replace **every** loop's state | 2.454 | +1.011 | - |
+| replace only loop 1 / 2 / 4 / 8 | ~1.443 | ~0.000 | n/a (no effect) |
+| replace only loop 16 | 1.4435 | +0.0006 | 0.76 |
+| replace only loop 32 (last) | 1.732 | +0.289 | **0.949** |
+
+Two findings:
+
+1. **The recurrence self-corrects SAE error at early/middle loops.** A single-loop reconstruction (FVU 0.32, so a
+   large per-state error) injected at loop 1-8 changes the output CE by ~0 — the later loops absorb it. Error
+   propagation confirms this: after injecting at loop l, the relative state error `||edited-clean||/||clean||`
+   starts at ~0.58 and **decays** monotonically to ~0.08 by loop 32 (it does not grow). So Huginn's recurrence is
+   contractive around its trajectory and repairs a perturbation of this size within a few loops.
+2. **Only the final loop matters for the output.** Editing loop 32 costs +0.29 CE and recovers 95% of the
+   mean-ablation loss (ablating loop 32 gives CE 7.15), as expected since the coda/readout reads the last state.
+   Replacing *every* loop compounds to +1.01 CE — worse than any single edit, because the final loop's input is
+   itself a reconstruction.
+
+Caveat / interpretation: a low per-loop FVU is **not** required for the SAE to be useful here — the model is
+robust to intermediate-state perturbations, so "faithfulness" should be judged at the read-out loop (loop 32),
+where the SAE recovers 95% of performance. This also means the early/late and feature-flow analyses above are
+measuring real structure in states that the model treats as intermediate and self-correcting, which is the point:
+the recurrence does visible, decaying "computation" in the first ~16 loops and commits at the end.

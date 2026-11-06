@@ -129,3 +129,32 @@ class HuginnAdapter:
     def final_logits(self, ids: torch.Tensor, loops: int, seed: int = 0) -> torch.Tensor:
         torch.manual_seed(seed)
         return self.model(ids, num_steps=loops, use_cache=False).logits[0]
+
+    @torch.no_grad()
+    def run_with_state_edit(self, ids, loops, edit_fn, edit_loops, seed=0):
+        """Run Huginn, replacing the loop state (output of core_block[-1]) at the given loops with edit_fn(state).
+
+        edit_fn maps a (T, D) state to a (T, D) state (e.g. SAE reconstruction); edit_loops is a set of 1-based
+        loop indices to edit. The edited state feeds the next loop, so the edit propagates. Returns final logits
+        (T, V) and the list of per-loop states actually produced (post-edit), for error-propagation analysis.
+        """
+        counter = {"i": 0}
+        states = []
+
+        def hook(mod, inp, out):
+            counter["i"] += 1
+            x = out[0] if isinstance(out, tuple) else out
+            s = x[0]  # (T, D)
+            if counter["i"] in edit_loops:
+                s = edit_fn(s).to(s.dtype)
+                x = (s.unsqueeze(0), *out[1:]) if isinstance(out, tuple) else s.unsqueeze(0)
+            states.append(s.detach())
+            return x
+
+        h = self.model.transformer.core_block[-1].register_forward_hook(hook)
+        torch.manual_seed(seed)
+        try:
+            logits = self.model(ids, num_steps=loops, use_cache=False).logits[0]
+        finally:
+            h.remove()
+        return logits, states

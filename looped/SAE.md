@@ -192,9 +192,31 @@ corpora; `results/sae/interp_feats_early_late.json`):
 - Both classes are ~40% single-domain in their top contexts; the difference is firing breadth and specificity,
   not domain exclusivity.
 
-Interpretation: Huginn's first loop sets up a generic, dense scaffold (syntax, position, frequent tokens); later
-loops progressively switch on many sparse, content-specific features. This matches the geometry (loop 1 is
-lower-dimensional, PR ~287 vs ~1200) and the stages-of-inference view.
+Caveat: these descriptions were written from hand-picked examples (features sorted by domain purity) and are
+partly **not supported** by the quantitative test below: the syntactic-vs-content contrast does not hold.
+
+### Quantitative descriptors of early / late / persistent features (`code/feature_descriptors.py`, A4)
+
+LLM-free descriptors over all firings (328k tokens, 200 docs/domain; early at loop 1, late and persistent at
+loop 32; `results/sae/feature_descriptors.json`). Medians; p = Mann-Whitney early vs late:
+
+| descriptor | early (n=1735) | late (n=11936) | persistent (n=6021) | p |
+|---|---|---|---|---|
+| firing frequency | 0.022 | 0.0045 | 0.0031 | ~0 |
+| domain entropy (1 = spread over all 5 domains) | **0.81** | **0.62** | 0.71 | 2e-143 |
+| current-token entropy | 0.79 | 0.78 | 0.79 | 0.32 (n.s.) |
+| share of top current token | 0.070 | 0.080 | 0.082 | 0.14 (n.s.) |
+| punctuation share of firing tokens | 0.165 | 0.163 | 0.095 | 0.004 |
+| mean relative position | 0.495 | 0.507 | 0.483 | 6e-15 |
+| answer-token share (math / gsm8k) | 0.66 | 0.63 | 0.55 | 2e-11 |
+
+What holds: early features fire ~5x more often and are much more **domain-general** (higher domain entropy);
+late-emerging features are rarer and more **domain-specific**. What does not hold: early features are *not* more
+token-specific / syntactic than late ones (token entropy and top-token share are indistinguishable; punctuation
+shares are equal), and position effects are tiny. So the defensible summary is "early = few, frequent,
+domain-general features; late = many, rare, domain-specific features", not "syntax first, content later".
+Interpretability of individual features (does a feature correspond to a human concept?) still needs auto-interp,
+which requires an LLM we have not set up.
 
 ### Max-activating examples (final SAE, loops 1/8/32)
 
@@ -231,7 +253,59 @@ the converged state. This is a token-level, dynamical complement to the populati
 
 Caveat: our SAE site is the end-of-loop state, so this is cross-loop flow at one site, not flow across the 4 core
 layers within a loop (the loop state does not expose intermediate layers). Per-layer flow would need SAEs on the
-core-layer outputs.
+core-layer outputs. The three single prompts above are anecdotes; the statistics are in the next section.
+
+### Feature-flow statistics with baselines (`code/flow_stats.py`, A2)
+
+1000 documents (200/domain), two init seeds each; mean with 95% bootstrap CI over documents (CIs are all
+< +-0.004, omitted). Weighted turnover = 1 - sum min(a, a') / sum max(a, a') over feature activations (magnitude-
+aware, insensitive to threshold flicker). Relative state distance = ||s_l' - s_l|| / ||s_l||.
+`results/sae/flow_stats.json`.
+
+| transition | stay (binary) | weighted turnover | state distance | turnover expected from isotropic noise of that size |
+|---|---|---|---|---|
+| 1 -> 2 | 0.31 | 0.81 | 0.91 | 0.61 |
+| 2 -> 3 | 0.47 | 0.66 | 0.72 | 0.48 |
+| 3 -> 4 | 0.57 | 0.55 | 0.59 | 0.40 |
+| 6 -> 8 | 0.70 | 0.41 | 0.46 | 0.31 |
+| 12 -> 16 | 0.87 | 0.20 | 0.19 | 0.13 |
+| 24 -> 32 | 0.97 | 0.04 | 0.04 | 0.03 |
+
+Baselines:
+- **Same loop, other random init state:** turnover 0.50 at loop 1, 0.29 at loop 4, 0.08 at loop 12, 0.02 at loop 32.
+  Init-seed variation is a large fraction of early-loop turnover: at loop 1 the two seeds differ in half of their
+  feature mass. Consecutive-loop turnover is larger than seed turnover at every loop, so it is not only init noise.
+- **Isotropic noise added to the loop-32 state:** turnover grows linearly, ~0.66 x relative noise norm.
+
+Findings: (1) feature turnover tracks the size of the state change almost one-to-one (turnover ~ 0.9-1.1 x state
+distance at every transition); the decay of turnover is just the convergence of the state, not an additional
+discovery. (2) For the same state distance, real loop-to-loop changes turn over ~1.3-1.5x more feature mass than
+isotropic noise: the trajectory moves along directions that the SAE dictionary resolves (it changes which features
+are on), rather than in random directions. (3) The single-prompt class split (transient 40% etc.) uses a binary
+threshold and has no flicker baseline; it should not be over-interpreted.
+
+### Feature lineage: re-encoding or replacement? (`code/feature_lineage.py`, A3)
+
+When features switch off between loops, do the features that switch on rebuild the same direction (the same
+concept carried by another latent) or something else? 750 documents, 165k tokens. `results/sae/feature_lineage.json`.
+
+| transition | features off (= on) per token | cos(v_off, v_on) per token | null (other token) | top-1 successor decoder cos (median) |
+|---|---|---|---|---|
+| 1 -> 2 | 88 | 0.125 | 0.057 | 0.008 |
+| 2 -> 4 | 86 | 0.086 | 0.062 | -0.003 |
+| 4 -> 8 | 66 | 0.065 | 0.070 | 0.001 |
+| 8 -> 16 | 33 | 0.036 | 0.047 | 0.001 |
+
+v_off = sum of decoder vectors (weighted by activation) of the features that switch off; v_on likewise for the
+features that switch on. Decoder cosine of the most likely successor latent vs nearest-neighbour cosine in the whole
+dictionary: median 0.18-0.23; fraction of top successors with decoder cos > 0.5: < 0.6%.
+
+Finding: features that switch off are **not** replaced by latents pointing in the same direction. The direction
+that leaves and the direction that arrives are nearly orthogonal (cos 0.04-0.13, barely above the other-token null,
+and at null level from loop 4 on). So across loops the representation genuinely changes content in the SAE basis,
+rather than re-encoding the same concept with different latents. Successors are only weakly predictable (top-1
+successor probability median 0.08-0.51, lift 1.4-2.8 over its base rate). Limitation: this is a single shared
+dictionary; the per-loop SAEs (B1) test the same question without assuming a shared basis.
 
 ## Splicing the SAE back into Huginn (`code/splice_eval.py`)
 
@@ -239,28 +313,47 @@ The ultimate test: replace the loop state with `sae.decode(sae.encode(state))` i
 recurrence continue. Next-token CE on the per-domain corpora (math/gsm8k: answer tokens only), 60 docs/domain,
 32 loops. `results/sae/splice_final.json`.
 
-| edit | CE | delta CE | loss recovered |
+| edit (one forward of 32 loops) | CE | delta CE | CE with mean-ablation at the same loop |
 |---|---|---|---|
 | clean (no edit) | 1.443 | - | - |
 | replace **every** loop's state | 2.454 | +1.011 | - |
-| replace only loop 1 / 2 / 4 / 8 | ~1.443 | ~0.000 | n/a (no effect) |
-| replace only loop 16 | 1.4435 | +0.0006 | 0.76 |
-| replace only loop 32 (last) | 1.732 | +0.289 | **0.949** |
+| replace only loop 1 / 2 / 4 / 8 | ~1.443 | ~0.000 | ~1.442 (also no effect) |
+| replace only loop 16 | 1.4435 | +0.0006 | 1.445 |
+| replace only loop 32 (last) | 1.732 | +0.289 | 7.15 -> loss recovered 0.95 |
 
-Two findings:
+**What this does and does not show (corrected).**
 
-1. **The recurrence self-corrects SAE error at early/middle loops.** A single-loop reconstruction (FVU 0.32, so a
-   large per-state error) injected at loop 1-8 changes the output CE by ~0 — the later loops absorb it. Error
-   propagation confirms this: after injecting at loop l, the relative state error `||edited-clean||/||clean||`
-   starts at ~0.58 and **decays** monotonically to ~0.08 by loop 32 (it does not grow). So Huginn's recurrence is
-   contractive around its trajectory and repairs a perturbation of this size within a few loops.
-2. **Only the final loop matters for the output.** Editing loop 32 costs +0.29 CE and recovers 95% of the
-   mean-ablation loss (ablating loop 32 gives CE 7.15), as expected since the coda/readout reads the last state.
-   Replacing *every* loop compounds to +1.01 CE — worse than any single edit, because the final loop's input is
-   itself a reconstruction.
+- At loops 1-16 even *mean-ablating* the state leaves CE unchanged. Huginn starts from a random state and converges
+  to a fixed point, so any intermediate state is overwritten by the remaining loops. This single-edit test therefore
+  has **no power** to measure SAE faithfulness at intermediate loops: zero delta CE there is a property of the model,
+  not evidence for the SAE. (An earlier version of this section called it "self-correcting SAE error"; that
+  overstates it.) The decaying error after injection (relative state error 0.58 at the edited loop -> 0.08 at
+  loop 32) is the same contraction, not an SAE property.
+- The only informative point is the read-out loop: editing loop 32 costs +0.29 CE, recovering 95% of the
+  mean-ablation loss. Replacing every loop compounds to +1.01 CE.
+- Faithfulness at intermediate loops is measured separately with depth-truncated runs (next section).
 
-Caveat / interpretation: a low per-loop FVU is **not** required for the SAE to be useful here — the model is
-robust to intermediate-state perturbations, so "faithfulness" should be judged at the read-out loop (loop 32),
-where the SAE recovers 95% of performance. This also means the early/late and feature-flow analyses above are
-measuring real structure in states that the model treats as intermediate and self-correcting, which is the point:
-the recurrence does visible, decaying "computation" in the first ~16 loops and commits at the end.
+## Per-depth faithfulness (`code/depth_fidelity.py`, A1)
+
+For each depth l, Huginn is run for exactly l loops and the loop-l state is replaced before being read by the
+model's own coda + head, i.e. the model's real output at depth l. 500 documents (100/domain), math/gsm8k scored on
+answer tokens. `results/sae/depth_fidelity.json`.
+
+| depth | CE clean | CE SAE | CE mean-ablation | delta CE | KL(clean ‖ SAE) | loss recovered | FVU |
+|---|---|---|---|---|---|---|---|
+| 1 | 3.680 | 4.213 | 7.394 | +0.53 | 0.81 | 0.857 | 0.399 |
+| 2 | 2.743 | 3.071 | 7.203 | +0.33 | 0.45 | 0.926 | 0.387 |
+| 4 | 1.976 | 2.290 | 7.156 | +0.31 | 0.35 | 0.939 | 0.406 |
+| 8 | 1.599 | 1.903 | 7.204 | +0.30 | 0.30 | 0.946 | 0.378 |
+| 16 | 1.518 | 1.804 | 7.192 | +0.29 | 0.29 | 0.950 | 0.368 |
+| 32 | 1.515 | 1.798 | 7.190 | +0.28 | 0.29 | 0.950 | 0.367 |
+
+Per domain, delta CE at depth 1 / 4 / 32: web 0.41 / 0.28 / 0.26, code 0.58 / 0.33 / 0.30, math 0.47 / 0.15 / 0.13,
+gsm8k 0.83 / 0.36 / 0.15, wiki 0.58 / 0.44 / 0.45.
+
+Findings: the shared SAE is faithful at every depth (loss recovered 0.94-0.95 from depth 3 on), but **worst at
+loop 1** (0.86, delta CE 0.53) even though its FVU there is no worse. Loop-1 states are read out by the model with
+less tolerance to reconstruction error; one plausible reason is that the shared dictionary is dominated by the
+~21k features of the converged regime while loop 1 uses only ~9k. Wiki stays hardest at every depth (delta CE ~0.45).
+Loss recovered of 0.95 with delta CE 0.28 nat is typical of current residual-stream SAEs; it is the faithfulness
+ceiling of all feature-level conclusions here.

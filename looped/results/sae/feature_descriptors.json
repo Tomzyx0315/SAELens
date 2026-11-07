@@ -1,0 +1,713 @@
+{
+ "n_tokens": 328053,
+ "classes": {
+  "early": {
+   "n_features": 1741,
+   "n_described": 1735,
+   "summary": {
+    "freq": {
+     "median": 0.0222,
+     "mean": 0.0502
+    },
+    "token_entropy": {
+     "median": 0.7921,
+     "mean": 0.7047
+    },
+    "top1_token_share": {
+     "median": 0.07,
+     "mean": 0.1795
+    },
+    "rel_pos_mean": {
+     "median": 0.4947,
+     "mean": 0.4933
+    },
+    "domain_entropy": {
+     "median": 0.8052,
+     "mean": 0.7323
+    },
+    "cc_alpha": {
+     "median": 0.6775,
+     "mean": 0.5798
+    },
+    "cc_digit": {
+     "median": 0.0275,
+     "mean": 0.08
+    },
+    "cc_punct": {
+     "median": 0.165,
+     "mean": 0.2566
+    },
+    "cc_space": {
+     "median": 0.0175,
+     "mean": 0.0679
+    },
+    "cc_mixed": {
+     "median": 0.01,
+     "mean": 0.0157
+    },
+    "answer_share": {
+     "median": 0.661,
+     "mean": 0.6473
+    }
+   },
+   "examples": [
+    {
+     "top_tokens": [
+      "\n",
+      "(",
+      " $",
+      ",",
+      "    "
+     ],
+     "token_entropy": 0.754,
+     "freq": 0.00898
+    },
+    {
+     "top_tokens": [
+      " this",
+      " This",
+      " these",
+      "This",
+      " These"
+     ],
+     "token_entropy": 0.428,
+     "freq": 0.00239
+    },
+    {
+     "top_tokens": [
+      "\n",
+      ".",
+      ",",
+      "\n\n",
+      "$"
+     ],
+     "token_entropy": 0.703,
+     "freq": 0.10285
+    },
+    {
+     "top_tokens": [
+      " the",
+      ",",
+      "_",
+      ".",
+      " to"
+     ],
+     "token_entropy": 0.873,
+     "freq": 0.07554
+    },
+    {
+     "top_tokens": [
+      ",",
+      " school",
+      ".",
+      " is",
+      " the"
+     ],
+     "token_entropy": 0.932,
+     "freq": 0.02272
+    },
+    {
+     "top_tokens": [
+      ")",
+      "\n",
+      "\n\n",
+      "    ",
+      "}"
+     ],
+     "token_entropy": 0.449,
+     "freq": 0.00972
+    },
+    {
+     "top_tokens": [
+      ",",
+      " and",
+      "\n",
+      " =",
+      ")"
+     ],
+     "token_entropy": 0.382,
+     "freq": 0.04206
+    },
+    {
+     "top_tokens": [
+      " the",
+      ",",
+      " in",
+      " is",
+      " $"
+     ],
+     "token_entropy": 0.848,
+     "freq": 0.11492
+    },
+    {
+     "top_tokens": [
+      " more",
+      " much",
+      " as",
+      " a",
+      " so"
+     ],
+     "token_entropy": 0.801,
+     "freq": 0.01191
+    },
+    {
+     "top_tokens": [
+      " of",
+      " the",
+      "Solution",
+      " version",
+      "__"
+     ],
+     "token_entropy": 0.928,
+     "freq": 0.02774
+    },
+    {
+     "top_tokens": [
+      ".",
+      "\n",
+      "\n\n",
+      " the",
+      ","
+     ],
+     "token_entropy": 0.754,
+     "freq": 0.04142
+    },
+    {
+     "top_tokens": [
+      "\n",
+      ",",
+      "0",
+      ")",
+      "."
+     ],
+     "token_entropy": 0.876,
+     "freq": 0.23492
+    },
+    {
+     "top_tokens": [
+      ".",
+      "_",
+      ")",
+      "-",
+      "e"
+     ],
+     "token_entropy": 0.941,
+     "freq": 0.04337
+    },
+    {
+     "top_tokens": [
+      "\n",
+      ".",
+      "-",
+      ",",
+      "_"
+     ],
+     "token_entropy": 0.898,
+     "freq": 0.04093
+    },
+    {
+     "top_tokens": [
+      " and",
+      " or",
+      "\n",
+      ",",
+      "/"
+     ],
+     "token_entropy": 0.39,
+     "freq": 0.00946
+    }
+   ]
+  },
+  "late": {
+   "n_features": 11940,
+   "n_described": 11936,
+   "summary": {
+    "freq": {
+     "median": 0.0045,
+     "mean": 0.0076
+    },
+    "token_entropy": {
+     "median": 0.7843,
+     "mean": 0.7252
+    },
+    "top1_token_share": {
+     "median": 0.08,
+     "mean": 0.1448
+    },
+    "rel_pos_mean": {
+     "median": 0.5074,
+     "mean": 0.5076
+    },
+    "domain_entropy": {
+     "median": 0.6249,
+     "mean": 0.5926
+    },
+    "cc_alpha": {
+     "median": 0.7075,
+     "mean": 0.5955
+    },
+    "cc_digit": {
+     "median": 0.025,
+     "mean": 0.0759
+    },
+    "cc_punct": {
+     "median": 0.1625,
+     "mean": 0.2495
+    },
+    "cc_space": {
+     "median": 0.015,
+     "mean": 0.067
+    },
+    "cc_mixed": {
+     "median": 0.0075,
+     "mean": 0.012
+    },
+    "answer_share": {
+     "median": 0.625,
+     "mean": 0.5973
+    }
+   },
+   "examples": [
+    {
+     "top_tokens": [
+      " the",
+      " a",
+      " of",
+      " in",
+      " on"
+     ],
+     "token_entropy": 0.811,
+     "freq": 0.00349
+    },
+    {
+     "top_tokens": [
+      "_",
+      "(",
+      "^",
+      "{",
+      "."
+     ],
+     "token_entropy": 0.585,
+     "freq": 0.00235
+    },
+    {
+     "top_tokens": [
+      " 1",
+      "1",
+      " C",
+      "E",
+      " A"
+     ],
+     "token_entropy": 0.918,
+     "freq": 0.01021
+    },
+    {
+     "top_tokens": [
+      " In",
+      "In",
+      ",",
+      " in",
+      "The"
+     ],
+     "token_entropy": 0.83,
+     "freq": 0.00543
+    },
+    {
+     "top_tokens": [
+      "-",
+      ">>",
+      " -",
+      "*",
+      "–"
+     ],
+     "token_entropy": 0.402,
+     "freq": 0.00262
+    },
+    {
+     "top_tokens": [
+      ".",
+      " the",
+      ",",
+      "\n",
+      ":"
+     ],
+     "token_entropy": 0.834,
+     "freq": 0.00477
+    },
+    {
+     "top_tokens": [
+      "\n",
+      "#",
+      ".",
+      " the",
+      " License"
+     ],
+     "token_entropy": 0.679,
+     "freq": 0.00959
+    },
+    {
+     "top_tokens": [
+      " but",
+      ",",
+      " However",
+      "but",
+      " But"
+     ],
+     "token_entropy": 0.49,
+     "freq": 0.00085
+    },
+    {
+     "top_tokens": [
+      "        ",
+      "    ",
+      "\n",
+      "            ",
+      "                "
+     ],
+     "token_entropy": 0.37,
+     "freq": 0.00117
+    },
+    {
+     "top_tokens": [
+      "-",
+      " FITNESS",
+      " animal",
+      ",",
+      " meat"
+     ],
+     "token_entropy": 0.879,
+     "freq": 0.00126
+    },
+    {
+     "top_tokens": [
+      ".",
+      ",",
+      "\n",
+      " of",
+      "2"
+     ],
+     "token_entropy": 0.846,
+     "freq": 0.00587
+    },
+    {
+     "top_tokens": [
+      ",",
+      " and",
+      ".",
+      " to",
+      " in"
+     ],
+     "token_entropy": 0.862,
+     "freq": 0.00299
+    },
+    {
+     "top_tokens": [
+      "#",
+      "####",
+      "[",
+      "ambigu",
+      "run"
+     ],
+     "token_entropy": 0.354,
+     "freq": 0.00036
+    },
+    {
+     "top_tokens": [
+      "0",
+      "1",
+      "5",
+      "2",
+      "4"
+     ],
+     "token_entropy": 0.684,
+     "freq": 0.001
+    },
+    {
+     "top_tokens": [
+      "\n",
+      "    ",
+      ".",
+      ")",
+      "#"
+     ],
+     "token_entropy": 0.592,
+     "freq": 0.00935
+    }
+   ]
+  },
+  "persistent": {
+   "n_features": 6029,
+   "n_described": 6021,
+   "summary": {
+    "freq": {
+     "median": 0.0031,
+     "mean": 0.0046
+    },
+    "token_entropy": {
+     "median": 0.7893,
+     "mean": 0.7016
+    },
+    "top1_token_share": {
+     "median": 0.0815,
+     "mean": 0.1896
+    },
+    "rel_pos_mean": {
+     "median": 0.4832,
+     "mean": 0.4819
+    },
+    "domain_entropy": {
+     "median": 0.7102,
+     "mean": 0.6635
+    },
+    "cc_alpha": {
+     "median": 0.8325,
+     "mean": 0.7007
+    },
+    "cc_digit": {
+     "median": 0.0175,
+     "mean": 0.059
+    },
+    "cc_punct": {
+     "median": 0.095,
+     "mean": 0.1884
+    },
+    "cc_space": {
+     "median": 0.0075,
+     "mean": 0.0384
+    },
+    "cc_mixed": {
+     "median": 0.005,
+     "mean": 0.0135
+    },
+    "answer_share": {
+     "median": 0.5455,
+     "mean": 0.5368
+    }
+   },
+   "examples": [
+    {
+     "top_tokens": [
+      "0",
+      "2",
+      "1",
+      "3",
+      "5"
+     ],
+     "token_entropy": 0.485,
+     "freq": 0.01693
+    },
+    {
+     "top_tokens": [
+      " the",
+      " a",
+      ",",
+      " and",
+      " wood"
+     ],
+     "token_entropy": 0.909,
+     "freq": 0.00533
+    },
+    {
+     "top_tokens": [
+      "8",
+      "9",
+      "0",
+      "3",
+      "7"
+     ],
+     "token_entropy": 0.55,
+     "freq": 0.00345
+    },
+    {
+     "top_tokens": [
+      " in",
+      " the",
+      " on",
+      " by",
+      " In"
+     ],
+     "token_entropy": 0.655,
+     "freq": 0.00266
+    },
+    {
+     "top_tokens": [
+      ".",
+      "0",
+      "-",
+      "\n",
+      "_"
+     ],
+     "token_entropy": 0.868,
+     "freq": 0.00194
+    },
+    {
+     "top_tokens": [
+      " all",
+      " of",
+      " All",
+      "All",
+      " is"
+     ],
+     "token_entropy": 0.43,
+     "freq": 0.00102
+    },
+    {
+     "top_tokens": [
+      "(",
+      "_",
+      ")",
+      "\n",
+      ":"
+     ],
+     "token_entropy": 0.74,
+     "freq": 0.00197
+    },
+    {
+     "top_tokens": [
+      " and",
+      ",",
+      " or",
+      "(",
+      "-"
+     ],
+     "token_entropy": 0.349,
+     "freq": 0.00529
+    },
+    {
+     "top_tokens": [
+      " and",
+      ",",
+      ".",
+      "\n",
+      "_"
+     ],
+     "token_entropy": 0.741,
+     "freq": 0.01193
+    },
+    {
+     "top_tokens": [
+      " The",
+      " the",
+      "The",
+      " La",
+      "the"
+     ],
+     "token_entropy": 0.438,
+     "freq": 0.00128
+    },
+    {
+     "top_tokens": [
+      " the",
+      ",",
+      ".",
+      " of",
+      ")"
+     ],
+     "token_entropy": 0.806,
+     "freq": 0.00667
+    },
+    {
+     "top_tokens": [
+      " high",
+      " low",
+      " higher",
+      " High",
+      "-"
+     ],
+     "token_entropy": 0.501,
+     "freq": 0.00073
+    },
+    {
+     "top_tokens": [
+      " the",
+      ",",
+      " America",
+      " North",
+      " South"
+     ],
+     "token_entropy": 0.91,
+     "freq": 0.00446
+    },
+    {
+     "top_tokens": [
+      " a",
+      " an",
+      " the",
+      "A",
+      " A"
+     ],
+     "token_entropy": 0.537,
+     "freq": 0.00243
+    },
+    {
+     "top_tokens": [
+      "_",
+      " of",
+      "0",
+      ",",
+      " bad"
+     ],
+     "token_entropy": 0.94,
+     "freq": 0.00256
+    }
+   ]
+  }
+ },
+ "tests_early_vs_late": {
+  "freq": {
+   "p_mannwhitney": 0.0,
+   "median_early": 0.0222,
+   "median_late": 0.0045
+  },
+  "token_entropy": {
+   "p_mannwhitney": 0.31835672510172996,
+   "median_early": 0.7921,
+   "median_late": 0.7843
+  },
+  "top1_token_share": {
+   "p_mannwhitney": 0.13629797874473124,
+   "median_early": 0.07,
+   "median_late": 0.08
+  },
+  "rel_pos_mean": {
+   "p_mannwhitney": 5.911363082553601e-15,
+   "median_early": 0.4947,
+   "median_late": 0.5074
+  },
+  "domain_entropy": {
+   "p_mannwhitney": 1.9962239963785924e-143,
+   "median_early": 0.8052,
+   "median_late": 0.6249
+  },
+  "cc_alpha": {
+   "p_mannwhitney": 0.4207483589326587,
+   "median_early": 0.6775,
+   "median_late": 0.7075
+  },
+  "cc_digit": {
+   "p_mannwhitney": 0.08072492641525715,
+   "median_early": 0.0275,
+   "median_late": 0.025
+  },
+  "cc_punct": {
+   "p_mannwhitney": 0.004289972750123007,
+   "median_early": 0.165,
+   "median_late": 0.1625
+  },
+  "cc_space": {
+   "p_mannwhitney": 0.3291143054467207,
+   "median_early": 0.0175,
+   "median_late": 0.015
+  },
+  "cc_mixed": {
+   "p_mannwhitney": 1.0872055577324298e-14,
+   "median_early": 0.01,
+   "median_late": 0.0075
+  },
+  "answer_share": {
+   "p_mannwhitney": 2.1468082773941077e-11,
+   "median_early": 0.661,
+   "median_late": 0.625
+  }
+ }
+}

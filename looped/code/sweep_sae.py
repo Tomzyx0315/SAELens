@@ -42,6 +42,9 @@ CONFIGS = {
     "k128_lr1e-4_decay": (128, 1e-4, "constant", 0.2),
 }
 ROUND2 = "k64_lr3e-4_const,k64_lr1e-4_decay,k96_lr3e-4_decay,k128_lr1e-4_decay"
+# B3 seed-stability: same config as the full run (k128, lr 1e-4 + decay); a name suffix "@sN" sets the
+# parameter-init seed, so members differ only in initialisation (identical data stream).
+SEED_RUN = "k128_lr1e-4_decay@s1,k128_lr1e-4_decay@s2"
 ROUND1 = "k32_lr3e-4_const,k32_lr1e-3_decay,k64_lr3e-4_decay,k128_lr3e-4_decay"
 
 
@@ -109,8 +112,10 @@ def main():
     steps = args.total // args.batch
     trainers = {}
     for i, n in enumerate(names):
-        k, lr, sched, decay_frac = CONFIGS[n]
+        base, _, seed_s = n.partition("@s")
+        k, lr, sched, decay_frac = CONFIGS[base]
         dev = f"cuda:{sae_gpus[i % len(sae_gpus)]}"
+        torch.manual_seed(int(seed_s) if seed_s else 0)
         sae = BatchTopKTrainingSAE(BatchTopKTrainingSAEConfig(
             d_in=D_IN, d_sae=args.d_sae, k=k, device=dev, normalize_activations="expected_average_only_in"))
         cfg = SAETrainerConfig(
@@ -129,7 +134,8 @@ def main():
     print("scaling factor", next(iter(trainers.values())).activation_scaler.scaling_factor, flush=True)
 
     eval_at = set(int(steps * f) for f in np.linspace(0, 1, args.n_evals + 1)[1:])
-    results = {n: {"config": dict(zip(["k", "lr", "sched", "decay_frac"], CONFIGS[n])), "evals": []} for n in names}
+    results = {n: {"config": dict(zip(["k", "lr", "sched", "decay_frac"], CONFIGS[n.partition("@s")[0]])),
+                   "evals": []} for n in names}
     t0 = time.time()
     for step in range(1, steps + 1):
         try:

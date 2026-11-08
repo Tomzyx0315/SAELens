@@ -155,7 +155,7 @@ def main():
     p.add_argument("--out", required=True)
     p.add_argument("--device", default="cuda:0")
     p.add_argument("--producer_gpus", default="1,2,3,4,5,6,7")
-    p.add_argument("--m", type=int, default=16384)
+    p.add_argument("--m", type=int, default=8192)
     p.add_argument("--k", type=int, default=128)
     p.add_argument("--batch", type=int, default=2048)
     p.add_argument("--total_tokens", type=int, default=25_000_000)
@@ -179,7 +179,8 @@ def main():
     scale = (warm.pow(2).sum(-1).mean(0).sqrt() / np.sqrt(D_IN)).to(dev)  # (L,)
     del warm
     cc = Crosscoder(L, D_IN, args.m, args.k).to(dev)
-    opt = torch.optim.Adam(cc.parameters(), lr=args.lr, betas=(0.9, 0.999))
+    # foreach=False: avoid the multi-tensor Adam temporaries (an extra copy of the 2.8 GB params), GPUs are shared
+    opt = torch.optim.Adam(cc.parameters(), lr=args.lr, betas=(0.9, 0.999), foreach=False)
     steps = args.total_tokens // args.batch
     decay_from = int(0.8 * steps)
     since_fired = torch.zeros(args.m, device=dev)

@@ -121,6 +121,25 @@ class HuginnAdapter:
         assert len(out) == loops, len(out)
         return torch.stack(out)
 
+    @torch.no_grad()
+    def run_layer_states(self, ids: torch.Tensor, loop: int, seed: int = 0) -> torch.Tensor:
+        """Output of every core-block layer at a given loop. Returns (n_core, T, D) in model dtype.
+
+        Used by the per-core-layer SAE study (D1): the loop state is core layer n_core-1; this exposes the
+        intermediate core layers 0..n_core-1 of the chosen loop.
+        """
+        out = []
+        hooks = [b.register_forward_hook(lambda mod, i, o: out.append(o[0])) for b in self.model.transformer.core_block]
+        torch.manual_seed(seed)
+        try:
+            self.model(ids, num_steps=loop, use_cache=False)
+        finally:
+            for h in hooks:
+                h.remove()
+        # out is loop * n_core blocks in order; take the last loop's n_core
+        block = torch.stack(out[-self.n_core:])
+        return block
+
     def _readout(self, state: torch.Tensor) -> torch.Tensor:
         """Latent after a loop (T, D) -> logits (T, V): ln_f -> coda -> ln_f -> lm_head (upstream predict_from_latents)."""
         return self.model.predict_from_latents(state[None]).logits[0]

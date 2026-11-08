@@ -456,3 +456,24 @@ Findings:
 - Caveat: this is a causal test of features at the loop-state site, not a claim that ablation is "surgical" — the
   ablated direction is the SAE decoder direction, and the readout is Huginn's own coda+head. Auto-interp would be
   needed to name features beyond the hand-read examples (22618 = place-name answer).
+
+## Do early features cause the converged representation? (C2)
+
+`code/early_causes_late.py`. Persistently ablate the early features (loop-1-only, 1741 of them) at loops 1-4, run
+to loop 32, and measure the Jaccard of the loop-32 active-feature set vs the clean run (1000 docs). Controls: ablate
+a random same-size set of other loop-1-active features at loops 1-4; and ablate the early features at the *last* 4
+loops instead. `results/sae/early_causes_late.json`.
+
+| intervention | loop-32 active-set Jaccard vs clean |
+|---|---|
+| ablate early features at loops 1-4 | 0.963 |
+| ablate random loop-1 features at loops 1-4 (control) | 0.969 |
+| ablate early features at loops 29-32 (control) | 0.759 |
+
+Finding: **the early scaffold does not causally shape the converged representation.** Removing the early features
+during the early loops barely perturbs loop 32 (Jaccard 0.96) — and no more than removing a random set of loop-1
+features (0.97). The recurrence re-derives its converged state regardless of the early features; what it is given at
+loop 1 does not propagate. Ablating the same features late *does* change loop 32 (0.76), confirming the ablation is
+real and that only edits near the read-out survive. Together with C1, the causal picture is: the first loops set up
+a disposable scaffold that the recurrence overwrites; the answer is carried by features present at the converged
+read-out, and only interventions that reach that read-out matter.

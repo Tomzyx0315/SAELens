@@ -1,0 +1,10 @@
+{
+ "n_early": 1741,
+ "early_until": 4,
+ "tokens": 63869,
+ "loop32_active_jaccard_vs_clean": {
+  "early_at_early": 0.9627,
+  "rand_at_early": 0.9693,
+  "early_at_late": 0.7592
+ }
+}

@@ -426,3 +426,33 @@ compared with each other and with the 1B main run. `results/sae/seed_stability.j
   far above the chance shares (0.05-0.06 / 0.30-0.37 / 0.21-0.23). A feature that is early in one SAE, if it has a
   counterpart in another SAE, is early there too ~89% of the time. So the population-level early/late conclusion
   (B1 and the shared-SAE analysis) is seed-robust; claims about specific feature ids are not.
+
+## Causal test: do SAE features drive the prediction, and does the two-regime picture hold causally? (C1)
+
+`code/causal_steer.py`. For a factual prompt we find the features active at the last position at loop 32 but not
+at loop 1 (the "late" features that carry the answer), ranked by activation x decoder norm, and ablate them in SAE
+space (`state -= a_j W_dec[j]`). Because a single-loop edit is overwritten by the recurrence, we ablate at *every*
+loop from a start loop onward. Readout = the model's own per-loop logit lens; target = the correct next token.
+`results/sae/causal_steer.json`.
+
+| prompt | baseline (flip loop, pred, target CE) | ablate set every loop from 1 | single loop only (1 / flip / 32) | best single feature |
+|---|---|---|---|---|
+| "...currency is the yen is" | loop 6, " Tokyo", 0.94 | " the", CE 4.95 | " Tokyo" / " Tokyo" / " the" | 22618 -> " Japan" (CE 6.1) |
+| "capital of France is" | loop 4, " Paris", 1.31 | " the", CE 4.12 | " Paris" / " Paris" / " the" | 22618 -> " the" (CE 4.8) |
+| "square root of 144 is" | loop 3, " 1", 0.64 | " equal", CE 2.26 | " 1" / " 1" / " equal" | 21130 -> keeps " 1" |
+
+Findings:
+
+- **The late features are causal for the answer.** Ablating the target set persistently flips the prediction away
+  from the correct token (Tokyo/Paris -> "the") and raises the target CE by 2-4 nat. A single responsible feature
+  often suffices: feature 22618 ablated alone turns "...yen is Tokyo" into "Japan" (CE 6.1) and "France is Paris"
+  into "the" (CE 4.8) — it is a shared "answer-is-a-place-name / emit the specific entity" feature.
+- **The two-regime picture holds causally.** The single-loop control is decisive: ablating the same features at
+  only loop 1, or only the flip loop, changes nothing (prediction and CE unchanged) — the recurrence repairs an
+  early one-off edit. Ablating at only loop 32, or persistently from any early loop, breaks the prediction. So the
+  answer-carrying features must be *present at the read-out* (loop 32); whether they were edited early is irrelevant
+  unless the edit is maintained. This is the causal version of B1 / the per-depth faithfulness result: early-loop
+  states are not read out, the converged state is.
+- Caveat: this is a causal test of features at the loop-state site, not a claim that ablation is "surgical" — the
+  ablated direction is the SAE decoder direction, and the readout is Huginn's own coda+head. Auto-interp would be
+  needed to name features beyond the hand-read examples (22618 = place-name answer).

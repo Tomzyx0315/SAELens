@@ -1,0 +1,426 @@
+{
+ "prompts": {
+  "yen": {
+   "text": "The capital of the country whose currency is the yen is",
+   "target": " Tokyo",
+   "baseline_pred_by_loop": {
+    "1": " the",
+    "2": " the",
+    "3": " the",
+    "4": " the",
+    "6": " Tokyo",
+    "8": " Tokyo",
+    "12": " Tokyo",
+    "16": " Tokyo",
+    "24": " Tokyo",
+    "32": " Tokyo"
+   },
+   "flip_loop": 6,
+   "final_pred": " Tokyo",
+   "target_feats": [
+    22618,
+    12024,
+    13257,
+    19353,
+    8089,
+    5596,
+    10631,
+    17985
+   ],
+   "interventions": {
+    "ablate_all_from_loop1": {
+     "pred_by_loop": {
+      "1": " the",
+      "2": " the",
+      "3": " the",
+      "4": " the",
+      "6": " the",
+      "8": " the",
+      "12": " the",
+      "16": " the",
+      "24": " the",
+      "32": " the"
+     },
+     "final_pred": " the",
+     "target_token_ce": 4.954,
+     "target_token_prob": 0.0071
+    },
+    "ablate_all_from_loop4": {
+     "pred_by_loop": {
+      "1": " the",
+      "2": " the",
+      "3": " the",
+      "4": " the",
+      "6": " the",
+      "8": " the",
+      "12": " the",
+      "16": " the",
+      "24": " the",
+      "32": " the"
+     },
+     "final_pred": " the",
+     "target_token_ce": 5.217,
+     "target_token_prob": 0.0054
+    },
+    "ablate_all_from_loop6": {
+     "pred_by_loop": {
+      "1": " the",
+      "2": " the",
+      "3": " the",
+      "4": " the",
+      "6": " the",
+      "8": " the",
+      "12": " the",
+      "16": " the",
+      "24": " the",
+      "32": " the"
+     },
+     "final_pred": " the",
+     "target_token_ce": 5.213,
+     "target_token_prob": 0.0054
+    }
+   },
+   "baseline_target_ce": 0.945,
+   "single_feature_ablation_from_loop1": {
+    "22618": {
+     "target_ce": 6.092,
+     "final_pred": " Japan"
+    },
+    "12024": {
+     "target_ce": 1.217,
+     "final_pred": " Tokyo"
+    },
+    "13257": {
+     "target_ce": 1.159,
+     "final_pred": " Tokyo"
+    },
+    "19353": {
+     "target_ce": 1.25,
+     "final_pred": " Tokyo"
+    }
+   },
+   "single_loop_ablation_control": {
+    "loop1": {
+     "target_ce": 0.951,
+     "final_pred": " Tokyo"
+    },
+    "loop6": {
+     "target_ce": 0.993,
+     "final_pred": " Tokyo"
+    },
+    "loop32": {
+     "target_ce": 13.68,
+     "final_pred": " the"
+    }
+   }
+  },
+  "sqrt": {
+   "text": "The square root of 144 is",
+   "target": " 12",
+   "baseline_pred_by_loop": {
+    "1": " a",
+    "2": " a",
+    "3": " 1",
+    "4": " 1",
+    "6": " 4",
+    "8": " 1",
+    "12": " 1",
+    "16": " 1",
+    "24": " 1",
+    "32": " 1"
+   },
+   "flip_loop": 3,
+   "final_pred": " 1",
+   "target_feats": [
+    31225,
+    29374,
+    21130,
+    4563,
+    8101,
+    28337,
+    29007,
+    6798
+   ],
+   "interventions": {
+    "ablate_all_from_loop1": {
+     "pred_by_loop": {
+      "1": " a",
+      "2": " a",
+      "3": " 1",
+      "4": " 1",
+      "6": " equal",
+      "8": " equal",
+      "12": " equal",
+      "16": " equal",
+      "24": " equal",
+      "32": " equal"
+     },
+     "final_pred": " equal",
+     "target_token_ce": 2.256,
+     "target_token_prob": 0.1047
+    },
+    "ablate_all_from_loop3": {
+     "pred_by_loop": {
+      "1": " a",
+      "2": " a",
+      "3": " 1",
+      "4": " 1",
+      "6": " equal",
+      "8": " equal",
+      "12": " equal",
+      "16": " equal",
+      "24": " equal",
+      "32": " equal"
+     },
+     "final_pred": " equal",
+     "target_token_ce": 2.302,
+     "target_token_prob": 0.1001
+    }
+   },
+   "baseline_target_ce": 0.643,
+   "single_feature_ablation_from_loop1": {
+    "31225": {
+     "target_ce": 0.597,
+     "final_pred": " 1"
+    },
+    "29374": {
+     "target_ce": 1.097,
+     "final_pred": " 1"
+    },
+    "21130": {
+     "target_ce": 1.832,
+     "final_pred": " 1"
+    },
+    "4563": {
+     "target_ce": 0.529,
+     "final_pred": " 1"
+    }
+   },
+   "single_loop_ablation_control": {
+    "loop1": {
+     "target_ce": 0.643,
+     "final_pred": " 1"
+    },
+    "loop3": {
+     "target_ce": 0.641,
+     "final_pred": " 1"
+    },
+    "loop32": {
+     "target_ce": 3.683,
+     "final_pred": " equal"
+    }
+   }
+  },
+  "france": {
+   "text": "The capital of France is",
+   "target": " Paris",
+   "baseline_pred_by_loop": {
+    "1": " the",
+    "2": " the",
+    "3": " the",
+    "4": " Paris",
+    "6": " Paris",
+    "8": " Paris",
+    "12": " Paris",
+    "16": " Paris",
+    "24": " Paris",
+    "32": " Paris"
+   },
+   "flip_loop": 4,
+   "final_pred": " Paris",
+   "target_feats": [
+    22618,
+    13257,
+    19353,
+    17001,
+    2658,
+    7531,
+    12024,
+    20818
+   ],
+   "interventions": {
+    "ablate_all_from_loop1": {
+     "pred_by_loop": {
+      "1": " the",
+      "2": " the",
+      "3": " the",
+      "4": " the",
+      "6": " located",
+      "8": " located",
+      "12": " the",
+      "16": " the",
+      "24": " the",
+      "32": " the"
+     },
+     "final_pred": " the",
+     "target_token_ce": 4.124,
+     "target_token_prob": 0.0162
+    },
+    "ablate_all_from_loop2": {
+     "pred_by_loop": {
+      "1": " the",
+      "2": " the",
+      "3": " the",
+      "4": " the",
+      "6": " the",
+      "8": " the",
+      "12": " the",
+      "16": " the",
+      "24": " the",
+      "32": " the"
+     },
+     "final_pred": " the",
+     "target_token_ce": 4.834,
+     "target_token_prob": 0.008
+    },
+    "ablate_all_from_loop4": {
+     "pred_by_loop": {
+      "1": " the",
+      "2": " the",
+      "3": " the",
+      "4": " called",
+      "6": " the",
+      "8": " the",
+      "12": " the",
+      "16": " the",
+      "24": " the",
+      "32": " the"
+     },
+     "final_pred": " the",
+     "target_token_ce": 4.759,
+     "target_token_prob": 0.0086
+    }
+   },
+   "baseline_target_ce": 1.308,
+   "single_feature_ablation_from_loop1": {
+    "22618": {
+     "target_ce": 4.789,
+     "final_pred": " the"
+    },
+    "13257": {
+     "target_ce": 0.9,
+     "final_pred": " Paris"
+    },
+    "19353": {
+     "target_ce": 1.913,
+     "final_pred": " Paris"
+    },
+    "17001": {
+     "target_ce": 1.114,
+     "final_pred": " Paris"
+    }
+   },
+   "single_loop_ablation_control": {
+    "loop1": {
+     "target_ce": 1.19,
+     "final_pred": " Paris"
+    },
+    "loop4": {
+     "target_ce": 1.165,
+     "final_pred": " Paris"
+    },
+    "loop32": {
+     "target_ce": 12.436,
+     "final_pred": " the"
+    }
+   }
+  },
+  "antonym": {
+   "text": "The opposite of the word 'hot' is",
+   "target": " cold",
+   "baseline_pred_by_loop": {
+    "1": " a",
+    "2": " '",
+    "3": " not",
+    "4": " '",
+    "6": " '",
+    "8": " '",
+    "12": " '",
+    "16": " '",
+    "24": " '",
+    "32": " '"
+   },
+   "flip_loop": 2,
+   "final_pred": " '",
+   "target_feats": [
+    12024,
+    22925,
+    23741,
+    8782,
+    31140,
+    14207,
+    32099,
+    15648
+   ],
+   "interventions": {
+    "ablate_all_from_loop1": {
+     "pred_by_loop": {
+      "1": " a",
+      "2": " '",
+      "3": " not",
+      "4": " the",
+      "6": " the",
+      "8": " the",
+      "12": " the",
+      "16": " the",
+      "24": " the",
+      "32": " the"
+     },
+     "final_pred": " the",
+     "target_token_ce": 3.072,
+     "target_token_prob": 0.0463
+    },
+    "ablate_all_from_loop2": {
+     "pred_by_loop": {
+      "1": " a",
+      "2": " '",
+      "3": " not",
+      "4": " the",
+      "6": " the",
+      "8": " the",
+      "12": " the",
+      "16": " the",
+      "24": " the",
+      "32": " the"
+     },
+     "final_pred": " the",
+     "target_token_ce": 3.098,
+     "target_token_prob": 0.0451
+    }
+   },
+   "baseline_target_ce": 3.424,
+   "single_feature_ablation_from_loop1": {
+    "12024": {
+     "target_ce": 3.414,
+     "final_pred": " the"
+    },
+    "22925": {
+     "target_ce": 3.863,
+     "final_pred": " the"
+    },
+    "23741": {
+     "target_ce": 3.0,
+     "final_pred": " the"
+    },
+    "8782": {
+     "target_ce": 3.908,
+     "final_pred": " '"
+    }
+   },
+   "single_loop_ablation_control": {
+    "loop1": {
+     "target_ce": 3.475,
+     "final_pred": " '"
+    },
+    "loop2": {
+     "target_ce": 3.456,
+     "final_pred": " '"
+    },
+    "loop32": {
+     "target_ce": 2.605,
+     "final_pred": " the"
+    }
+   }
+  }
+ }
+}

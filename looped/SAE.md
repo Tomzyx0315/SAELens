@@ -477,3 +477,29 @@ loop 1 does not propagate. Ablating the same features late *does* change loop 32
 real and that only edits near the read-out survive. Together with C1, the causal picture is: the first loops set up
 a disposable scaffold that the recurrence overwrites; the answer is carried by features present at the converged
 read-out, and only interventions that reach that read-out matter.
+
+## Across the 4 core layers within a loop (D1)
+
+`code/train_perlayer_saes.py`. Huginn's recurrent block has 4 core layers; the loop-state SAE only saw the last of
+them. Here one SAE per core layer (at loop 32, BatchTopK d_sae 16384 k 64, 60M vectors each), then the layer x layer
+transfer matrix FVU[train layer, eval layer]. `results/sae/perlayer_transfer.json`.
+
+Transfer FVU (row = SAE's training layer, col = evaluation layer; layer 3 = loop state):
+
+| train \ eval | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| **0** | 0.34 | 0.43 | 0.50 | 1.21 |
+| **1** | 0.41 | 0.35 | 0.42 | 1.13 |
+| **2** | 0.47 | 0.40 | 0.37 | 1.04 |
+| **3** | 0.72 | 0.67 | 0.61 | 0.40 |
+
+- **Layers 0-2 are a largely shared space; layer 3 (the block output = loop state) is a separate space.** Among
+  layers 0/1/2 the cross-layer excess FVU is only 0.05-0.14; adjacent-layer decoder matching is 0.57 mean cosine,
+  ~19% of features near-identical (cos>0.8). But layer 3's own SAE reconstructs layers 0-2 with 0.24-0.38 excess,
+  and the layer 0-2 SAEs reconstruct layer 3 catastrophically (FVU 1.0-1.2, worse than the mean).
+- So within a loop there is a sharp representational break at the last sublayer: the GatedMLP + sandwich norm at
+  layer 3 maps into a different space, which is also the space that carries to the next loop and is read out. This
+  mirrors the cross-loop finding (loop 1 distinct, loops 8-32 shared) one level down: the "interface" states (loop
+  state / block output) form their own space, distinct from the internal computation.
+- Caveat: layer 3 FVU 1.0-1.2 for a foreign SAE is partly a scale/normalisation mismatch (each SAE folds its own
+  input scale), but the asymmetry and the within-{0,1,2} similarity are robust and not explained by scale alone.

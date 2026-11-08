@@ -60,6 +60,20 @@ Site: the loop state (output of the last core-block layer, d 5280). Main SAE: Ba
 - Single-edit splice into the full forward is uninformative at intermediate loops (the recurrence overwrites any
   intermediate state; even mean-ablation has no effect there). Only the read-out loop (32) matters for the output.
 
+### Causal tests (C)
+- C1 (persistent feature ablation): the late (converged) features are **causal** for the answer — ablating them at
+  every loop flips the prediction (Tokyo/Paris -> "the", CE +2-4 nat); a single feature (22618 = place-name answer)
+  suffices. The two-regime picture is confirmed causally: ablating at a single early loop is repaired by the
+  recurrence (no effect), only persistent or loop-32 edits change the output.
+- C2 (does the early scaffold cause the converged state?): **no** — ablating the early (loop-1-only) features during
+  loops 1-4 barely changes the loop-32 feature set (Jaccard 0.96, same as a random ablation). The recurrence
+  re-derives its converged state regardless of what loop 1 contains; the early scaffold is disposable.
+
+### Across the 4 core layers within a loop (D1)
+- Layers 0-2 are a largely shared space (cross-layer excess FVU 0.05-0.14); layer 3 (the block output = loop state)
+  is a distinct space (foreign SAEs reconstruct it at FVU ~1). The "interface" state that carries to the next loop
+  and is read out forms its own space — the same "interface states are distinct" pattern as across loops.
+
 ### Is the space the same across loops? (B — the direct test)
 - B1 transfer matrix: loops 8/16/32 are one space (interchangeable SAEs); loop 1 is a distinct space (~0.42 excess
   FVU to/from it); loops 2-4 are the transition. Decoder matching agrees (near-identical features only among late
@@ -76,15 +90,17 @@ Site: the loop state (output of the last core-block layer, d 5280). Main SAE: Ba
 Solid: the two-regime picture and the loop-8+ shared space (B1, multiple independent measurements); the population
 early/late split and its seed-robustness; the reproduction claims with their corrections.
 
+Also solid: the causal results (C1/C2) and the within-loop layer structure (D1) all corroborate the two-regime,
+disposable-scaffold picture from independent angles.
+
 Tentative / limited: interpretations of individual features (need auto-interp with an LLM we have not set up);
-the crosscoder absolute dead count; everything is one SAE site (loop state), so flow *across the 4 core layers*
-within a loop is untested; no causal steering yet; Huginn only (train-depth confound not isolated).
+the crosscoder absolute dead count; D1's cross-layer SAEs are at one loop (32) only; Huginn only (train-depth
+confound not isolated); layer-3 foreign-SAE FVU has a scale-mismatch component.
 
 ## Backlog (see the TODO list)
-- C: causal interventions — persistent steering/ablation of candidate features across loops; test whether early
-  features cause late features.
-- D: per-core-layer SAEs (the "different layers" question); cross-model / train-depth controls.
-- crosscoder clean re-run; auto-interp.
+- cross-model / train-depth controls (Ouro, retrofitted models at different train depths).
+- crosscoder clean re-run (fix aux-loss weight); auto-interp to name features.
+- per-core-layer SAEs at loops other than 32; within-loop x across-loop combined flow.
 
 ## Where things are
 - Docs: `REPORT.md`, `SAE.md`, `DATA.md`, this file. Code: `looped/code/` (`paths.py` for layout).

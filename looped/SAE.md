@@ -357,3 +357,72 @@ less tolerance to reconstruction error; one plausible reason is that the shared 
 ~21k features of the converged regime while loop 1 uses only ~9k. Wiki stays hardest at every depth (delta CE ~0.45).
 Loss recovered of 0.95 with delta CE 0.28 nat is typical of current residual-stream SAEs; it is the faithfulness
 ceiling of all feature-level conclusions here.
+
+## Is the representation space the same across loops? (B)
+
+The analyses above use one shared dictionary, which presupposes a common space. B tests that assumption directly.
+
+### B1. Per-loop SAEs and the cross-loop transfer matrix (`code/train_perloop_saes.py`)
+
+One SAE per loop (BatchTopK, d_sae 16384, k 64, 60M vectors each), trained only on that loop's states, no shared
+basis. Then FVU[train loop, eval loop] on the held-out cache. `results/sae/perloop_transfer.json`.
+
+Transfer FVU (row = SAE's training loop, col = evaluation loop):
+
+| train \ eval | 1 | 2 | 4 | 8 | 16 | 32 |
+|---|---|---|---|---|---|---|
+| **1** | 0.34 | 0.64 | 0.77 | 0.81 | 0.82 | 0.82 |
+| **2** | 0.61 | 0.33 | 0.63 | 0.69 | 0.70 | 0.70 |
+| **4** | 0.69 | 0.56 | 0.39 | 0.47 | 0.48 | 0.48 |
+| **8** | 0.74 | 0.61 | 0.46 | 0.41 | 0.40 | 0.40 |
+| **16** | 0.76 | 0.62 | 0.47 | 0.41 | 0.40 | 0.40 |
+| **32** | 0.76 | 0.62 | 0.47 | 0.41 | 0.40 | 0.40 |
+
+- **Loops >= 8 share one space.** The loop-8/16/32 SAEs are interchangeable: each reconstructs the others with FVU
+  within 0.005 of the target loop's own SAE (e.g. loop-8 SAE on loop 32: 0.402 vs 0.398 own). Loops 8/16/32 are the
+  same representation.
+- **Early loops are different spaces.** Transferring to/from loop 1 costs ~0.42 excess FVU (loop-1 SAE on loop 32:
+  0.82 vs 0.40; loop-32 SAE on loop 1: 0.76 vs 0.34) — i.e. a loop-32 dictionary explains loop-1 states hardly
+  better than the mean. Loop 2 is intermediate (~0.28-0.30 excess), loop 4 closer (~0.07-0.08 to loops >= 8).
+- **Decoder feature matching** (Hungarian on decoder cosine between consecutive loop SAEs) tells the same story:
+  fraction of features with a matched counterpart at cos > 0.8 rises from 0.02 (1->2) to 0.05 (2->4), 0.16 (4->8),
+  0.25 (8->16), 0.27 (16->32). Adjacent *late* loops share a quarter of their features as near-identical
+  directions; adjacent *early* loops share almost none.
+
+Answer to the original question: the loop representations are **not** a single shared space with features fading in
+and out. There is a transition from loop 1 (a distinct, lower-dimensional space) through loops 2-4 to a stable
+converged space that loops 8-32 all share. The "early / late-emerging" feature split from the shared SAE is the
+shadow of this: the shared dictionary is really the converged-space dictionary, which fits loop 1 poorly.
+
+### B2. Cross-loop crosscoder (`code/crosscoder.py`)
+
+Shared latents, per-loop encoders/decoders, loops {1, 2, 4, 32} (Anthropic sparse-crosscoder setup across loops
+instead of layers). Per-loop held-out FVU 0.40 / 0.39 / 0.46 / 0.50. Each latent has a decoder-norm share per loop;
+a latent concentrated at loop 1 is early, spread across loops is shared. `results/sae/.../crosscoder results.json`.
+
+- Of 6146 live latents, **0** are "mostly loop 1" (rel decoder norm > 0.7) and **0** are "mostly loop 32"; 4441 are
+  spread across all four loops (each share 0.15-0.35). The relative-norm histograms peak at the 0.2-0.3 bin for both
+  loop 1 and loop 32.
+- Read with B1: the crosscoder ties loops together through shared latents and finds them mostly shared, but its
+  loop-1 FVU (0.40) is no better than the shared SAE, and the per-loop decoders still differ. The crosscoder does
+  not contradict B1; it shows that *if* you force shared latents, no latent is purely early/late — the early/late
+  distinction lives in the encoder/decoder weights, not in a clean subset of latents.
+- Caveat: this crosscoder underperformed its potential — ~2000 of 8192 latents died (the dead-latent aux-loss
+  weight was mis-scaled, aux loss tracked the main loss). The decoder-norm *distribution* is still informative, but
+  the absolute dead count should not be read as structure. A clean re-run is on the backlog.
+
+### B3. Seed stability (`code/seed_stability.py`, `code/sweep_sae.py` seed runs)
+
+Two SAEs with the main-run config (k128, lr 1e-4 + decay) differing only in parameter-init seed (100M vectors each),
+compared with each other and with the 1B main run. `results/sae/seed_stability.json`.
+
+- Both seeds reach identical FVU 0.3519 and nearly identical class counts (early ~1540, late ~12000, persistent
+  ~6900). The main 1B run has fewer late (9673) because it trained 10x longer with a different loop sampling.
+- Decoder matching (Hungarian): mean matched cosine 0.51 (s1~s2), 0.55 (seed~1B); only 7-8% of features match at
+  cos > 0.9, 27-34% at cos > 0.7. So **individual features are not reproducible across seeds** — the usual SAE
+  instability; roughly a third of the dictionary is shared as recognisable directions.
+- **The early/late/persistent split is reproducible even though individual features are not.** Among features that
+  *do* match across seeds (cos > 0.7), class agreement is 0.89 for early, 0.75 for late, 0.73-0.80 for persistent,
+  far above the chance shares (0.05-0.06 / 0.30-0.37 / 0.21-0.23). A feature that is early in one SAE, if it has a
+  counterpart in another SAE, is early there too ~89% of the time. So the population-level early/late conclusion
+  (B1 and the shared-SAE analysis) is seed-robust; claims about specific feature ids are not.

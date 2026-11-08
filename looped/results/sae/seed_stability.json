@@ -1,0 +1,95 @@
+{
+ "names": [
+  "s1_100M",
+  "s2_100M",
+  "v2_1B"
+ ],
+ "per_sae": {
+  "s1_100M": {
+   "early": 1534,
+   "late": 12108,
+   "persistent": 6830,
+   "other": 12296
+  },
+  "s2_100M": {
+   "early": 1541,
+   "late": 12029,
+   "persistent": 6958,
+   "other": 12240
+  },
+  "v2_1B": {
+   "early": 1956,
+   "late": 9673,
+   "persistent": 7440,
+   "other": 13699
+  }
+ },
+ "pairs": {
+  "s1_100M~s2_100M": {
+   "mean_matched_cos": 0.507,
+   "frac_cos>0.7": 0.265,
+   "frac_cos>0.9": 0.07,
+   "class_agreement_among_matched(cos>0.7)": {
+    "early": {
+     "n_matched_in_class_a": 411,
+     "frac_same_class_in_b": 0.886,
+     "chance(class share in b)": 0.047
+    },
+    "late": {
+     "n_matched_in_class_a": 1571,
+     "frac_same_class_in_b": 0.756,
+     "chance(class share in b)": 0.367
+    },
+    "persistent": {
+     "n_matched_in_class_a": 2762,
+     "frac_same_class_in_b": 0.803,
+     "chance(class share in b)": 0.212
+    }
+   }
+  },
+  "s1_100M~v2_1B": {
+   "mean_matched_cos": 0.551,
+   "frac_cos>0.7": 0.331,
+   "frac_cos>0.9": 0.076,
+   "class_agreement_among_matched(cos>0.7)": {
+    "early": {
+     "n_matched_in_class_a": 545,
+     "frac_same_class_in_b": 0.89,
+     "chance(class share in b)": 0.06
+    },
+    "late": {
+     "n_matched_in_class_a": 2091,
+     "frac_same_class_in_b": 0.739,
+     "chance(class share in b)": 0.295
+    },
+    "persistent": {
+     "n_matched_in_class_a": 3207,
+     "frac_same_class_in_b": 0.727,
+     "chance(class share in b)": 0.227
+    }
+   }
+  },
+  "s2_100M~v2_1B": {
+   "mean_matched_cos": 0.553,
+   "frac_cos>0.7": 0.335,
+   "frac_cos>0.9": 0.079,
+   "class_agreement_among_matched(cos>0.7)": {
+    "early": {
+     "n_matched_in_class_a": 547,
+     "frac_same_class_in_b": 0.865,
+     "chance(class share in b)": 0.06
+    },
+    "late": {
+     "n_matched_in_class_a": 2072,
+     "frac_same_class_in_b": 0.745,
+     "chance(class share in b)": 0.295
+    },
+    "persistent": {
+     "n_matched_in_class_a": 3259,
+     "frac_same_class_in_b": 0.735,
+     "chance(class share in b)": 0.227
+    }
+   }
+  }
+ }
+}

@@ -32,8 +32,9 @@ HELDOUT_SHARD = "shard_1000_of_4096.parquet"
 
 
 def iter_token_rows(context_size: int, max_rows: int | None, seed: int, worker: int = 0,
-                    n_workers: int = 1, split: str = "train") -> Iterator[list[int]]:
-    """Yield Huginn-tokenized rows (length 4097, BOS-prefixed) truncated to context_size.
+                    n_workers: int = 1, split: str = "train", column: str = "input_ids") -> Iterator:
+    """Yield rows from the huginn_val shards: pre-tokenized `input_ids` (Huginn), or raw `text` (for models with a
+    different tokenizer, e.g. Ouro, which re-tokenizes in the producer).
 
     split="train": all shards except HELDOUT_SHARD; split="heldout": only HELDOUT_SHARD.
     Shards are visited in a seeded shuffled order; rows within a shard in a seeded shuffled order. Rows are
@@ -49,12 +50,13 @@ def iter_token_rows(context_size: int, max_rows: int | None, seed: int, worker: 
     rng.shuffle(shards)
     n_seen, n_yield = 0, 0
     for shard in shards:
-        col = pq.read_table(shard, columns=["input_ids"]).column("input_ids")
+        col = pq.read_table(shard, columns=[column]).column(column)
         order = list(range(len(col)))
         rng.shuffle(order)
         for i in order:
             if n_seen % n_workers == worker:
-                yield col[i].as_py()[:context_size]
+                v = col[i].as_py()
+                yield v[:context_size] if column == "input_ids" else v  # text truncated after tokenization
                 n_yield += 1
                 if max_rows is not None and n_yield >= max_rows:
                     return
@@ -78,7 +80,7 @@ def doc_activations(ad, ids, loops, n_seeds, rng, drop_bos=True):
 
 
 def producer(rank, gpu, n_producers, queue, cfg):
-    """Run Huginn on physical GPU `gpu` (or CPU if gpu < 0), push (cpu bf16 activations, tags) chunks into `queue`."""
+    """Run the model on physical GPU `gpu` (or CPU if gpu < 0), push (cpu bf16 activations, tags) chunks into `queue`."""
     import time
 
     dev = f"cuda:{gpu}" if gpu >= 0 else "cpu"  # explicit index; CUDA_VISIBLE_DEVICES is unreliable in spawn children
@@ -88,12 +90,15 @@ def producer(rank, gpu, n_producers, queue, cfg):
         torch.set_num_threads(8)
     from models import get_adapter
 
-    ad = get_adapter("huginn", dtype=torch.bfloat16, device=dev)
+    model = cfg.get("model", "huginn")
+    ad = get_adapter(model, dtype=torch.bfloat16, device=dev)
+    col = "input_ids" if model == "huginn" else "text"  # Ouro has a different tokenizer -> re-tokenize text
     rng = np.random.default_rng(cfg["shuffle_seed"] * 1000 + rank)
     rows = iter_token_rows(cfg["context_size"], cfg["max_rows_per_producer"], cfg["shuffle_seed"], rank, n_producers,
-                           split=cfg["split"])
+                           split=cfg["split"], column=col)
     for row in rows:
-        ids = torch.tensor(row, device=dev).unsqueeze(0)
+        ids = (torch.tensor(row, device=dev).unsqueeze(0) if col == "input_ids"
+               else ad.encode(row)[:, :cfg["context_size"]])
         for attempt in range(240):  # GPUs are shared with other jobs; retry transient OOM (e.g. sglang KV spikes)
             try:
                 X, tg = doc_activations(ad, ids, cfg["loops"], cfg["n_seeds"], rng)
@@ -126,11 +131,13 @@ class HuginnActivationProvider:
         max_rows: int | None = None,
         shuffle_seed: int = 0,
         split: str = "train",
+        model: str = "huginn",
     ):
         self.bs = train_batch_size
         self.device = device
         self.loops = loops
-        self.n_seeds = n_seeds
+        self.model = model
+        self.n_seeds = n_seeds if model == "huginn" else 1  # Ouro is deterministic: one pass per document
         self.buffer_vectors = buffer_vectors
         self.rng = np.random.default_rng(shuffle_seed)
         self.n_emitted = 0
@@ -142,8 +149,8 @@ class HuginnActivationProvider:
         self._pos = 0
         self._exhausted = False
         n_prod = max(len(producer_gpus), 1)
-        cfg = dict(context_size=context_size, loops=loops, n_seeds=n_seeds, shuffle_seed=shuffle_seed, split=split,
-                   max_rows_per_producer=None if max_rows is None else -(-max_rows // n_prod))
+        cfg = dict(context_size=context_size, loops=loops, n_seeds=self.n_seeds, shuffle_seed=shuffle_seed, split=split,
+                   model=model, max_rows_per_producer=None if max_rows is None else -(-max_rows // n_prod))
         if producer_gpus:
             ctx = mp.get_context("spawn")
             self.queue = ctx.Queue(maxsize=64)
@@ -157,18 +164,21 @@ class HuginnActivationProvider:
             from models import get_adapter
 
             self.procs, self.queue = [], None
-            self._local = (get_adapter("huginn", dtype=torch.bfloat16, device=device),
-                           iter_token_rows(context_size, cfg["max_rows_per_producer"], shuffle_seed, split=split),
-                           np.random.default_rng(shuffle_seed * 1000))
+            col = "input_ids" if model == "huginn" else "text"
+            self._local = (get_adapter(model, dtype=torch.bfloat16, device=device),
+                           iter_token_rows(context_size, cfg["max_rows_per_producer"], shuffle_seed, split=split,
+                                           column=col),
+                           np.random.default_rng(shuffle_seed * 1000), col, context_size)
 
     def _get_chunk(self):
         if self._local is not None:
-            ad, rows, rng = self._local
+            ad, rows, rng, col, ctx = self._local
             try:
                 row = next(rows)
             except StopIteration:
                 return None
-            ids = torch.tensor(row, device=self.device).unsqueeze(0)
+            ids = (torch.tensor(row, device=self.device).unsqueeze(0) if col == "input_ids"
+                   else ad.encode(row)[:, :ctx])
             X, tg = doc_activations(ad, ids, self.loops, self.n_seeds, rng)
             return X.cpu(), tg
         while self._alive > 0:

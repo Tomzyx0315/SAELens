@@ -44,3 +44,41 @@ class OuroAdapter:
                 h.remove()
         assert len(resid) == loops * self.n_core
         return Trace(resid=torch.stack(resid), attn=torch.stack(attn), loop_state=torch.stack(normed), readout=m.lm_head)
+
+    @torch.no_grad()
+    def run_states(self, ids: torch.Tensor, loops: int, seed: int = 0) -> torch.Tensor:
+        """Per-loop state = output of the end-of-loop `model.norm` (fed to the next loop and to lm_head), the Ouro
+        analogue of Huginn's loop state. Returns (loops, T, D=2048). Ouro is deterministic; `seed` is ignored.
+        """
+        m = self.model
+        m.config.total_ut_steps = loops
+        m.model.total_ut_steps = loops
+        out = []
+        h = m.model.norm.register_forward_hook(lambda mod, i, o: out.append(o[0]))
+        try:
+            m(ids, use_cache=False)
+        finally:
+            h.remove()
+        assert len(out) == loops, len(out)
+        return torch.stack(out)
+
+    @torch.no_grad()
+    def run_layer_states(self, ids: torch.Tensor, loop: int, seed: int = 0) -> torch.Tensor:
+        """Output (residual) of every decoder layer at the given loop. Returns (n_core=24, T, D). Pre end-of-loop
+        norm; the last layer's output + norm is the loop state.
+        """
+        m = self.model
+        m.config.total_ut_steps = loop
+        m.model.total_ut_steps = loop
+        out = []
+        hooks = [layer.register_forward_hook(lambda mod, i, o: out.append(o[0])) for layer in m.model.layers]
+        try:
+            m(ids, use_cache=False)
+        finally:
+            for h in hooks:
+                h.remove()
+        return torch.stack(out[-self.n_core:])
+
+    def _readout(self, state: torch.Tensor) -> torch.Tensor:
+        """Loop state (already post-norm) -> logits via lm_head, Ouro's per-loop exit readout."""
+        return self.model.lm_head(state)

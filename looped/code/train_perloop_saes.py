@@ -46,6 +46,7 @@ def fvu_on(sae, scaler, X, idx, dev, chunk=8192):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--out", required=True)
+    p.add_argument("--model", default="huginn", choices=["huginn", "ouro"])
     p.add_argument("--loops", default="1,2,4,8,16,32")
     p.add_argument("--total", type=int, default=120_000_000, help="training vectors per loop-SAE")
     p.add_argument("--d_sae", type=int, default=16384)
@@ -64,17 +65,18 @@ def main():
     sae_gpus = [int(g) for g in args.sae_gpus.split(",")]
     prod_gpus = tuple(int(g) for g in args.producer_gpus.split(",") if g != "")
     json.dump({**vars(args), "loops": loops}, open(out / "args.json", "w"), indent=1)
+    d_in = {"huginn": 5280, "ouro": 2048}[args.model]
 
     # stream only the needed loops; tag by loop so each SAE pulls its own
-    provider = HuginnActivationProvider(train_batch_size=args.batch, context_size=512, n_seeds=2, device="cpu",
+    provider = HuginnActivationProvider(train_batch_size=args.batch, context_size=512, device="cpu",
                                         producer_gpus=prod_gpus, buffer_vectors=2_000_000, shuffle_seed=0,
-                                        split="train", loops=tuple(loops))
+                                        split="train", loops=tuple(loops), model=args.model)
     steps = args.total // args.batch
     trainers, bufs = {}, {l: [] for l in loops}
     for i, l in enumerate(loops):
         dev = f"cuda:{sae_gpus[i % len(sae_gpus)]}"
         sae = BatchTopKTrainingSAE(BatchTopKTrainingSAEConfig(
-            d_in=D_IN, d_sae=args.d_sae, k=args.k, device=dev, normalize_activations="expected_average_only_in"))
+            d_in=d_in, d_sae=args.d_sae, k=args.k, device=dev, normalize_activations="expected_average_only_in"))
         cfg = SAETrainerConfig(total_training_samples=args.total, train_batch_size_samples=args.batch, lr=1e-4,
                                lr_end=1e-5, lr_scheduler_name="constant", lr_warm_up_steps=0,
                                lr_decay_steps=int(0.2 * steps), device=dev, logger=LoggingConfig(log_to_wandb=False),
@@ -93,7 +95,7 @@ def main():
             if m.any() and len(warm[l]) < need:
                 warm[l].append(b[m])
     for l in loops:
-        trainers[l].activation_scaler.estimate_scaling_factor(d_in=D_IN, data_provider=iter(warm[l]),
+        trainers[l].activation_scaler.estimate_scaling_factor(d_in=d_in, data_provider=iter(warm[l]),
                                                               n_batches_for_norm_estimate=len(warm[l]))
     del warm
     print("norm estimates done", flush=True)
@@ -137,11 +139,28 @@ def main():
         t.sae.eval()
         t.save_checkpoint(checkpoint_name=f"loop{l}", base_path=str(out))
 
-    # transfer matrix on the eval cache: FVU[l_train, m_eval]
-    ev = torch.load(args.eval_cache)
-    X, tags, ev_loops = ev["X"], ev["tags"].numpy(), list(ev["loops"])
+    # transfer matrix on a held-out eval set: FVU[l_train, m_eval]
+    if args.model == "huginn" and Path(args.eval_cache).exists():
+        ev = torch.load(args.eval_cache)
+        X, tags, ev_loops = ev["X"], ev["tags"].numpy(), list(ev["loops"])
+    else:  # build inline from the held-out shard via the provider (Ouro has no prebuilt cache)
+        evp = HuginnActivationProvider(train_batch_size=args.batch, context_size=512, device="cpu",
+                                       producer_gpus=prod_gpus, buffer_vectors=200_000, shuffle_seed=77,
+                                       split="heldout", loops=tuple(loops), model=args.model, max_rows=400)
+        xs, ts = [], []
+        want = args.eval_vectors * len(loops) * 3
+        try:
+            while sum(x.shape[0] for x in xs) < want:
+                b = next(evp)
+                xs.append(b.half())
+                ts.append(evp.last_tags.copy())
+        except StopIteration:
+            pass
+        evp.close()
+        X, tags, ev_loops = torch.cat(xs), np.concatenate(ts), list(loops)
     rng = np.random.default_rng(0)
-    eval_idx = {m: rng.choice(np.where(tags[:, 0] == m)[0], args.eval_vectors, replace=False) for m in loops if m in ev_loops}
+    eval_idx = {m: rng.choice(np.where(tags[:, 0] == m)[0], min(args.eval_vectors, int((tags[:, 0] == m).sum())),
+                              replace=False) for m in loops if m in ev_loops}
     from sae_lens.training.activation_scaler import ActivationScaler  # scaling already folded; identity scaler
     ident = ActivationScaler()
     T = np.full((len(loops), len(loops)), np.nan)
@@ -167,10 +186,11 @@ def main():
         print(f"decoder match {a}->{b}: mean cos {match[f'{a}->{b}']['mean_matched_cos']}, "
               f">0.5 {match[f'{a}->{b}']['frac_matched_cos>0.5']}, >0.8 {match[f'{a}->{b}']['frac_matched_cos>0.8']}", flush=True)
 
-    res = {"loops": loops, "transfer_fvu": T.round(4).tolist(), "decoder_match": match,
+    res = {"model": args.model, "loops": loops, "transfer_fvu": T.round(4).tolist(), "decoder_match": match,
            "diag_fvu": {str(l): round(float(T[i, i]), 4) for i, l in enumerate(loops)}}
-    json.dump(res, open(Path(__file__).resolve().parent.parent / "results/sae/perloop_transfer.json", "w"), indent=1)
-    print("saved results/sae/perloop_transfer.json", flush=True)
+    name = "perloop_transfer.json" if args.model == "huginn" else f"perloop_transfer_{args.model}.json"
+    json.dump(res, open(Path(__file__).resolve().parent.parent / "results/sae" / name, "w"), indent=1)
+    print(f"saved results/sae/{name}", flush=True)
 
 
 if __name__ == "__main__":
